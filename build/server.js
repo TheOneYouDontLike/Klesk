@@ -53,19 +53,19 @@ require("source-map-support").install();
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _appLogger = __webpack_require__(2);
+	var _appLogger = __webpack_require__(5);
 	
 	var _appLogger2 = _interopRequireDefault(_appLogger);
 	
-	var _appRoutes = __webpack_require__(3);
+	var _appRoutes = __webpack_require__(6);
 	
 	var _appRoutes2 = _interopRequireDefault(_appRoutes);
 	
-	var _express = __webpack_require__(4);
+	var _express = __webpack_require__(3);
 	
 	var _express2 = _interopRequireDefault(_express);
 	
-	var _bodyParser = __webpack_require__(5);
+	var _bodyParser = __webpack_require__(4);
 	
 	var _bodyParser2 = _interopRequireDefault(_bodyParser);
 	
@@ -89,12 +89,25 @@ require("source-map-support").install();
 	    value: true
 	});
 	exports["default"] = {
-	    port: 1666
+	    port: 80
 	};
 	module.exports = exports["default"];
 
 /***/ },
-/* 2 */
+/* 2 */,
+/* 3 */
+/***/ function(module, exports) {
+
+	module.exports = require("express");
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = require("body-parser");
+
+/***/ },
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -110,7 +123,7 @@ require("source-map-support").install();
 	module.exports = exports['default'];
 
 /***/ },
-/* 3 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -121,7 +134,7 @@ require("source-map-support").install();
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _logger = __webpack_require__(2);
+	var _logger = __webpack_require__(5);
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
@@ -141,18 +154,6 @@ require("source-map-support").install();
 	    configure: configure
 	};
 	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	module.exports = require("express");
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	module.exports = require("body-parser");
 
 /***/ }
 /******/ ]);
