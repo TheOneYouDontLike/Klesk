@@ -1,6 +1,7 @@
 'use strict';
 
 import logger from './logger';
+import commandBus from './commandBus';
 
 let configure = function(app) {
 
@@ -9,7 +10,8 @@ let configure = function(app) {
     });
 
     app.post('/', (req, res) => {
-        logger(req.body);
+        commandBus(req.body);
+        logger.log(req.body);
         res.end("congratulation it works !");
     });
 

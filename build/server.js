@@ -53,19 +53,19 @@ require("source-map-support").install();
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _appLogger = __webpack_require__(5);
+	var _appLogger = __webpack_require__(2);
 	
 	var _appLogger2 = _interopRequireDefault(_appLogger);
 	
-	var _appRoutes = __webpack_require__(6);
+	var _appRoutes = __webpack_require__(3);
 	
 	var _appRoutes2 = _interopRequireDefault(_appRoutes);
 	
-	var _express = __webpack_require__(3);
+	var _express = __webpack_require__(5);
 	
 	var _express2 = _interopRequireDefault(_express);
 	
-	var _bodyParser = __webpack_require__(4);
+	var _bodyParser = __webpack_require__(6);
 	
 	var _bodyParser2 = _interopRequireDefault(_bodyParser);
 	
@@ -94,20 +94,7 @@ require("source-map-support").install();
 	module.exports = exports["default"];
 
 /***/ },
-/* 2 */,
-/* 3 */
-/***/ function(module, exports) {
-
-	module.exports = require("express");
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	module.exports = require("body-parser");
-
-/***/ },
-/* 5 */
+/* 2 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -123,7 +110,7 @@ require("source-map-support").install();
 	module.exports = exports['default'];
 
 /***/ },
-/* 6 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -134,9 +121,13 @@ require("source-map-support").install();
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _logger = __webpack_require__(5);
+	var _logger = __webpack_require__(2);
 	
 	var _logger2 = _interopRequireDefault(_logger);
+	
+	var _commandBus = __webpack_require__(4);
+	
+	var _commandBus2 = _interopRequireDefault(_commandBus);
 	
 	var configure = function configure(app) {
 	
@@ -145,7 +136,8 @@ require("source-map-support").install();
 	    });
 	
 	    app.post('/', function (req, res) {
-	        (0, _logger2['default'])(req.body);
+	        (0, _commandBus2['default'])(req.body);
+	        _logger2['default'].log(req.body);
 	        res.end('congratulation it works !');
 	    });
 	};
@@ -154,6 +146,34 @@ require("source-map-support").install();
 	    configure: configure
 	};
 	module.exports = exports['default'];
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	exports['default'] = {
+	    dispatch: function dispatch(command) {
+	        return command;
+	    }
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	module.exports = require("express");
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = require("body-parser");
 
 /***/ }
 /******/ ]);

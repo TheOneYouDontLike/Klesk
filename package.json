@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha ./tests --require babel/register --watch",
     "start": "node build/server.js",
     "watch": "nodemon build/server.js"
   },
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/TheOneYouDontLike/Klesk",
   "devDependencies": {
+    "assertthat": "^0.6.0",
     "babel-core": "^5.6.14",
     "babel-loader": "^5.2.2",
     "node-libs-browser": "^0.5.2",
