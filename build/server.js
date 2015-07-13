@@ -137,8 +137,8 @@ require("source-map-support").install();
 	
 	    app.post('/', function (req, res) {
 	        var response = _commandBus2['default'].dispatch(req.body);
-	        _logger2['default'].log(req.body);
-	        res.end(response);
+	        (0, _logger2['default'])(req.body);
+	        res.end(JSON.stringify(response));
 	    });
 	};
 	

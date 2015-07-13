@@ -11,8 +11,8 @@ let configure = function(app) {
 
     app.post('/', (req, res) => {
         let response = commandBus.dispatch(req.body);
-        logger.log(req.body);
-        res.end(response);
+        logger(req.body);
+        res.end(JSON.stringify(response));
     });
 
 };
