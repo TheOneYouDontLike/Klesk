@@ -1,0 +1,28 @@
+{
+  "name": "Klesk",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node build/server.js",
+    "watch": "nodemon build/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheOneYouDontLike/Klesk.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheOneYouDontLike/Klesk/issues"
+  },
+  "homepage": "https://github.com/TheOneYouDontLike/Klesk",
+  "devDependencies": {
+    "babel-core": "^5.6.14",
+    "babel-loader": "^5.2.2",
+    "node-libs-browser": "^0.5.2",
+    "source-map-support": "^0.3.2",
+    "webpack": "^1.9.12"
+  }
+}
