@@ -89,7 +89,7 @@ require("source-map-support").install();
 	    value: true
 	});
 	exports["default"] = {
-	    port: 1666
+	    port: 80
 	};
 	module.exports = exports["default"];
 
