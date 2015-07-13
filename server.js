@@ -1,3 +1,15 @@
 'use strict';
 
-console.log('works as it should');
+import config from './config';
+import logger from './logger';
+
+import express from 'express';
+import bodyParser from 'body-parser';
+
+var app = express();
+app.use(bodyParser.json());
+
+var port = config.port;
+app.listen(port);
+
+logger('Listening on port ' + port);
