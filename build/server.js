@@ -74,7 +74,7 @@ require("source-map-support").install();
 	
 	_appRoutes2['default'].configure(app);
 	
-	var port = _config2['default'].port;
+	var port = process.env.PORT || _config2['default'].port;
 	app.listen(port);
 	
 	(0, _appLogger2['default'])('Listening on port ' + port);
@@ -89,7 +89,7 @@ require("source-map-support").install();
 	    value: true
 	});
 	exports["default"] = {
-	    port: 80
+	    port: 1666
 	};
 	module.exports = exports["default"];
 

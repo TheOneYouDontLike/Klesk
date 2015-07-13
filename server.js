@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 routes.configure(app);
 
-var port = config.port;
+var port = process.env.PORT || config.port;
 app.listen(port);
 
 logger('Listening on port ' + port);
