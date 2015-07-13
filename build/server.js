@@ -71,6 +71,7 @@ require("source-map-support").install();
 	
 	var app = (0, _express2['default'])();
 	app.use(_bodyParser2['default'].json());
+	app.use(_bodyParser2['default'].urlencoded({ extended: true }));
 	
 	_appRoutes2['default'].configure(app);
 	
