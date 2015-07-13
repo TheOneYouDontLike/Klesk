@@ -10,7 +10,7 @@ let configure = function(app) {
     });
 
     app.post('/', (req, res) => {
-        let response = commandBus(req.body);
+        let response = commandBus.dispatch(req.body);
         logger.log(req.body);
         res.end(response);
     });
