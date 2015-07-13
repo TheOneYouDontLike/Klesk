@@ -10,9 +10,9 @@ let configure = function(app) {
     });
 
     app.post('/', (req, res) => {
-        commandBus(req.body);
+        let response = commandBus(req.body);
         logger.log(req.body);
-        res.end("congratulation it works !");
+        res.end(response);
     });
 
 };
