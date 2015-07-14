@@ -1,6 +1,7 @@
 'use strict';
 
 import assert from 'assertthat';
+import _ from 'lodash';
 
 import commandBus from '../app/commandBus.js';
 
@@ -17,7 +18,7 @@ let genericKleskCommand = {
 };
 
 function prepareCommand(commandText) {
-    let command = genericKleskCommand;
+    let command = _.cloneDeep(genericKleskCommand);
     command.text = commandText;
 
     return command;
