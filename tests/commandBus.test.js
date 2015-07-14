@@ -4,7 +4,7 @@ import assert from 'assertthat';
 
 import commandBus from '../app/commandBus.js';
 
-let exampleCommand = {
+let genericKleskCommand = {
     token: "...",
     team_id: "...",
     team_domain: "...",
@@ -16,8 +16,38 @@ let exampleCommand = {
     text: "query string"
 };
 
+function prepareCommand(commandText) {
+    let command = genericKleskCommand;
+    command.text = commandText;
+
+    return command;
+}
+
 describe('commandBus', () => {
-    it('dispatches events properly', () => {
-        assert.that(commandBus.dispatch('some command')).is.equalTo('some command');
+    afterEach(() => {
+        commandBus.dispatch(prepareCommand('clear'));
     });
+
+    it('handles /addplayer/ command', () => {
+        // when
+        let result = commandBus.dispatch(prepareCommand('addplayer anarki'));
+
+        // then
+        assert.that(result).is.equalTo('Added new player: anarki');
+    });
+
+    it('handles /getallplayers/ command', () => {
+        // given
+        // there are players added
+        commandBus.dispatch(prepareCommand('addplayer anarki'));
+        commandBus.dispatch(prepareCommand('addplayer sarge'));
+
+        // when
+        let result = commandBus.dispatch(prepareCommand('getallplayers'));
+
+        // then
+        assert.that(result).is.equalTo('anarki\nsarge');
+    });
+
+    //it('handles bad commands')
 });
