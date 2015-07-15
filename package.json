@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha ./tests --require babel/register --watch",
+    "test": "mocha ./tests --require babel-test-hook --watch",
     "start": "node build/server.js",
     "watch": "nodemon build/server.js"
   },
@@ -22,7 +22,10 @@
     "assertthat": "^0.6.0",
     "babel-core": "^5.6.14",
     "babel-loader": "^5.2.2",
+    "babel-plugin-rewire": "^0.1.5",
     "node-libs-browser": "^0.5.2",
+    "rewire": "^2.3.4",
+    "sinon": "^1.15.4",
     "webpack": "^1.9.12"
   },
   "dependencies": {
