@@ -29,7 +29,15 @@ describe('commandBus', () => {
         commandBus.dispatch(prepareCommand('clear'));
     });
 
-    it('handles /addplayer/ command', () => {
+    it('should handle /createladder/ command', () => {
+        // when
+        let result = commandBus.dispatch(prepareCommand('newladder normal'));
+
+        // then
+        assert.that(result).is.equalTo('Created new ladder: normal');
+    });
+
+    it('should handle /addplayer/ command', () => {
         // when
         let result = commandBus.dispatch(prepareCommand('addplayer anarki'));
 
@@ -37,18 +45,11 @@ describe('commandBus', () => {
         assert.that(result).is.equalTo('Added new player: anarki');
     });
 
-    it('handles /getallplayers/ command', () => {
-        // given
-        // there are players added
-        commandBus.dispatch(prepareCommand('addplayer anarki'));
-        commandBus.dispatch(prepareCommand('addplayer sarge'));
-
+    it('should handle bad commands', () => {
         // when
-        let result = commandBus.dispatch(prepareCommand('getallplayers'));
+        let result = commandBus.dispatch(prepareCommand('makesheldartheultimatekiller'));
 
         // then
-        assert.that(result).is.equalTo('anarki\nsarge');
+        assert.that(result).is.equalTo('This is not the command you are looking for.');
     });
-
-    //it('handles bad commands')
 });
