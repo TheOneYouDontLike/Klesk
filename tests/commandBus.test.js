@@ -1,7 +1,6 @@
 'use strict';
 
 import assert from 'assertthat';
-import _ from 'lodash';
 
 import commandBus from '../app/commandBus.js';
 
@@ -17,39 +16,29 @@ let genericKleskCommand = {
     text: "query string"
 };
 
-function prepareCommand(commandText) {
-    let command = _.cloneDeep(genericKleskCommand);
-    command.text = commandText;
-
-    return command;
-}
-
 describe('commandBus', () => {
-    afterEach(() => {
-        commandBus.dispatch(prepareCommand('clear'));
-    });
+    it('should use correct command handler', () => {
+        // given
+        let someCommand = {
+            text: 'createnewladder ladder'
+        };
 
-    it('should handle /createladder/ command', () => {
+        let fakeFactory = {
+            getCommandHandler: function(/* commandType does not matter during this test */) {
+                return {
+                    makeItSo() {
+                        return 'result';
+                    }
+                };
+            }
+        };
+
+        commandBus.__Rewire__('handlersFactory', fakeFactory);
+
         // when
-        let result = commandBus.dispatch(prepareCommand('newladder normal'));
+        let result = commandBus.dispatch(someCommand);
 
         // then
-        assert.that(result).is.equalTo('Created new ladder: normal');
-    });
-
-    it('should handle /addplayer/ command', () => {
-        // when
-        let result = commandBus.dispatch(prepareCommand('addplayer anarki'));
-
-        // then
-        assert.that(result).is.equalTo('Added new player: anarki');
-    });
-
-    it('should handle bad commands', () => {
-        // when
-        let result = commandBus.dispatch(prepareCommand('makesheldartheultimatekiller'));
-
-        // then
-        assert.that(result).is.equalTo('This is not the command you are looking for.');
+        assert.that(result).is.equalTo('result');
     });
 });
