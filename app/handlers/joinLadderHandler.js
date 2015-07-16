@@ -69,7 +69,7 @@ let newLadderHandler = function(persistence) {
 
             persistence.update(queryLadder, updateCallback, (error) => {
                 if (error) { logger(error) }
-                logger('updejtuje');
+
                 callback(null, RESULT_MESSAGE + playerName);
             });
         }

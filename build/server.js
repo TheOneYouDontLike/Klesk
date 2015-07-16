@@ -61,11 +61,11 @@ require("source-map-support").install();
 	
 	var _appRoutes2 = _interopRequireDefault(_appRoutes);
 	
-	var _express = __webpack_require__(10);
+	var _express = __webpack_require__(11);
 	
 	var _express2 = _interopRequireDefault(_express);
 	
-	var _bodyParser = __webpack_require__(11);
+	var _bodyParser = __webpack_require__(12);
 	
 	var _bodyParser2 = _interopRequireDefault(_bodyParser);
 	
@@ -206,19 +206,19 @@ require("source-map-support").install();
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _JsonPersistence = __webpack_require__(7);
+	var _JsonPersistence = __webpack_require__(8);
 	
 	var _JsonPersistence2 = _interopRequireDefault(_JsonPersistence);
 	
-	var _handlersNewLadderHandler = __webpack_require__(8);
+	var _handlersNewLadderHandler = __webpack_require__(9);
 	
 	var _handlersNewLadderHandler2 = _interopRequireDefault(_handlersNewLadderHandler);
 	
-	var _handlersJoinLadderHandler = __webpack_require__(12);
+	var _handlersJoinLadderHandler = __webpack_require__(10);
 	
 	var _handlersJoinLadderHandler2 = _interopRequireDefault(_handlersJoinLadderHandler);
 	
-	var _handlersNullHandler = __webpack_require__(9);
+	var _handlersNullHandler = __webpack_require__(7);
 	
 	var _handlersNullHandler2 = _interopRequireDefault(_handlersNullHandler);
 	
@@ -262,10 +262,30 @@ require("source-map-support").install();
 /* 7 */
 /***/ function(module, exports) {
 
-	module.exports = require("JsonPersistence");
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	var thisIsNotTheCommandYouAreLookingFor = function thisIsNotTheCommandYouAreLookingFor() {
+	    return {
+	        makeItSo: function makeItSo(parsedCommand, callback) {
+	            callback(null, 'This is not the command you are looking for.');
+	        }
+	    };
+	};
+	
+	exports['default'] = thisIsNotTheCommandYouAreLookingFor;
+	module.exports = exports['default'];
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	module.exports = require("JsonPersistence");
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -300,39 +320,7 @@ require("source-map-support").install();
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-	var thisIsNotTheCommandYouAreLookingFor = function thisIsNotTheCommandYouAreLookingFor() {
-	    return {
-	        makeItSo: function makeItSo(parsedCommand, callback) {
-	            callback(null, 'This is not the command you are looking for.');
-	        }
-	    };
-	};
-	
-	exports['default'] = thisIsNotTheCommandYouAreLookingFor;
-	module.exports = exports['default'];
-
-/***/ },
 /* 10 */
-/***/ function(module, exports) {
-
-	module.exports = require("express");
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	module.exports = require("body-parser");
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -414,7 +402,7 @@ require("source-map-support").install();
 	                if (error) {
 	                    (0, _logger2['default'])(error);
 	                }
-	                (0, _logger2['default'])('updejtuje');
+	
 	                callback(null, RESULT_MESSAGE + playerName);
 	            });
 	        }
@@ -423,6 +411,18 @@ require("source-map-support").install();
 	
 	exports['default'] = newLadderHandler;
 	module.exports = exports['default'];
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	module.exports = require("express");
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	module.exports = require("body-parser");
 
 /***/ }
 /******/ ]);
