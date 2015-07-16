@@ -5,21 +5,39 @@ import sinon from 'sinon';
 import newLadderHandler from '../app/handlers/newLadderHandler.js';
 
 describe('newLadderHandler', () => {
-    it('should create new ladder', () => {
+    it('should return result new ladder name', () => {
+        // given
+        let parsedCommand = ['newladder', 'normal'];
+
+        let fakeRepo = {
+            createNewLadder(ladderName, callback) {
+                callback(null);
+            }
+        };
+        newLadderHandler.__Rewire__('repo', fakeRepo);
+
+        let callback = sinon.spy();
         // when
+
+        newLadderHandler.makeItSo(parsedCommand, callback);
+
+        // then
+        assert.that(callback.calledWith(null, 'Created new ladder: normal')).is.true();
+    });
+
+    it('should create new ladder using underlying repo', () => {
+        // given
+        let parsedCommand = ['newladder', 'normal'];
+
         let fakeRepo = {
             createNewLadder: sinon.spy()
         };
-
         newLadderHandler.__Rewire__('repo', fakeRepo);
 
-        let parsedCommand = ['newladder', 'normal'];
-        let result = newLadderHandler.makeItSo(parsedCommand);
+        // when
+        newLadderHandler.makeItSo(parsedCommand, () => {});
 
         // then
-        let name = fakeRepo.createNewLadder.getCall(0).args[0];
-
-        assert.that(name).is.equalTo('normal');
-        assert.that(result).is.equalTo('Created new ladder: normal');
+        assert.that(fakeRepo.createNewLadder.calledWith('normal', sinon.match.func)).is.true();
     });
 });
