@@ -22,4 +22,4 @@ let getCommandHandler = function(commandType) {
 
 export default {
     getCommandHandler: getCommandHandler
-}
+};

@@ -4,18 +4,6 @@ import assert from 'assertthat';
 
 import commandBus from '../app/commandBus.js';
 
-let genericKleskCommand = {
-    token: "...",
-    team_id: "...",
-    team_domain: "...",
-    channel_id: "...",
-    channel_name: "...",
-    user_id: "...",
-    user_name: "...",
-    command: "/klesk",
-    text: "query string"
-};
-
 describe('commandBus', () => {
     it('should use correct command handler', () => {
         // given
@@ -42,3 +30,15 @@ describe('commandBus', () => {
         assert.that(result).is.equalTo('result');
     });
 });
+
+// let genericKleskCommand = {
+//     token: "...",
+//     team_id: "...",
+//     team_domain: "...",
+//     channel_id: "...",
+//     channel_name: "...",
+//     user_id: "...",
+//     user_name: "...",
+//     command: "/klesk",
+//     text: "query string"
+// };
