@@ -4,40 +4,44 @@ import assert from 'assertthat';
 import sinon from 'sinon';
 import newLadderHandler from '../app/handlers/newLadderHandler.js';
 
-describe('newLadderHandler', () => {
-    it('should return result new ladder name', () => {
-        // given
-        let parsedCommand = ['newladder', 'normal'];
+let parsedCommand = {
+    arguments: ['newladder', 'normal']
+};
 
-        let fakeRepo = {
-            createNewLadder(ladderName, callback) {
+describe('newLadderHandler', () => {
+    it('should return result with new ladder name', () => {
+        // given
+        let fakePersistence = {
+            add(ladderName, callback) {
                 callback(null);
             }
         };
-        newLadderHandler.__Rewire__('repo', fakeRepo);
+        let handler = newLadderHandler(fakePersistence);
 
         let callback = sinon.spy();
         // when
 
-        newLadderHandler.makeItSo(parsedCommand, callback);
+        handler.makeItSo(parsedCommand, callback);
 
         // then
         assert.that(callback.calledWith(null, 'Created new ladder: normal')).is.true();
     });
 
     it('should create new ladder using underlying repo', () => {
-        // given
-        let parsedCommand = ['newladder', 'normal'];
-
-        let fakeRepo = {
-            createNewLadder: sinon.spy()
+    // given
+        let fakePersistence = {
+            add: sinon.spy()
         };
-        newLadderHandler.__Rewire__('repo', fakeRepo);
+        let handler = newLadderHandler(fakePersistence);
 
         // when
-        newLadderHandler.makeItSo(parsedCommand, () => {});
+        handler.makeItSo(parsedCommand, () => {});
 
         // then
-        assert.that(fakeRepo.createNewLadder.calledWith('normal', sinon.match.func)).is.true();
+        let expectedLadder = {
+            name: 'normal',
+            matches: []
+        };
+        assert.that(fakePersistence.add.calledWith(expectedLadder, sinon.match.func)).is.true();
     });
 });

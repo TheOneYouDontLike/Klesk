@@ -28,3 +28,4 @@ node_modules
 
 # Project specifig
 *.sublime-workspace
+ladders.json

@@ -1,20 +1,26 @@
 'use strict';
 
-import repo from '../repo';
+function Ladder(name) {
+    return {
+        name: name,
+        matches: []
+    };
+}
 
-let newLadderHandler = {
-    makeItSo(parsedCommand, callback) {
-        let ladderName = parsedCommand[1];
+let newLadderHandler = function(persistence) {
+    return {
+        makeItSo(parsedCommand, callback) {
+            let ladderName = parsedCommand.arguments[1];
 
-        repo.createNewLadder(ladderName, (error) => {
-            if (error) {
-                callback(error.message, null);
-            }
+            persistence.add(Ladder(ladderName), (error) => {
+                if (error) {
+                    callback(error.message, null);
+                }
 
-            console.log('calling with ', ladderName);
-            callback(null, 'Created new ladder: ' + ladderName);
-        });
-    }
+                callback(null, 'Created new ladder: ' + ladderName);
+            });
+        }
+    };
 };
 
 export default newLadderHandler;

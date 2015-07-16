@@ -3,8 +3,8 @@
 let ladders = [];
 
 let fakeLadderRepo = {
-    createNewLadder(ladderName) {
-        ladders.push({ name: ladderName });
+    createNewLadder(ladder) {
+        ladders.push(ladder);
     }
 };
 

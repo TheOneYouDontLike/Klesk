@@ -10,11 +10,11 @@ let configure = function(app) {
     });
 
     app.post('/', (req, res) => {
-        let response = commandBus.dispatch(req.body);
-        logger(req.body);
-        res.end(JSON.stringify(response));
+        commandBus.dispatch(req.body, (error, response) => {
+            logger(req.body);
+            res.end(JSON.stringify(response));
+        });
     });
-
 };
 
 export default {

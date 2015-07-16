@@ -14,8 +14,8 @@ describe('commandBus', () => {
         let fakeFactory = {
             getCommandHandler: function(/* commandType does not matter during this test */) {
                 return {
-                    makeItSo() {
-                        return 'result';
+                    makeItSo(command, callback) {
+                        callback(null, 'result');
                     }
                 };
             }
@@ -24,10 +24,10 @@ describe('commandBus', () => {
         commandBus.__Rewire__('handlersFactory', fakeFactory);
 
         // when
-        let result = commandBus.dispatch(someCommand);
-
-        // then
-        assert.that(result).is.equalTo('result');
+        commandBus.dispatch(someCommand, (error, result) => {
+            // then
+            assert.that(result).is.equalTo('result');
+        });
     });
 });
 
