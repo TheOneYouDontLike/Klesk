@@ -12,7 +12,10 @@ describe('newLadderHandler', () => {
     it('should return result with new ladder name', () => {
         // given
         let fakePersistence = {
-            add(ladderName, callback) {
+            getAll(callback) {
+                callback(null, []);
+            },
+            add(ladder, callback) {
                 callback(null);
             }
         };
@@ -28,8 +31,11 @@ describe('newLadderHandler', () => {
     });
 
     it('should create new ladder using underlying repo', () => {
-    // given
+        // given
         let fakePersistence = {
+            getAll(callback) {
+                callback(null, []);
+            },
             add: sinon.spy()
         };
         let handler = newLadderHandler(fakePersistence);
@@ -43,5 +49,28 @@ describe('newLadderHandler', () => {
             matches: []
         };
         assert.that(fakePersistence.add.calledWith(expectedLadder, sinon.match.func)).is.true();
+    });
+
+    it ('should not create the same ladder two times', () => {
+        //given
+        let ladderInRepository = {
+            name: parsedCommand.arguments[1],
+            matches: []
+        };
+
+        let fakePersistence = {
+            getAll: function(callback) {
+                callback(null, [ladderInRepository]);
+            }
+        };
+
+        let callbackSpy = sinon.spy();
+        let handler = newLadderHandler(fakePersistence);
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        //then
+        assert.that(callbackSpy.calledWith(null, 'Ladder `' + ladderInRepository.name + '` already exists.')).is.true();
     });
 });

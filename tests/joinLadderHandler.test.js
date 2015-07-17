@@ -9,7 +9,7 @@ let parsedCommand = {
 };
 
 describe('joinLadderHandler', () => {
-    it('should join ladder if it there are other players', () => {
+    it('should join ladder if there are other players', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',

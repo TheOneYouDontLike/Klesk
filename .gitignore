@@ -19,6 +19,9 @@ coverage
 # node-waf configuration
 .lock-wscript
 
+* ignoring build directory - build it yourself, dammit
+build
+
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
@@ -26,6 +29,6 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-# Project specifig
+# Project specific
 *.sublime-workspace
 ladders.json

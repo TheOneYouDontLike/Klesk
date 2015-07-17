@@ -37,14 +37,14 @@ let newLadderHandler = function(persistence) {
                 if (_thereAreNoOtherPlayers(ladder.matches)) {
                     ladder.matches.push({ player1: playerName, player2: '', winner: '' });
 
-                    callback(RESULT_MESSAGE + playerName);
+                    callback(null, RESULT_MESSAGE + playerName);
                     return;
                 }
 
                 if (_thereIsOnlyOnePlayer(ladder.matches)) {
                     _addNewPlayerToMatch(ladder.matches[0], playerName);
 
-                    callback(RESULT_MESSAGE + playerName);
+                    callback(null, RESULT_MESSAGE + playerName);
                     return;
                 }
 
@@ -65,12 +65,12 @@ let newLadderHandler = function(persistence) {
                 let matches = allMatches.concat(newMatchesToPlay);
 
                 ladder.matches = matches;
+
+                callback(null, RESULT_MESSAGE + playerName);
             };
 
             persistence.update(queryLadder, updateCallback, (error) => {
                 if (error) { logger(error) }
-
-                callback(null, RESULT_MESSAGE + playerName);
             });
         }
     };
