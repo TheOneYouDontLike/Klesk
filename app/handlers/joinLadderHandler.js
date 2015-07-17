@@ -4,6 +4,7 @@ import _ from 'lodash';
 import logger from '../logger';
 
 const RESULT_MESSAGE = 'Added: ';
+const ALREADY_JOINED = 'You already joined this ladder.';
 
 let newLadderHandler = function(persistence) {
     function _thereAreNoOtherPlayers(matches) {
@@ -24,6 +25,24 @@ let newLadderHandler = function(persistence) {
         match.player2 = player;
     }
 
+    function _getAllPlayers(ladderMatches) {
+        return _(ladderMatches)
+            .map((match) => {
+                return [ match.player1, match.player2 ];
+            })
+            .flatten()
+            .uniq()
+            .value();
+    }
+
+    function _alreadyJoinedLadder(ladderMatches, playerName) {
+        let allPlayersInLadder = _getAllPlayers(ladderMatches);
+
+        return _.any(allPlayersInLadder, (player) => {
+            return player === playerName;
+        });
+    }
+
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
@@ -41,6 +60,11 @@ let newLadderHandler = function(persistence) {
                     return;
                 }
 
+                if (_alreadyJoinedLadder(ladder.matches, playerName)) {
+                    callback(null, ALREADY_JOINED + playerName);
+                    return;
+                }
+
                 if (_thereIsOnlyOnePlayer(ladder.matches)) {
                     _addNewPlayerToMatch(ladder.matches[0], playerName);
 
@@ -48,13 +72,7 @@ let newLadderHandler = function(persistence) {
                     return;
                 }
 
-                let allPlayersInLadder = _(ladder.matches)
-                    .map((match) => {
-                        return [ match.player1, match.player2 ];
-                    })
-                    .flatten()
-                    .uniq()
-                    .value();
+                let allPlayersInLadder = _getAllPlayers(ladder.matches);
 
                 let newMatchesToPlay = _.map(allPlayersInLadder, (player) => {
                     return { player1: playerName, player2: player, winner: '' };

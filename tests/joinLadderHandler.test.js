@@ -1,6 +1,7 @@
 'use strict';
 
 import assert from 'assertthat';
+import _ from 'lodash';
 import joinLadderHandler from '../app/handlers/joinLadderHandler.js';
 
 let parsedCommand = {
@@ -92,6 +93,29 @@ describe('joinLadderHandler', () => {
             { player1: 'newPlayer', player2: '', winner: '' }
         ];
 
+        assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+    });
+
+    it('should not join ladder if already joined', () => {
+        // given
+        let ladderToUpdate = {
+            name: 'normal',
+            matches: [{ player1: 'newPlayer', player2: '', winner: '' }]
+        };
+
+        let expectedMatches = _.cloneDeep(ladderToUpdate.matches);
+
+        let fakePersistence = {
+            update(filterDelegate, updateDelegate) {
+                updateDelegate(ladderToUpdate);
+            }
+        };
+        let handler = joinLadderHandler(fakePersistence);
+
+        // when
+        handler.makeItSo(parsedCommand, () => {});
+
+        // then
         assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
     });
 });
