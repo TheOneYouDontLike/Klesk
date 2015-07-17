@@ -20,7 +20,7 @@ coverage
 .lock-wscript
 
 * ignoring build directory - build it yourself, dammit
-build/
+build
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
