@@ -6,7 +6,12 @@ import showStatsHandler from '../app/handlers/showStatsHandler.js';
 
 let parsedCommand = {
     playerName: 'anarki',
-    arguments: ['showStats', 'normal']
+    arguments: ['showstats', 'normal']
+};
+
+let commandWithoutLadderName = {
+    playerName: 'anarki',
+    arguments: ['showstats']
 };
 
 describe('showStatsHandler', () => {
@@ -40,5 +45,19 @@ describe('showStatsHandler', () => {
         let actualMessage = callbackSpy.getCall(0).args[1];
 
         assert.that(actualMessage).is.equalTo(expectedMessage);
+    });
+
+    it('should not return stats if ladder name is not specified', () => {
+        // given
+        let handler = showStatsHandler({});
+
+        let callbackSpy = sinon.spy();
+
+        // when
+        handler.makeItSo(commandWithoutLadderName, callbackSpy);
+
+        // then
+        let errorMessage = callbackSpy.getCall(0).args[0].message;
+        assert.that(errorMessage).is.equalTo('Please specify ladder name.');
     });
 });

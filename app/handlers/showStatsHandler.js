@@ -41,6 +41,11 @@ let showStatsHandler = function(persistence) {
             let ladderName = parsedCommand.arguments[1];
             let playerName = parsedCommand.playerName;
 
+            if (!ladderName) {
+                callback(new Error('Please specify ladder name.'), null);
+                return;
+            }
+
             let filterFunction = (ladder) => {
                 return ladder.name === ladderName;
             };
