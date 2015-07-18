@@ -88,7 +88,9 @@ let newLadderHandler = function(persistence) {
             };
 
             persistence.update(queryLadder, updateCallback, (error) => {
-                if (error) { logger(error) }
+                if (error) { 
+                    logger(error);
+                }
             });
         }
     };
