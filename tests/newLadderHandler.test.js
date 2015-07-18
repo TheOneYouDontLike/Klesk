@@ -59,7 +59,7 @@ describe('newLadderHandler', () => {
         };
 
         let fakePersistence = {
-            getAll: function(callback) {
+            getAll(callback) {
                 callback(null, [ladderInRepository]);
             }
         };

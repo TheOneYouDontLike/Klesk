@@ -4,6 +4,7 @@ import Persistence from 'JsonPersistence';
 
 import newLadderHandler from './handlers/newLadderHandler';
 import joinLadderHandler from './handlers/joinLadderHandler';
+import showStatsHandler from './handlers/showStatsHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import config from '../config';
 import logger from './logger';
@@ -15,7 +16,8 @@ jsonPersistence.init((error) => {
 
 let commandTypes = {
     NEWLADDER: 'newladder',
-    JOINLADDER: 'joinladder'
+    JOINLADDER: 'joinladder',
+    SHOWSTATS: 'showstats'
 };
 
 let getCommandHandler = function(commandType) {
@@ -25,6 +27,9 @@ let getCommandHandler = function(commandType) {
 
         case commandTypes.JOINLADDER:
             return joinLadderHandler(jsonPersistence);
+
+        case commandTypes.SHOWSTATS:
+            return showStatsHandler(jsonPersistence);
 
         default:
             return thisIsNotTheCommandYouAreLookingFor();
