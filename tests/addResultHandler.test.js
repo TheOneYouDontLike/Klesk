@@ -15,6 +15,7 @@ let fakePersistence = {
         query(ladder); update(ladder); callback();
     }
 };
+let updateSpy = sinon.spy(fakePersistence.update);
 
 let handler = addResultHandler(fakePersistence);
 let callbackSpy = sinon.spy();
@@ -45,6 +46,7 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
+        assert.that(updateSpy.called).is.false();
         assert.that(callbackSpy.calledWith(null, 'You were not in the match and cannot add result.')).is.true();
     });
 
@@ -64,6 +66,7 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
+        assert.that(updateSpy.called).is.false();
         assert.that(callbackSpy.calledWith(null, 'This match result has already been added.')).is.true();
     });
 
@@ -78,6 +81,7 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
+        assert.that(updateSpy.called).is.false();
         assert.that(callbackSpy.calledWith(null, 'Indicate winner by adding a + before their name.'));
     });
 });
