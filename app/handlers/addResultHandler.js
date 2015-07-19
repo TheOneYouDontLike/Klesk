@@ -44,8 +44,12 @@ let addResultHandler = function(persistence) {
         return function(ladder) {
             var match = _getMatch(ladder, players);
 
-            match.winner = _getWinner(players);
+            if(match.winner) {
+                callback(null, 'This match result has already been added.');
+                return;
+            }
 
+            match.winner = _getWinner(players);
             callback(null, 'Result saved!');
         };
     }
