@@ -5,7 +5,7 @@ import handlersFactory from './commandHandlersFactory';
 
 export default {
     dispatch(command, callback) {
-        let parsedCommandArguments = _.words(command.text);
+        let parsedCommandArguments = command.text.split(" ");
         let commandType = parsedCommandArguments[0];
 
         let parsedCommand = {
