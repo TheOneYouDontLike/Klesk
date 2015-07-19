@@ -17,9 +17,9 @@ let addResultHandler = function(persistence) {
     }
 
     function _getMatch(ladder, players) {
-        let matchWithPlayers = _.find(ladder.matches, function(match) {
-            let player1InPlayers = _.any(players, function(player) { return _sanitizePlayerName(player) === match.player1; });
-            let player2InPlayers = _.any(players, function(player) { return _sanitizePlayerName(player) === match.player2; });
+        let matchWithPlayers = _.find(ladder.matches, (match) => {
+            let player1InPlayers = _.any(players, (player) => { return _sanitizePlayerName(player) === match.player1; });
+            let player2InPlayers = _.any(players, (player) => { return _sanitizePlayerName(player) === match.player2; });
 
             return player1InPlayers && player2InPlayers;
         });
@@ -28,7 +28,7 @@ let addResultHandler = function(persistence) {
     }
 
     function _getLadderPredicate(ladderName, players) {
-        return function(ladder) {
+        return (ladder) => {
             let isGoodLadder = ladder.name === ladderName;
             let hasMatch = Boolean(_getMatch(ladder, players));
 
@@ -37,11 +37,11 @@ let addResultHandler = function(persistence) {
     }
 
     function _getWinner(players) {
-        return _sanitizePlayerName(_.find(players, function(player) { return _startsWith(player, '+'); }));
+        return _sanitizePlayerName(_.find(players, (player) => { return _startsWith(player, '+'); }));
     }
 
     function _getFunctionToSetWinner(players, callback) {
-        return function(ladder) {
+        return (ladder) => {
             var match = _getMatch(ladder, players);
 
             if(match.winner) {
@@ -57,19 +57,19 @@ let addResultHandler = function(persistence) {
     function _playerWasInMatch(playerName, playersFromCommand) {
         var sanitizedPlayers = _.map(playersFromCommand, _sanitizePlayerName);
 
-        return _.any(sanitizedPlayers, function(sanitizedPlayerName) {
+        return _.any(sanitizedPlayers, (sanitizedPlayerName) => {
             return playerName === sanitizedPlayerName;
         });
     }
 
     function _noWinnerProvided(players) {
-        return !_.any(players, function(playerName) {
+        return !_.any(players, (playerName) => {
             return _startsWith(playerName, '+');
         });
     }
 
     function _bothAreWinners(players) {
-        return _.all(players, function(playerName) {
+        return _.all(players, (playerName) => {
             return _startsWith(playerName, '+');
         });
     }
@@ -94,7 +94,7 @@ let addResultHandler = function(persistence) {
                 return;
             }
 
-            persistence.update(_getLadderPredicate(ladderName, players), _getFunctionToSetWinner(players, callback), function(error){
+            persistence.update(_getLadderPredicate(ladderName, players), _getFunctionToSetWinner(players, callback), (error) => {
                 callback(error);
             });
         }
