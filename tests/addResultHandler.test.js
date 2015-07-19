@@ -54,7 +54,7 @@ describe('addResultHandler', () => {
             playerName: 'winner',
             arguments: ['addresult', 'laddername', '+winner', 'loser']
         };
-        
+
         ladder = {
             name: 'laddername', 
             matches: [{player1: 'winner', player2: 'loser', winner: 'winner'}]
@@ -65,5 +65,19 @@ describe('addResultHandler', () => {
 
         //then
         assert.that(callbackSpy.calledWith(null, 'This match result has already been added.')).is.true();
+    });
+
+    it('should not save result if no winner is found in command', () => {
+        //given
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', 'winner', 'loser']
+        };
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        //then
+        assert.that(callbackSpy.calledWith(null, 'Indicate winner by adding a + before their name.'));
     });
 });

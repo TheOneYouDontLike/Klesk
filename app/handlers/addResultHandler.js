@@ -62,6 +62,12 @@ let addResultHandler = function(persistence) {
         });
     }
 
+    function _noWinnerProvided(players) {
+        return !_.any(players, function(playerName) {
+            return _startsWith(playerName, '+');
+        });
+    }
+
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
@@ -69,6 +75,11 @@ let addResultHandler = function(persistence) {
 
             if (!_playerWasInMatch(parsedCommand.playerName, players)) {
                 callback(null, 'You were not in the match and cannot add result.');
+                return;
+            }
+
+            if(_noWinnerProvided(players)) {
+                callback(null, 'Indicate winner by adding a + before their name.');
                 return;
             }
 
