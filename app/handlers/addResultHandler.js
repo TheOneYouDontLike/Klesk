@@ -68,6 +68,12 @@ let addResultHandler = function(persistence) {
         });
     }
 
+    function _bothAreWinners(players) {
+        return _.all(players, function(playerName) {
+            return _startsWith(playerName, '+');
+        });
+    }
+
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
@@ -80,6 +86,11 @@ let addResultHandler = function(persistence) {
 
             if(_noWinnerProvided(players)) {
                 callback(null, 'Indicate winner by adding a + before their name.');
+                return;
+            }
+
+            if(_bothAreWinners(players)) {
+                callback(null, 'Both players could not have won, get your shit together.');
                 return;
             }
 

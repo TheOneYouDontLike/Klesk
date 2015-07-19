@@ -92,4 +92,19 @@ describe('addResultHandler', () => {
         assert.that(updateSpy.called).is.false();
         assert.that(callbackSpy.calledWith(null, 'Indicate winner by adding a + before their name.'));
     });
+
+    it('should not save result if both players in command are indicated as winners', () => {
+        //given
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', '+loser']
+        };
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        //then
+        assert.that(updateSpy.called).is.false();
+        assert.that(callbackSpy.calledWith(null, 'Both players could not have won, get your shit together.')).is.true();
+    });
 });
