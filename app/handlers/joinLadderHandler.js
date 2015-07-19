@@ -4,7 +4,7 @@ import _ from 'lodash';
 import logger from '../logger';
 
 const RESULT_MESSAGE = 'Added: ';
-const ALREADY_JOINED = 'You already joined this ladder.';
+const ALREADY_JOINED = 'You already joined this ladder ';
 
 let newLadderHandler = function(persistence) {
     function _thereAreNoOtherPlayers(matches) {
@@ -43,6 +43,10 @@ let newLadderHandler = function(persistence) {
         });
     }
 
+    function _decorate(playerName) {
+        return '`' + playerName + '`';
+    }
+
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
@@ -56,19 +60,19 @@ let newLadderHandler = function(persistence) {
                 if (_thereAreNoOtherPlayers(ladder.matches)) {
                     ladder.matches.push({ player1: playerName, player2: '', winner: '' });
 
-                    callback(null, RESULT_MESSAGE + playerName);
+                    callback(null, RESULT_MESSAGE + _decorate(playerName));
                     return;
                 }
 
                 if (_alreadyJoinedLadder(ladder.matches, playerName)) {
-                    callback(null, ALREADY_JOINED + playerName);
+                    callback(null, ALREADY_JOINED + _decorate(playerName));
                     return;
                 }
 
                 if (_thereIsOnlyOnePlayer(ladder.matches)) {
                     _addNewPlayerToMatch(ladder.matches[0], playerName);
 
-                    callback(null, RESULT_MESSAGE + playerName);
+                    callback(null, RESULT_MESSAGE + _decorate(playerName));
                     return;
                 }
 

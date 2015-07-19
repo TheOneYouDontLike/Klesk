@@ -10,8 +10,12 @@ let configure = function(app) {
     });
 
     app.post('/', (req, res) => {
+        logger(req.body);
+
         commandBus.dispatch(req.body, (error, response) => {
-            logger(req.body);
+            if (error) {
+                res.status(400).end(error.message);
+            }
             res.end(JSON.stringify(response));
         });
     });
