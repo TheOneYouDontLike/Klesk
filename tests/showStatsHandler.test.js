@@ -60,4 +60,31 @@ describe('showStatsHandler', () => {
         let errorMessage = callbackSpy.getCall(0).args[0].message;
         assert.that(errorMessage).is.equalTo('Please specify ladder name.');
     });
+
+    it('should not return stats if player did not join the ladder', () => {
+        // given
+        let ladderInRepository = {
+            name: parsedCommand.arguments[1],
+            matches: [
+                { player1: 'klesk', player2: 'sarge', winner: 'sarge' }
+            ]
+        };
+
+        let fakePersistence = {
+            query(filterFunction, callback) {
+                callback(null, [ ladderInRepository ]);
+            }
+        };
+
+        let handler = showStatsHandler(fakePersistence);
+
+        let callbackSpy = sinon.spy();
+
+        // when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        // then
+        let resultMessage = callbackSpy.getCall(0).args[1];
+        assert.that(resultMessage).is.equalTo('You didn\'t join this ladder.');
+    });
 });

@@ -55,6 +55,11 @@ let showStatsHandler = function(persistence) {
                     return match.player1 === playerName || match.player2 === playerName;
                 });
 
+                if (playerMatches.length === 0) {
+                    callback(null, 'You didn\'t join this ladder.');
+                    return;
+                }
+
                 let playerWins = _.filter(playerMatches, (match) => {
                     return match.winner === playerName;
                 });
