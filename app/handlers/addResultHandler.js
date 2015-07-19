@@ -50,10 +50,24 @@ let addResultHandler = function(persistence) {
         };
     }
 
+    function _playerWasInMatch(playerName, playersFromCommand) {
+        var sanitizedPlayers = _.map(playersFromCommand, _sanitizePlayerName);
+
+        return _.any(sanitizedPlayers, function(sanitizedPlayerName) {
+            return playerName === sanitizedPlayerName;
+        });
+    }
+
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
             let players = [parsedCommand.arguments[2], parsedCommand.arguments[3]];
+
+            if (!_playerWasInMatch(parsedCommand.playerName, players)) {
+                callback(null, 'You were not in the match and cannot add result.');
+                return;
+            }
+
             persistence.update(_getLadderPredicate(ladderName, players), _getFunctionToSetWinner(players, callback), function(error){
                 callback(error);
             });
