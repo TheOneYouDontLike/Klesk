@@ -4,7 +4,7 @@ import Persistence from 'JsonPersistence';
 
 import newLadderHandler from './handlers/newLadderHandler';
 import joinLadderHandler from './handlers/joinLadderHandler';
-import addResultHandler from './handlers/addResult';
+import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import config from '../config';

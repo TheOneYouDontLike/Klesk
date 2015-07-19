@@ -37,7 +37,7 @@ let addResultHandler = function(persistence) {
     }
 
     function _getWinner(players) {
-        return _sanitizePlayerName(_.find(players, function(player) { return _startsWith(player, '+')}));
+        return _sanitizePlayerName(_.find(players, function(player) { return _startsWith(player, '+'); }));
     }
 
     function _getFunctionToSetWinner(players, callback) {
@@ -47,13 +47,13 @@ let addResultHandler = function(persistence) {
             match.winner = _getWinner(players);
 
             callback(null, 'Result saved!');
-        }
+        };
     }
 
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
-            let players = [parsedCommand.arguments[2], parsedCommand.arguments[3]]
+            let players = [parsedCommand.arguments[2], parsedCommand.arguments[3]];
             persistence.update(_getLadderPredicate(ladderName, players), _getFunctionToSetWinner(players, callback), function(error){
                 callback(error);
             });
