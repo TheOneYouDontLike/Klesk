@@ -17,28 +17,27 @@ let addResultHandler = function(persistence) {
     }
 
     function _getMatch(ladder, players) {
-        let matches = _.find(ladder.matches, function(match) {
-            return _.any(players, function(player) { return _sanitizePlayerName(player) === match.player1 }) &&
-                   _.any(players, function(player) { return _sanitizePlayerName(player) === match.player2 })
+        let matchWithPlayers = _.find(ladder.matches, function(match) {
+            let player1InPlayers = _.any(players, function(player) { return _sanitizePlayerName(player) === match.player1; });
+            let player2InPlayers = _.any(players, function(player) { return _sanitizePlayerName(player) === match.player2; });
+
+            return player1InPlayers && player2InPlayers;
         });
 
-        if (matches && matches.length === 1) {
-            return matches[0];
-        }
-
-        return undefined;
+        return matchWithPlayers;
     }
 
     function _getLadderPredicate(ladderName, players) {
         return function(ladder) {
             let isGoodLadder = ladder.name === ladderName;
-            let match = _getMatch(ladder, players);
-            return isGoodLadder && match;
+            let hasMatch = Boolean(_getMatch(ladder, players));
+
+            return isGoodLadder && hasMatch;
         };
     }
 
     function _getWinner(players) {
-        return _.find(players, function(player) { return _startsWith(player, '+')})[0];
+        return _sanitizePlayerName(_.find(players, function(player) { return _startsWith(player, '+')}));
     }
 
     function _getFunctionToSetWinner(players, callback) {
