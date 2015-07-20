@@ -58,7 +58,7 @@ describe('showStatsHandler', () => {
 
         // then
         let errorMessage = callbackSpy.getCall(0).args[0].message;
-        assert.that(errorMessage).is.equalTo('Please specify ladder name.');
+        assert.that(errorMessage).is.equalTo('Specify ladder name.');
     });
 
     it('should not return stats if player did not join the ladder', () => {

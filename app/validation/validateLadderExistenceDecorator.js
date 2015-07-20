@@ -1,0 +1,34 @@
+'use strict';
+
+function _getFilter (ladderName) {
+    return (ladder) => {
+        return ladderName === ladder.name;
+    };
+}
+
+function _getQueryCallback (ladderName, commandHandlerToDecorate, parsedCommand, callback) {
+    return (error, ladders) => {
+        if (ladders.length === 0) {
+            callback(new Error('There is no ' + '`' + ladderName + '`' + ' ladder.'), null);
+            return;
+        }
+
+        commandHandlerToDecorate.makeItSo(parsedCommand, callback);
+    };
+}
+
+let validateLadderExistenceDecorator = function (commandHandlerToDecorate, persistence) {
+    return {
+        makeItSo(parsedCommand, callback) {
+            let ladderName = parsedCommand.arguments[1];
+
+            if (!ladderName) {
+                callback(new Error('Specify ladder name'), null);
+            }
+
+            persistence.query(_getFilter(ladderName), _getQueryCallback(ladderName, commandHandlerToDecorate, parsedCommand, callback));
+        }
+    };
+};
+
+export default validateLadderExistenceDecorator;

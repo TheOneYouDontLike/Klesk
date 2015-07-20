@@ -42,7 +42,7 @@ let showStatsHandler = function(persistence) {
             let playerName = parsedCommand.playerName;
 
             if (!ladderName) {
-                callback(new Error('Please specify ladder name.'), null);
+                callback(new Error('Specify ladder name.'), null);
                 return;
             }
 
