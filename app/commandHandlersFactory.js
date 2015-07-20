@@ -40,7 +40,7 @@ let getCommandHandler = function(commandType) {
             return validateLadderExistenceDecorator(showStatsHandler(jsonPersistence), jsonPersistence);
 
         case commandTypes.RANKING:
-            return rankingHandler(jsonPersistence);
+            return validateLadderExistenceDecorator(rankingHandler(jsonPersistence), jsonPersistence);
 
         default:
             return thisIsNotTheCommandYouAreLookingFor();
