@@ -6,6 +6,7 @@ import newLadderHandler from './handlers/newLadderHandler';
 import joinLadderHandler from './handlers/joinLadderHandler';
 import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
+import rankingHandler from './handlers/rankingHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
 import config from '../config';
@@ -20,7 +21,8 @@ let commandTypes = {
     NEWLADDER: 'newladder',
     JOINLADDER: 'joinladder',
     ADDRESULT: 'addresult',
-    SHOWSTATS: 'showstats'
+    SHOWSTATS: 'showstats',
+    RANKING: 'ranking'
 };
 
 let getCommandHandler = function(commandType) {
@@ -36,6 +38,9 @@ let getCommandHandler = function(commandType) {
 
         case commandTypes.SHOWSTATS:
             return validateLadderExistenceDecorator(showStatsHandler(jsonPersistence), jsonPersistence);
+
+        case commandTypes.RANKING:
+            return rankingHandler(jsonPersistence);
 
         default:
             return thisIsNotTheCommandYouAreLookingFor();
