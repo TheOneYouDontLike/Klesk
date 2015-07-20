@@ -29,6 +29,25 @@ let rankingHandler = function(persistence) {
         return message;
     }
 
+    function _putPlayedMatchesFirst(ladder) {
+        ladder.matches = ladder.matches.sort((a, b) => {
+            let aComesFirstInOrder = -1;
+            if (a.winner && !b.winner) {
+                return aComesFirstInOrder;
+            }
+
+            let bComesFirstInOrder = 1;
+            if (!a.winner && b.winner) {
+                return bComesFirstInOrder;
+            }
+
+            let leaveOrderAsIs = 0;
+            return leaveOrderAsIs;
+        });
+
+        return ladder;
+    }
+
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
@@ -39,7 +58,7 @@ let rankingHandler = function(persistence) {
                     return;
                 }
 
-                let ladderForRanking = filteredData[0];
+                let ladderForRanking = _putPlayedMatchesFirst(filteredData[0]);
 
                 callback(null, _prepareReturnMessageAboutAllMatches(ladderForRanking));
             });
