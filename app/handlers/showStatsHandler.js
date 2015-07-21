@@ -3,15 +3,17 @@
 import _ from 'lodash';
 import getMatchRepresentation from '../getMatchRepresentation';
 
-function _composeResultMessage(playerMatchesCount, playerWinsCount, playerMatches, requestingPlayerName) {
-    let playerLossCount = playerMatchesCount - playerWinsCount;
+function _composeResultMessage(playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName) {
+    let playerMatchesCount = playerMatches.length;
+
+    let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;
 
     let message = 'Matches: ' + playerMatchesCount + ' / Wins: ' + playerWinsCount  + ' / Losses: ' + playerLossCount;
 
-    let matchesStats = _.reduce(playerMatches, (result, match, matchIndex) => {
-        let matchMessage = 'Match ' + (matchIndex + 1) + ': ' + getMatchRepresentation(match);
+    let matchesStats = _.reduce(playerMatches, (result, match) => {
+        let matchMessage = getMatchRepresentation(match);
 
-        result += matchMessage + _newLineIfNeeded(playerMatches.length, matchIndex);
+        result += matchMessage;
 
         return result;
     }, '');
@@ -25,10 +27,6 @@ function _decorate(playerName, requestingPlayerName) {
     }
 
     return playerName;
-}
-
-function _newLineIfNeeded(playerMatchesCount, matchIndex) {
-    return playerMatchesCount !== matchIndex + 1 ? '\n' : '';
 }
 
 let showStatsHandler = function(persistence) {
@@ -60,7 +58,11 @@ let showStatsHandler = function(persistence) {
                     return match.winner === playerName;
                 });
 
-                let resultMessage = _composeResultMessage(playerMatches.length, playerWins.length, playerMatches, playerName);
+                let notPlayedMatches = _.filter(playerMatches, (match) => {
+                    return !match.winner;
+                });
+
+                let resultMessage = _composeResultMessage(playerWins.length, notPlayedMatches.length, playerMatches, playerName);
 
                 callback(null, resultMessage);
             };
