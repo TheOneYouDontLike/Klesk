@@ -1,6 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
+import getMatchRepresentation from '../getMatchRepresentation';
 
 function _composeResultMessage(playerMatchesCount, playerWinsCount, playerMatches, requestingPlayerName) {
     let playerLossCount = playerMatchesCount - playerWinsCount;
@@ -8,12 +9,7 @@ function _composeResultMessage(playerMatchesCount, playerWinsCount, playerMatche
     let message = 'Matches: ' + playerMatchesCount + ' / Wins: ' + playerWinsCount  + ' / Losses: ' + playerLossCount;
 
     let matchesStats = _.reduce(playerMatches, (result, match, matchIndex) => {
-        let matchMessage = 'Match ' + (matchIndex + 1) + ': ' +
-            _decorate(match.player1, requestingPlayerName) +
-            ' vs ' +
-            _decorate(match.player2, requestingPlayerName) +
-            ' / Winner: ' +
-            _decorate(match.winner, requestingPlayerName);
+        let matchMessage = 'Match ' + (matchIndex + 1) + ': ' + getMatchRepresentation(match);
 
         result += matchMessage + _newLineIfNeeded(playerMatches.length, matchIndex);
 

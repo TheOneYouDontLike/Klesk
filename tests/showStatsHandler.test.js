@@ -39,8 +39,8 @@ describe('showStatsHandler', () => {
 
         //then
         let expectedMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
-            'Match 1: `anarki` vs klesk / Winner: `anarki`\n' +
-            'Match 2: `anarki` vs sarge / Winner: sarge';
+            'Match 1: [`+anarki` vs klesk]\n' +
+            'Match 2: [anarki vs `+sarge`]';
 
         let actualMessage = callbackSpy.getCall(0).args[1];
 
