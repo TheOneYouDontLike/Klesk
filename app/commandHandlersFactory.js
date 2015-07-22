@@ -28,7 +28,12 @@ let commandTypes = {
 let getCommandHandler = function(commandType) {
     switch(commandType) {
         case commandTypes.NEWLADDER:
-            return newLadderHandler(ladderPersistence);
+            let mapPersistence = new Persistence(config.mapsFilename);
+            ladderPersistence.init((error => {
+                logger(error);
+            }));
+
+            return newLadderHandler(ladderPersistence, mapPersistence);
 
         case commandTypes.JOINLADDER:
             return validateLadderExistenceDecorator(joinLadderHandler(ladderPersistence), ladderPersistence);
