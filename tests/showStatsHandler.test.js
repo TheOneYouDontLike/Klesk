@@ -18,6 +18,7 @@ describe('showStatsHandler', () => {
     it('should return stats for player in ladder', () => {
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
             matches: [
                 { player1: 'anarki', player2: 'klesk', winner: 'anarki' },
                 { player1: 'anarki', player2: 'sarge', winner: 'sarge' },
@@ -35,8 +36,8 @@ describe('showStatsHandler', () => {
         let handler = showStatsHandler(fakePersistence);
 
         let expectedMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
-            '[`+anarki` vs klesk]' +
-            '[anarki vs `+sarge`]';
+            '[`+anarki` vs klesk on aerowalk]' +
+            '[anarki vs `+sarge` on aerowalk]';
 
         //when
         handler.makeItSo(parsedCommand, callbackSpy);
@@ -51,6 +52,7 @@ describe('showStatsHandler', () => {
         //given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
             matches: [
                 { player1: 'anarki', player2: 'klesk', winner: '' }
             ]
@@ -66,7 +68,7 @@ describe('showStatsHandler', () => {
         let handler = showStatsHandler(fakePersistence);
 
         let expectedMessage = 'Matches: 1 / Wins: 0 / Losses: 0\n' +
-            '[anarki vs klesk]';
+            '[anarki vs klesk on aerowalk]';
 
         //when
         handler.makeItSo(parsedCommand, callbackSpy);
@@ -95,6 +97,7 @@ describe('showStatsHandler', () => {
         // given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
             matches: [
                 { player1: 'klesk', player2: 'sarge', winner: 'sarge' }
             ]

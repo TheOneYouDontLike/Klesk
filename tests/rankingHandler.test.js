@@ -13,13 +13,14 @@ describe('ranking handler', () => {
 
         let ladderWithNotPlayedMatchFirst = {
             name: 'ladderName',
+            map: {name: 'aerowalk'},
             matches: [
                 {player1: 'unplayedMatchPlayer1', player2: 'unplayedMatchPlayer2', winner: ''},
                 {player1: 'playedMatchPlayer1', player2: 'playedMatchPlayer2', winner: 'playedMatchPlayer1'}
             ]
         }
 
-        let expectedResponseString = '`ladderName matches:`[`+playedMatchPlayer1` vs playedMatchPlayer2][unplayedMatchPlayer1 vs unplayedMatchPlayer2]';
+        let expectedResponseString = '`ladderName matches:`[`+playedMatchPlayer1` vs playedMatchPlayer2 on aerowalk][unplayedMatchPlayer1 vs unplayedMatchPlayer2 on aerowalk]';
 
         let fakePersistence = {
             query(filter, callback) {
