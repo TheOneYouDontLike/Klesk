@@ -14,6 +14,19 @@ function _prepareLadderExistsErrorMessage(ladderName) {
     return 'Ladder `' + ladderName + '` already exists.';
 }
 
+function _assignRandomMap(ladder, mapPersistence, callback) {
+    mapPersistence.getAll((error, maps) => {
+        if (error) {
+            callback(error);
+            return;
+        }
+
+        var randomMap = maps[Math.floor(Math.random()*maps.length)];
+
+        ladder.map = randomMap;
+    });
+}
+
 let newLadderHandler = function(ladderPersistence, mapPersistence) {
     return {
         makeItSo(parsedCommand, callback) {
@@ -31,20 +44,11 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
                     return;
                 }
 
-                let ladder = Ladder(ladderName);
+                let newLadder = Ladder(ladderName);
                 
-                mapPersistence.getAll((error, maps) => {
-                    if (error) {
-                        callback(error);
-                        return;
-                    }
+                _assignRandomMap(newLadder, mapPersistence, callback);
 
-                    var randomMap = maps[Math.floor(Math.random()*maps.length)];
-
-                    ladder.map = randomMap;
-                });
-
-                ladderPersistence.add(ladder, (error) => {
+                ladderPersistence.add(newLadder, (error) => {
                     if (error) {
                         callback(error.message, null);
                         return;
