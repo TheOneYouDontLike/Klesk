@@ -1,5 +1,7 @@
 'use strict';
 
+import getMatchRepresentation from '../getMatchRepresentation';
+
 let rankingHandler = function(persistence) {
     function _getLadderFilterFunction(ladderName) {
         return (element) => {
@@ -7,23 +9,11 @@ let rankingHandler = function(persistence) {
         };
     }
 
-    function _indicateWinner(playerName, match) {
-        if (playerName === match.winner) {
-            return '`+' + playerName + '`';
-        }
-
-        return playerName;
-    }
-
-    function _prepareMatchString(match) {
-        return _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match);
-    }
-
     function _prepareReturnMessageAboutAllMatches(ladder) {
         let message = '`' + ladder.name + ' matches:`';
 
         ladder.matches.forEach((match) => {
-            message += '[' + _prepareMatchString(match) + ']';
+            message += getMatchRepresentation(match);
         });
 
         return message;
