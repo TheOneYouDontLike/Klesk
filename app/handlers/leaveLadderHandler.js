@@ -18,6 +18,10 @@ function _getLadderUpdateFunction(playerName) {
     }
 } 
 
+function _getSuccessMessage(ladderName) {
+    return LEFT_LADDER + ' `' + ladderName + '`';
+}
+
 let leaveLadderHandler = function(persistence) {
     return {
         makeItSo(parsedCommand, callback) {
@@ -31,7 +35,7 @@ let leaveLadderHandler = function(persistence) {
             });
 
             if (updateSuccessfull) {
-                callback(null, LEFT_LADDER);
+                callback(null, _getSuccessMessage(ladderName));
             }
         }
     }

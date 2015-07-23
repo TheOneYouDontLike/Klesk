@@ -42,7 +42,7 @@ describe('leavLadderHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
         
         //then
-        assert.that(callbackSpy.calledWith(null, 'You are no longer a part of the ladder')).is.true();
+        assert.that(callbackSpy.calledWith(null, 'You are no longer a part of the ladder `ladderName`')).is.true();
         assert.that(ladderToUpdate.matches.length).is.equalTo(1);
         let onlyMatch = ladderToUpdate.matches[0];
         assert.that(onlyMatch.player1 === 'player1');
