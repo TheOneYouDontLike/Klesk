@@ -11,19 +11,12 @@ import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
 import config from '../config';
 import logger from './logger';
+import commandTypes from './commandTypes';
 
 let jsonPersistence = new Persistence(config.storageFilename);
 jsonPersistence.init((error) => {
     logger(error);
 });
-
-let commandTypes = {
-    NEWLADDER: 'newladder',
-    JOINLADDER: 'joinladder',
-    ADDRESULT: 'addresult',
-    SHOWSTATS: 'showstats',
-    RANKING: 'ranking'
-};
 
 let getCommandHandler = function(commandType) {
     switch(commandType) {

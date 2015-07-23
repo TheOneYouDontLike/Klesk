@@ -1,7 +1,7 @@
 'use strict';
 
-import _ from 'lodash';
-import handlersFactory from './commandHandlersFactory';
+import handlers from './commandHandlersFactory';
+import notifications from './notificationsFactory';
 
 export default {
     dispatch(command, callback) {
@@ -13,8 +13,9 @@ export default {
             arguments: parsedCommandArguments
         };
 
-        let commandHandler = handlersFactory.getCommandHandler(commandType);
-        let result = commandHandler.makeItSo(parsedCommand, callback);
+        let commandHandler = handlers.getCommandHandler(commandType);
+        let notification = notifications.getNotification(commandType);
+        let result = commandHandler.makeItSo(parsedCommand, callback, notification);
 
         return result;
     }

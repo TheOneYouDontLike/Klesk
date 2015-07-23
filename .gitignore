@@ -32,6 +32,7 @@ node_modules
 # Project specific
 *.sublime-workspace
 ladders.json
+config.js
 
 #merge files
 *.orig
