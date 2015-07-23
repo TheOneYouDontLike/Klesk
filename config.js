@@ -1,4 +1,5 @@
 export default {
     port: 1666,
-    storageFilename: 'ladders.json'
+    storageFilename: 'ladders.json',
+    mapsFilename: 'maps.json'
 };

@@ -5,21 +5,34 @@ import _ from 'lodash';
 function Ladder(name) {
     return {
         name: name,
+        map: '',
         matches: []
     };
 }
 
-let newLadderHandler = function(persistence) {
+function _prepareLadderExistsErrorMessage(ladderName) {
+    return 'Ladder `' + ladderName + '` already exists.';
+}
 
-    function _prepareLadderExistsErrorMessage(ladderName) {
-        return 'Ladder `' + ladderName + '` already exists.';
-    }
+function _assignRandomMap(ladder, mapPersistence, callback) {
+    mapPersistence.getAll((error, maps) => {
+        if (error) {
+            callback(error);
+            return;
+        }
 
+        var randomMap = maps[Math.floor(Math.random()*maps.length)];
+
+        ladder.map = randomMap;
+    });
+}
+
+let newLadderHandler = function(ladderPersistence, mapPersistence) {
     return {
         makeItSo(parsedCommand, callback) {
             let ladderName = parsedCommand.arguments[1];
 
-            persistence.getAll((error, data) => {
+            ladderPersistence.getAll((error, data) => {
                 if (error) {
                     callback(error.message, null);
                     return;
@@ -31,7 +44,11 @@ let newLadderHandler = function(persistence) {
                     return;
                 }
 
-                persistence.add(Ladder(ladderName), (error) => {
+                let newLadder = Ladder(ladderName);
+                
+                _assignRandomMap(newLadder, mapPersistence, callback);
+
+                ladderPersistence.add(newLadder, (error) => {
                     if (error) {
                         callback(error.message, null);
                         return;

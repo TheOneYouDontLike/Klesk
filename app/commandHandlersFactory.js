@@ -12,8 +12,8 @@ import validateLadderExistenceDecorator from './validation/validateLadderExisten
 import config from '../config';
 import logger from './logger';
 
-let jsonPersistence = new Persistence(config.storageFilename);
-jsonPersistence.init((error) => {
+let ladderPersistence = new Persistence(config.storageFilename);
+ladderPersistence.init((error) => {
     logger(error);
 });
 
@@ -28,19 +28,24 @@ let commandTypes = {
 let getCommandHandler = function(commandType) {
     switch(commandType) {
         case commandTypes.NEWLADDER:
-            return newLadderHandler(jsonPersistence);
+            let mapPersistence = new Persistence(config.mapsFilename);
+            ladderPersistence.init((error => {
+                logger(error);
+            }));
+
+            return newLadderHandler(ladderPersistence, mapPersistence);
 
         case commandTypes.JOINLADDER:
-            return validateLadderExistenceDecorator(joinLadderHandler(jsonPersistence), jsonPersistence);
+            return validateLadderExistenceDecorator(joinLadderHandler(ladderPersistence), ladderPersistence);
 
         case commandTypes.ADDRESULT:
-            return validateLadderExistenceDecorator(addResultHandler(jsonPersistence), jsonPersistence);
+            return validateLadderExistenceDecorator(addResultHandler(ladderPersistence), ladderPersistence);
 
         case commandTypes.SHOWSTATS:
-            return validateLadderExistenceDecorator(showStatsHandler(jsonPersistence), jsonPersistence);
+            return validateLadderExistenceDecorator(showStatsHandler(ladderPersistence), ladderPersistence);
 
         case commandTypes.RANKING:
-            return validateLadderExistenceDecorator(rankingHandler(jsonPersistence), jsonPersistence);
+            return validateLadderExistenceDecorator(rankingHandler(ladderPersistence), ladderPersistence);
 
         default:
             return thisIsNotTheCommandYouAreLookingFor();

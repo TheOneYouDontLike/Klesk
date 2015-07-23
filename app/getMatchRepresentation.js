@@ -8,8 +8,8 @@ function _indicateWinner(playerName, match) {
     return playerName;
 }
 
-function getMatchRepresentation(match) {
-    return '[' + _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match) + ']';
+function getMatchRepresentation(match, mapName) {
+    return '[' + _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match) + ' on ' + mapName + ']';
 };
 
 export default getMatchRepresentation;
