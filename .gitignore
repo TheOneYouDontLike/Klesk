@@ -35,3 +35,6 @@ ladders.json
 
 #merge files
 *.orig
+
+# Jetbarins specific
+.idea/
