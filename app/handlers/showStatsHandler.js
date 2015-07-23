@@ -1,38 +1,24 @@
 'use strict';
 
 import _ from 'lodash';
+import getMatchRepresentation from '../getMatchRepresentation';
 
-function _composeResultMessage(playerMatchesCount, playerWinsCount, playerMatches, requestingPlayerName) {
-    let playerLossCount = playerMatchesCount - playerWinsCount;
+function _composeResultMessage(playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName, mapName) {
+    let playerMatchesCount = playerMatches.length;
+
+    let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;
 
     let message = 'Matches: ' + playerMatchesCount + ' / Wins: ' + playerWinsCount  + ' / Losses: ' + playerLossCount;
 
-    let matchesStats = _.reduce(playerMatches, (result, match, matchIndex) => {
-        let matchMessage = 'Match ' + (matchIndex + 1) + ': ' +
-            _decorate(match.player1, requestingPlayerName) +
-            ' vs ' +
-            _decorate(match.player2, requestingPlayerName) +
-            ' / Winner: ' +
-            _decorate(match.winner, requestingPlayerName);
+    let matchesStats = _.reduce(playerMatches, (result, match) => {
+        let matchMessage = getMatchRepresentation(match, mapName);
 
-        result += matchMessage + _newLineIfNeeded(playerMatches.length, matchIndex);
+        result += matchMessage;
 
         return result;
     }, '');
 
     return message + '\n' + matchesStats;
-}
-
-function _decorate(playerName, requestingPlayerName) {
-    if (playerName === requestingPlayerName) {
-        return '`' + playerName + '`';
-    }
-
-    return playerName;
-}
-
-function _newLineIfNeeded(playerMatchesCount, matchIndex) {
-    return playerMatchesCount !== matchIndex + 1 ? '\n' : '';
 }
 
 let showStatsHandler = function(persistence) {
@@ -50,8 +36,9 @@ let showStatsHandler = function(persistence) {
                 return ladder.name === ladderName;
             };
 
-            let queryCallback = (error, ladder) => {
-                let playerMatches = _.filter(ladder[0].matches, (match) => {
+            let queryCallback = (error, filteredLadders) => {
+                let ladder = filteredLadders[0];
+                let playerMatches = _.filter(ladder.matches, (match) => {
                     return match.player1 === playerName || match.player2 === playerName;
                 });
 
@@ -64,7 +51,11 @@ let showStatsHandler = function(persistence) {
                     return match.winner === playerName;
                 });
 
-                let resultMessage = _composeResultMessage(playerMatches.length, playerWins.length, playerMatches, playerName);
+                let notPlayedMatches = _.filter(playerMatches, (match) => {
+                    return !match.winner;
+                });
+
+                let resultMessage = _composeResultMessage(playerWins.length, notPlayedMatches.length, playerMatches, playerName, ladder.map.name);
 
                 callback(null, resultMessage);
             };

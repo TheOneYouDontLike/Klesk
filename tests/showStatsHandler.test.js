@@ -18,6 +18,7 @@ describe('showStatsHandler', () => {
     it('should return stats for player in ladder', () => {
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
             matches: [
                 { player1: 'anarki', player2: 'klesk', winner: 'anarki' },
                 { player1: 'anarki', player2: 'sarge', winner: 'sarge' },
@@ -34,14 +35,45 @@ describe('showStatsHandler', () => {
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
+        let expectedMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
+            '[`+anarki` vs klesk on aerowalk]' +
+            '[anarki vs `+sarge` on aerowalk]';
+
         //when
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
-        let expectedMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
-            'Match 1: `anarki` vs klesk / Winner: `anarki`\n' +
-            'Match 2: `anarki` vs sarge / Winner: sarge';
+        let actualMessage = callbackSpy.getCall(0).args[1];
 
+        assert.that(actualMessage).is.equalTo(expectedMessage);
+    });
+
+    it('should not count not played matches as player losses', () => {
+        //given
+        let ladderInRepository = {
+            name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
+            matches: [
+                { player1: 'anarki', player2: 'klesk', winner: '' }
+            ]
+        };
+
+        let fakePersistence = {
+            query(filterFunction, callback) {
+                callback(null, [ ladderInRepository ]);
+            }
+        };
+
+        let callbackSpy = sinon.spy();
+        let handler = showStatsHandler(fakePersistence);
+
+        let expectedMessage = 'Matches: 1 / Wins: 0 / Losses: 0\n' +
+            '[anarki vs klesk on aerowalk]';
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        //then
         let actualMessage = callbackSpy.getCall(0).args[1];
 
         assert.that(actualMessage).is.equalTo(expectedMessage);
@@ -65,6 +97,7 @@ describe('showStatsHandler', () => {
         // given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
             matches: [
                 { player1: 'klesk', player2: 'sarge', winner: 'sarge' }
             ]
