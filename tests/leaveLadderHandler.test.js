@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import leaveLadderHandler from  '../app/handlers/leaveLadderHandler';
 import assert from 'assertthat';
 
-describe('leavLadderHandler', () => {
+describe('leaveLadderHandler', () => {
     it('should remove all matches with the player', () => {
         //given
         let ladderToUpdate = {
