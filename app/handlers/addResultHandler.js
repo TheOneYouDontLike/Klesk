@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-let addResultHandler = function(persistence) {
+let addResultHandler = function (persistence) {
 
     function _startsWith(element, startsWith) {
         return element.indexOf(startsWith) === 0;
@@ -18,8 +18,12 @@ let addResultHandler = function(persistence) {
 
     function _getMatch(ladder, players) {
         let matchWithPlayers = _.find(ladder.matches, (match) => {
-            let player1InPlayers = _.any(players, (player) => { return _sanitizePlayerName(player) === match.player1; });
-            let player2InPlayers = _.any(players, (player) => { return _sanitizePlayerName(player) === match.player2; });
+            let player1InPlayers = _.any(players, (player) => {
+                return _sanitizePlayerName(player) === match.player1;
+            });
+            let player2InPlayers = _.any(players, (player) => {
+                return _sanitizePlayerName(player) === match.player2;
+            });
 
             return player1InPlayers && player2InPlayers;
         });
@@ -37,14 +41,16 @@ let addResultHandler = function(persistence) {
     }
 
     function _getWinner(players) {
-        return _sanitizePlayerName(_.find(players, (player) => { return _startsWith(player, '+'); }));
+        return _sanitizePlayerName(_.find(players, (player) => {
+            return _startsWith(player, '+');
+        }));
     }
 
     function _getFunctionToSetWinner(players, callback) {
         return (ladder) => {
             var match = _getMatch(ladder, players);
 
-            if(match.winner) {
+            if (match.winner) {
                 callback(null, 'This match result has already been added.');
                 return;
             }
@@ -60,6 +66,17 @@ let addResultHandler = function(persistence) {
         return _.any(sanitizedPlayers, (sanitizedPlayerName) => {
             return playerName === sanitizedPlayerName;
         });
+    }
+
+    function _thereIsMatchWithPlayers(ladderName, players) {
+        let sanitizedPlayers = _.map(players, _sanitizePlayerName);
+        let bothPlayersWereInMatch = false;
+
+        persistence.query(_getLadderPredicate(ladderName, sanitizedPlayers), (error, matchWithPlayers) => {
+            bothPlayersWereInMatch = matchWithPlayers.length;
+        });
+
+        return bothPlayersWereInMatch;
     }
 
     function _noWinnerProvided(players) {
@@ -84,12 +101,17 @@ let addResultHandler = function(persistence) {
                 return;
             }
 
-            if(_noWinnerProvided(players)) {
+            if (!_thereIsMatchWithPlayers(ladderName, players)) {
+                callback(null, 'There is no match with given players in the ladder.');
+                return;
+            }
+
+            if (_noWinnerProvided(players)) {
                 callback(null, 'Indicate winner by adding a + before their name.');
                 return;
             }
 
-            if(_bothAreWinners(players)) {
+            if (_bothAreWinners(players)) {
                 callback(null, 'Both players could not have won, get your shit together.');
                 return;
             }
