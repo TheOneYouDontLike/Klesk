@@ -114,32 +114,10 @@ describe('addResultHandler', () => {
 
     it('should not save result if match with both players does not exist in ladder', () => {
         //given
-        let ladderToUpdate = {
-            name: 'ladderName',
-            matches: [
-                { player1: 'winner', player2: 'loser', winner: '' }
-            ]
-        };
-
         let parsedCommand = {
             playerName: 'winner',
             arguments: ['addresult', 'laddername', '+winner', 'inexistentPlayer']
         };
-
-        let fsMock = {
-            readFile(fileName, callback) {
-                callback(null, JSON.stringify([ladderToUpdate]));
-            },
-            writeFile(filename, data) {
-                ladderToUpdate = JSON.parse(data)[0];
-            }
-        };
-
-        let persistence = new Persistence('filename', fsMock);
-
-        let handler = addResultHandler(persistence);
-
-        let callbackSpy = sinon.spy();
 
         //when
         handler.makeItSo(parsedCommand, callbackSpy);
