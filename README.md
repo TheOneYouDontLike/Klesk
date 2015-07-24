@@ -21,3 +21,23 @@ Running and testing application requires: mocha, webpack and nodemon.
 `webpack` (or `webpack -w` for watching files) for building the app.
 
 `npm run watch` for watching build output and restarting service.
+
+Before building create **config.js** file in the root directory.
+
+```
+export default {
+  port: 1666,
+  storageFilename: 'ladders.json',
+  mapsFilename: 'maps.json'
+};
+```
+
+maps.json schema example:
+
+```
+[
+  { "name": "Campgrounds" },
+  { "name": "Aerowalk" }
+  ...
+]
+```
