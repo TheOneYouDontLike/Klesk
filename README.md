@@ -1,26 +1,23 @@
 # Klesk
-
-## About
-Klesk is a backend application to store and return ladder data for Quake Live.
+Klesk is a Slack service to store and return ladder data for Quake Live or whatever game you like.
 
 ## Features
 - Creating new ladder
 - Joining existing ladder
+- Adding match result
 - Showing user statistics for ladder
 - Showing ranking
-- Adding match result
 
 ## Installation
 Simply run inside Klesk directory:
 
 `npm install`
 
-Also running and testing application requires: mocha, webpack and nodemon.
+Running and testing application requires: mocha, webpack and nodemon.
 
 `npm install -g mocha webpack nodemon`
 
-## Running Klesk
-Klesk requires `webpack` and `node`/`nodemon` to run.
-
 ### Running Klesk for development
-`webpack` and `npm run watch`
+`webpack` (or `webpack -w` for watching files) for building the app.
+
+`npm run watch` for watching build output and restarting service.
