@@ -6,27 +6,27 @@ function _getFilter (ladderName) {
     };
 }
 
-function _getQueryCallback (ladderName, commandHandlerToDecorate, parsedCommand, callback) {
+function _getQueryCallback (ladderName, commandHandlerToDecorate, parsedCommand, callback, notificationCallback) {
     return (error, ladders) => {
         if (ladders.length === 0) {
             callback(new Error('There is no ' + '`' + ladderName + '`' + ' ladder.'), null);
             return;
         }
 
-        commandHandlerToDecorate.makeItSo(parsedCommand, callback);
+        commandHandlerToDecorate.makeItSo(parsedCommand, callback, notificationCallback);
     };
 }
 
 let validateLadderExistenceDecorator = function (commandHandlerToDecorate, persistence) {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo(parsedCommand, callback, notificationCallback) {
             let ladderName = parsedCommand.arguments[1];
 
             if (!ladderName) {
                 callback(new Error('Specify ladder name'), null);
             }
 
-            persistence.query(_getFilter(ladderName), _getQueryCallback(ladderName, commandHandlerToDecorate, parsedCommand, callback));
+            persistence.query(_getFilter(ladderName), _getQueryCallback(ladderName, commandHandlerToDecorate, parsedCommand, callback, notificationCallback));
         }
     };
 };

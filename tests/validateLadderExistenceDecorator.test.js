@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import validateLadderExistenceDecorator from '../app/validation/validateLadderExistenceDecorator.js';
 
 describe('validateLadderExistenceDecorator', () => {
-    it('should call decorated handler when ladder exists', () => {
+    it('should call decorated handler and pass down notification callback when ladder exists', () => {
         // given
         let dummyLadderThatShouldPassFiltering = {
             name: 'normal'
@@ -29,12 +29,13 @@ describe('validateLadderExistenceDecorator', () => {
             arguments: ['somecommand', 'normal', 'something']
         };
         let decoratedHandlerCallback = () => {};
+        let decoratedHandlerNotificationCallback = () => {};
 
         // when
-        decorator.makeItSo(parsedCommand, decoratedHandlerCallback);
+        decorator.makeItSo(parsedCommand, decoratedHandlerCallback, decoratedHandlerNotificationCallback);
 
         // then
-        assert.that(decoratedHandlerSpy.makeItSo.calledWith(parsedCommand, decoratedHandlerCallback)).is.true();
+        assert.that(decoratedHandlerSpy.makeItSo.calledWith(parsedCommand, decoratedHandlerCallback, decoratedHandlerNotificationCallback)).is.true();
     });
 
     it('should return error when ladder does not exist', () => {

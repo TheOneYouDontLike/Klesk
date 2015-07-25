@@ -48,7 +48,7 @@ let newLadderHandler = function(persistence) {
     }
 
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo(parsedCommand, callback, notificationCallback) {
             let ladderName = parsedCommand.arguments[1];
             let playerName = parsedCommand.playerName;
 
@@ -89,10 +89,11 @@ let newLadderHandler = function(persistence) {
                 ladder.matches = matches;
 
                 callback(null, RESULT_MESSAGE + playerName);
+                notificationCallback('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
             };
 
             persistence.update(queryLadder, updateCallback, (error) => {
-                if (error) { 
+                if (error) {
                     logger(error);
                 }
             });

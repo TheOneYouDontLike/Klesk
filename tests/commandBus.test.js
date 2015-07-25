@@ -21,7 +21,7 @@ describe('commandBus', () => {
             }
         };
 
-        commandBus.__Rewire__('handlersFactory', fakeFactory);
+        commandBus.__Rewire__('handlers', fakeFactory);
 
         // when
         commandBus.dispatch(someCommand, (error, result) => {

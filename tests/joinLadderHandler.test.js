@@ -29,7 +29,7 @@ describe('joinLadderHandler', () => {
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {});
+        handler.makeItSo(parsedCommand, () => {}, () => {});
 
         // then
         let expectedMatches = [

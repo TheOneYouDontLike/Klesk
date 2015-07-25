@@ -8,7 +8,8 @@ import config from '../config';
 function userHasJoined(message) {
     let notificationMessage = {
         username: 'Klesk',
-        text: message
+        text: message,
+        channel: config.notificationChannel
     };
 
     request
