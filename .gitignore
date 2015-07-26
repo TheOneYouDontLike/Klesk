@@ -36,3 +36,6 @@ config.js
 
 #merge files
 *.orig
+
+# Jetbarins specific
+.idea/

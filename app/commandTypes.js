@@ -5,5 +5,6 @@ export default {
     JOINLADDER: 'joinladder',
     ADDRESULT: 'addresult',
     SHOWSTATS: 'showstats',
+    LEAVELADDER: 'leaveladder',
     RANKING: 'ranking'
 };

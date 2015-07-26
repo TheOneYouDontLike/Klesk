@@ -4,6 +4,7 @@ import Persistence from 'JsonPersistence';
 
 import newLadderHandler from './handlers/newLadderHandler';
 import joinLadderHandler from './handlers/joinLadderHandler';
+import leaveLadderHandler from './handlers/leaveLadderHandler';
 import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
 import rankingHandler from './handlers/rankingHandler';
@@ -18,6 +19,7 @@ ladderPersistence.init((error) => {
     logger(error);
 });
 
+
 let getCommandHandler = function(commandType) {
     switch(commandType) {
         case commandTypes.NEWLADDER:
@@ -30,6 +32,9 @@ let getCommandHandler = function(commandType) {
 
         case commandTypes.JOINLADDER:
             return validateLadderExistenceDecorator(joinLadderHandler(ladderPersistence), ladderPersistence);
+
+        case commandTypes.LEAVELADDER:
+            return validateLadderExistenceDecorator(leaveLadderHandler(ladderPersistence), ladderPersistence);
 
         case commandTypes.ADDRESULT:
             return validateLadderExistenceDecorator(addResultHandler(ladderPersistence), ladderPersistence);
