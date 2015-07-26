@@ -48,7 +48,7 @@ let newLadderHandler = function(persistence) {
     }
 
     return {
-        makeItSo(parsedCommand, callback, notificationCallback) {
+        makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
             let playerName = parsedCommand.playerName;
 
@@ -61,6 +61,7 @@ let newLadderHandler = function(persistence) {
                     ladder.matches.push({ player1: playerName, player2: '', winner: '' });
 
                     callback(null, RESULT_MESSAGE + _decorate(playerName));
+                    notification.send('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
                     return;
                 }
 
@@ -73,6 +74,7 @@ let newLadderHandler = function(persistence) {
                     _addNewPlayerToMatch(ladder.matches[0], playerName);
 
                     callback(null, RESULT_MESSAGE + _decorate(playerName));
+                    notification.send('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
                     return;
                 }
 
@@ -89,7 +91,7 @@ let newLadderHandler = function(persistence) {
                 ladder.matches = matches;
 
                 callback(null, RESULT_MESSAGE + playerName);
-                notificationCallback('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
+                notification.send('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
             };
 
             persistence.update(queryLadder, updateCallback, (error) => {

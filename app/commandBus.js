@@ -1,7 +1,7 @@
 'use strict';
 
 import handlers from './commandHandlersFactory';
-import notifications from './notificationsFactory';
+import notification from './notification';
 
 export default {
     dispatch(command, callback) {
@@ -14,7 +14,6 @@ export default {
         };
 
         let commandHandler = handlers.getCommandHandler(commandType);
-        let notification = notifications.getNotification(commandType);
         let result = commandHandler.makeItSo(parsedCommand, callback, notification);
 
         return result;

@@ -3,7 +3,7 @@
 import assert from 'assertthat';
 import sinon from 'sinon';
 import request from 'superagent';
-import userHasJoined from '../app/notifications/userHasJoinedNotification.js';
+import notification from '../app/notification.js';
 
 let config = {
     notificationWebhookAddress: 'http://fakeNotificationAddress.com/notify',
@@ -11,9 +11,9 @@ let config = {
     botUsername: 'Klesk'
 };
 
-userHasJoined.__Rewire__('config', config);
+notification.__Rewire__('config', config);
 
-describe('userHasJoinedNotification', function() {
+describe('notification', function() {
     let requestSpy;
 
     beforeEach(() => {
@@ -24,11 +24,9 @@ describe('userHasJoinedNotification', function() {
         request.post.restore();
     });
 
-    it('should send notification about the user joining ladder', function() {
+    it('should be sent when user joins ladder', function() {
         // when
-        try {
-            userHasJoined('user has joined');
-        } catch(error) {}
+        notification.send('user has joined');
 
         // then
         let expectedNotificationMessage = {

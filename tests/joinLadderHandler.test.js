@@ -2,6 +2,7 @@
 
 import assert from 'assertthat';
 import _ from 'lodash';
+import sinon from 'sinon';
 import joinLadderHandler from '../app/handlers/joinLadderHandler.js';
 
 let parsedCommand = {
@@ -29,7 +30,7 @@ describe('joinLadderHandler', () => {
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, () => {});
+        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
 
         // then
         let expectedMatches = [
@@ -61,7 +62,7 @@ describe('joinLadderHandler', () => {
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {});
+        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
 
         // then
         let expectedMatches = [
@@ -86,7 +87,7 @@ describe('joinLadderHandler', () => {
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {});
+        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
 
         // then
         let expectedMatches = [
@@ -94,6 +95,31 @@ describe('joinLadderHandler', () => {
         ];
 
         assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+    });
+
+    it('should send notification when user joins the ladder', () => {
+        // given
+        let ladderToUpdate = {
+            name: 'normal',
+            matches: []
+        };
+
+        let fakePersistence = {
+            update(filterDelegate, updateDelegate) {
+                updateDelegate(ladderToUpdate);
+            }
+        };
+        let handler = joinLadderHandler(fakePersistence);
+
+        let sendSpy = sinon.spy();
+
+        // when
+        handler.makeItSo(parsedCommand, () => {}, { send: sendSpy });
+
+        // then
+        let expectedMessage = 'Player `newPlayer` has joined the ladder `normal`';
+        assert.that(sendSpy.calledWith(expectedMessage)).is.true();
+        assert.that(sendSpy.calledOnce).is.true();
     });
 
     it('should not join ladder if already joined', () => {

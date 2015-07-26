@@ -1,10 +1,10 @@
 'use strict';
 
 import request from 'superagent';
-import logger from '../logger';
-import config from '../../config';
+import logger from './logger';
+import config from '../config';
 
-function userHasJoined(message) {
+function send(message) {
     let notificationMessage = {
         username: config.botUsername,
         text: message,
@@ -21,4 +21,6 @@ function userHasJoined(message) {
         });
 }
 
-export default userHasJoined;
+export default {
+    send: send
+};
