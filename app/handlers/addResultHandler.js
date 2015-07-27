@@ -48,7 +48,7 @@ let addResultHandler = function (persistence) {
 
     function _getFunctionToSetWinner(players, callback) {
         return (ladder) => {
-            var match = _getMatch(ladder, players);
+            let match = _getMatch(ladder, players);
 
             if (match.winner) {
                 callback(null, 'This match result has already been added.');
@@ -66,17 +66,6 @@ let addResultHandler = function (persistence) {
         return _.any(sanitizedPlayers, (sanitizedPlayerName) => {
             return playerName === sanitizedPlayerName;
         });
-    }
-
-    function _thereIsMatchWithPlayers(ladderName, players) {
-        let sanitizedPlayers = _.map(players, _sanitizePlayerName);
-        let bothPlayersWereInMatch = false;
-
-        persistence.query(_getLadderPredicate(ladderName, sanitizedPlayers), (error, matchWithPlayers) => {
-            bothPlayersWereInMatch = matchWithPlayers.length;
-        });
-
-        return bothPlayersWereInMatch;
     }
 
     function _noWinnerProvided(players) {
@@ -101,11 +90,6 @@ let addResultHandler = function (persistence) {
                 return;
             }
 
-            if (!_thereIsMatchWithPlayers(ladderName, players)) {
-                callback(null, 'There is no match with given players in the ladder.');
-                return;
-            }
-
             if (_noWinnerProvided(players)) {
                 callback(null, 'Indicate winner by adding a + before their name.');
                 return;
@@ -116,9 +100,18 @@ let addResultHandler = function (persistence) {
                 return;
             }
 
-            persistence.update(_getLadderPredicate(ladderName, players), _getFunctionToSetWinner(players, callback), (error) => {
-                callback(error);
-            });
+            persistence.update(
+                _getLadderPredicate(ladderName, players),
+                _getFunctionToSetWinner(players, callback),
+                (error) => {
+                    callback(error);
+                },
+                (ladderNotFoundError) => {
+                    if (ladderNotFoundError) {
+                        callback(null, 'There is no match with given players in the ladder.');
+                    }
+                }
+            );
         }
     };
 
