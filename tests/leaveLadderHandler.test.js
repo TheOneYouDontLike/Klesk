@@ -38,7 +38,7 @@ describe('leaveLadderHandler', () => {
         let callbackSpy = sinon.spy();
 
         //when
-        handler.makeItSo(parsedCommand, callbackSpy);
+        handler.makeItSo(parsedCommand, callbackSpy, { send: () => {} });
 
         //then
         assert.that(callbackSpy.calledWith(null, 'You are no longer a part of the ladder `ladderName`')).is.true();
@@ -49,7 +49,7 @@ describe('leaveLadderHandler', () => {
         assert.that(onlyMatch.winner = '');
     });
 
-    it.only('should send notification when player is leaving', () => {
+    it('should send notification when player is leaving', () => {
         //given
         let ladderToUpdate = {
             name: 'ladderName',
