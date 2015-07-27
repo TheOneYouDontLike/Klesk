@@ -12,18 +12,18 @@ let callbackSpy = {};
 
 describe('addResultHandler', () => {
     beforeEach(() => {
-        ladder = 
+        ladder =
         {
-            name: 'laddername', 
+            name: 'laddername',
             matches: [{player1: 'winner', player2: 'loser', winner: ''}]
         };
 
         fakePersistence = {
-            update(query, update, callback) {
-                query(ladder); update(ladder); callback();
+            update(queryFunction, updateFunction, callback) {
+                queryFunction(ladder); updateFunction(ladder); callback();
             }
         };
-        updateSpy = sinon.spy(fakePersistence, "update");
+        updateSpy = sinon.spy(fakePersistence, 'update');
 
         handler = addResultHandler(fakePersistence);
         callbackSpy = sinon.spy();
@@ -37,11 +37,28 @@ describe('addResultHandler', () => {
         };
 
         //when
-        handler.makeItSo(parsedCommand, callbackSpy);
+        handler.makeItSo(parsedCommand, callbackSpy, { send: () => {} });
 
         //then
         assert.that(updateSpy.called).is.true();
         assert.that(callbackSpy.calledWith(null, 'Result saved!')).is.true();
+    });
+
+    it('should send notification when adding result', () => {
+        //given
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', 'loser']
+        };
+
+        let notificationSpy = sinon.spy();
+
+        //when
+        handler.makeItSo(parsedCommand, () => {}, { send: notificationSpy });
+
+        //then
+        console.log(notificationSpy.getCall(0).args);
+        assert.that(notificationSpy.calledWith('`winner` has won a match with `loser` on ladder `laddername`')).is.true();
     });
 
     it('should not allow adding results by player who was not in match', () => {
@@ -67,7 +84,7 @@ describe('addResultHandler', () => {
         };
 
         ladder = {
-            name: 'laddername', 
+            name: 'laddername',
             matches: [{player1: 'winner', player2: 'loser', winner: 'winner'}]
         };
 
