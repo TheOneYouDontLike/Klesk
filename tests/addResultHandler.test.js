@@ -57,7 +57,6 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, () => {}, { send: notificationSpy });
 
         //then
-        console.log(notificationSpy.getCall(0).args);
         assert.that(notificationSpy.calledWith('`winner` has won a match with `loser` on ladder `laddername`')).is.true();
     });
 
