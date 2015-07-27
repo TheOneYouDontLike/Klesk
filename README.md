@@ -28,7 +28,9 @@ Before building create **config.js** file in the root directory.
 export default {
   port: 1666,
   storageFilename: 'ladders.json',
-  mapsFilename: 'maps.json'
+  mapsFilename: 'maps.json',
+  notificationChannel: '#notifications',
+  botUsername: 'Klesk'
 };
 ```
 
