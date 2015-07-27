@@ -2,7 +2,6 @@
 
 import assert from 'assertthat';
 import sinon from 'sinon';
-import _ from 'lodash';
 import newLadderHandler from '../app/handlers/newLadderHandler.js';
 
 let parsedCommand = {
@@ -12,9 +11,11 @@ let parsedCommand = {
 let mapList = [{name: 'aerowalk'}];
 let fakeMapPersistence = {
     getAll(callback) {
-        callback(null, mapList)
+        callback(null, mapList);
     }
-}
+};
+
+let emptyNotification = { send: () => {} };
 
 describe('newLadderHandler', () => {
     it('should return result with new ladder name', () => {
@@ -32,10 +33,31 @@ describe('newLadderHandler', () => {
         let callback = sinon.spy();
         // when
 
-        handler.makeItSo(parsedCommand, callback);
+        handler.makeItSo(parsedCommand, callback, emptyNotification);
 
         // then
         assert.that(callback.calledWith(null, 'Created new ladder: normal')).is.true();
+    });
+
+    it('should send notification about new ladder', () => {
+        // given
+        let fakeLadderPersistence = {
+            getAll(callback) {
+                callback(null, []);
+            },
+            add(ladder, callback) {
+                callback(null);
+            }
+        };
+        let handler = newLadderHandler(fakeLadderPersistence, fakeMapPersistence);
+
+        let notificationCallback = sinon.spy();
+        // when
+
+        handler.makeItSo(parsedCommand, () => {}, { send: notificationCallback });
+
+        // then
+        assert.that(notificationCallback.calledWith('Created new ladder: normal')).is.true();
     });
 
     it('should create new ladder using underlying repo', () => {
@@ -100,8 +122,8 @@ describe('newLadderHandler', () => {
         let handler = newLadderHandler(fakeLadderPersistence, fakeMapPersistence);
 
         //when
-        handler.makeItSo(parsedCommand, callbackSpy);
-        
+        handler.makeItSo(parsedCommand, callbackSpy, emptyNotification);
+
         //then
         let addedLadder = addLadderSpy.getCall(0).args[0];
         assert.that(mapList).is.containing(addedLadder.map);

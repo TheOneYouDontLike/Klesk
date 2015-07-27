@@ -29,7 +29,7 @@ function _assignRandomMap(ladder, mapPersistence, callback) {
 
 let newLadderHandler = function(ladderPersistence, mapPersistence) {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
 
             ladderPersistence.getAll((error, data) => {
@@ -45,7 +45,7 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
                 }
 
                 let newLadder = Ladder(ladderName);
-                
+
                 _assignRandomMap(newLadder, mapPersistence, callback);
 
                 ladderPersistence.add(newLadder, (error) => {
@@ -54,7 +54,9 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
                         return;
                     }
 
-                    callback(null, 'Created new ladder: ' + ladderName);
+                    let message = 'Created new ladder: ' + ladderName;
+                    callback(null, message);
+                    notification.send(message);
                 });
             });
         }
