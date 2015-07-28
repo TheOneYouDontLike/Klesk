@@ -20,8 +20,12 @@ function _sanitizePlayerName(playerNameWithIndicators) {
 
 function _getMatch(ladder, players) {
     let matchWithPlayers = _.find(ladder.matches, (match) => {
-        let player1InPlayers = _.any(players, (player) => { return _sanitizePlayerName(player) === match.player1; });
-        let player2InPlayers = _.any(players, (player) => { return _sanitizePlayerName(player) === match.player2; });
+            let player1InPlayers = _.any(players, (player) => {
+                return _sanitizePlayerName(player) === match.player1;
+            });
+            let player2InPlayers = _.any(players, (player) => {
+                return _sanitizePlayerName(player) === match.player2;
+            });
 
         return player1InPlayers && player2InPlayers;
     });
@@ -39,7 +43,9 @@ function _getLadderPredicate(ladderName, players) {
 }
 
 function _getWinner(players) {
-    return _sanitizePlayerName(_.find(players, (player) => { return _startsWith(player, '+'); }));
+        return _sanitizePlayerName(_.find(players, (player) => {
+            return _startsWith(player, '+');
+        }));
 }
 
 function _getLoser(players) {
@@ -48,9 +54,9 @@ function _getLoser(players) {
 
 function _getFunctionToSetWinner(players, callback, notification) {
     return (ladder) => {
-        var match = _getMatch(ladder, players);
+            let match = _getMatch(ladder, players);
 
-        if(match.winner) {
+        if (match.winner) {
             callback(null, 'This match result has already been added.');
             return;
         }
@@ -94,19 +100,28 @@ let addResultHandler = function(persistence) {
                 return;
             }
 
-            if(_noWinnerProvided(players)) {
+            if (_noWinnerProvided(players)) {
                 callback(null, 'Indicate winner by adding a + before their name.');
                 return;
             }
 
-            if(_bothAreWinners(players)) {
+            if (_bothAreWinners(players)) {
                 callback(null, 'Both players could not have won, get your shit together.');
                 return;
             }
 
-            persistence.update(_getLadderPredicate(ladderName, players), _getFunctionToSetWinner(players, callback, notification), (error) => {
-                callback(error);
-            });
+            persistence.update(
+                _getLadderPredicate(ladderName, players),
+                _getFunctionToSetWinner(players, callback, notification),
+                (error) => {
+                    callback(error);
+                },
+                (ladderNotFoundError) => {
+                    if (ladderNotFoundError) {
+                        callback(null, 'There is no match with given players in the ladder.');
+                    }
+                }
+            );
         }
     };
 
