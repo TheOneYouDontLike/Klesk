@@ -3,29 +3,36 @@
 import assert from 'assertthat';
 import sinon from 'sinon';
 import addResultHandler from '../app/handlers/addResultHandler';
+import Persistence from 'JsonPersistence';
 
 let ladder = {};
 let fakePersistence = {};
-let updateSpy = {};
 let handler = {};
 let callbackSpy = {};
+let dummyNotification = { send: () => {} };
 
 describe('addResultHandler', () => {
     beforeEach(() => {
-        ladder =
-        {
+        ladder = {
             name: 'laddername',
-            matches: [{player1: 'winner', player2: 'loser', winner: ''}]
+            matches: [
+                { player1: 'winner', player2: 'loser', winner: '' }
+            ]
         };
 
-        fakePersistence = {
-            update(queryFunction, updateFunction, callback) {
-                queryFunction(ladder); updateFunction(ladder); callback();
+        let fsMock = {
+            readFile(fileName, callback) {
+                callback(null, JSON.stringify([ladder]));
+            },
+            writeFile(filename, data) {
+                ladder = JSON.parse(data)[0];
             }
         };
-        updateSpy = sinon.spy(fakePersistence, 'update');
+
+        fakePersistence = new Persistence('filename', fsMock);
 
         handler = addResultHandler(fakePersistence);
+
         callbackSpy = sinon.spy();
     });
 
@@ -37,10 +44,10 @@ describe('addResultHandler', () => {
         };
 
         //when
-        handler.makeItSo(parsedCommand, callbackSpy, { send: () => {} });
+        handler.makeItSo(parsedCommand, callbackSpy, dummyNotification);
 
         //then
-        assert.that(updateSpy.called).is.true();
+        assert.that(ladder.matches[0].winner).is.equalTo('winner');
         assert.that(callbackSpy.calledWith(null, 'Result saved!')).is.true();
     });
 
@@ -71,20 +78,20 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
-        assert.that(updateSpy.called).is.false();
+        assert.that(ladder.matches[0].winner).is.equalTo('');
         assert.that(callbackSpy.calledWith(null, 'You were not in the match and cannot add result.')).is.true();
     });
 
     it('should not save match result twice', () => {
+        ladder = {
+            name: 'laddername',
+            matches: [{player1: 'winner', player2: 'loser', winner: 'winner'}]
+        };
+
         //given
         let parsedCommand = {
             playerName: 'winner',
             arguments: ['addresult', 'laddername', '+winner', 'loser']
-        };
-
-        ladder = {
-            name: 'laddername',
-            matches: [{player1: 'winner', player2: 'loser', winner: 'winner'}]
         };
 
         //when
@@ -105,7 +112,6 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
-        assert.that(updateSpy.called).is.false();
         assert.that(callbackSpy.calledWith(null, 'Indicate winner by adding a + before their name.'));
     });
 
@@ -120,7 +126,20 @@ describe('addResultHandler', () => {
         handler.makeItSo(parsedCommand, callbackSpy);
 
         //then
-        assert.that(updateSpy.called).is.false();
         assert.that(callbackSpy.calledWith(null, 'Both players could not have won, get your shit together.')).is.true();
+    });
+
+    it('should not save result if match with both players does not exist in ladder', () => {
+        //given
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', 'inexistentPlayer']
+        };
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        //then
+        assert.that(callbackSpy.calledWith(null, 'There is no match with given players in the ladder.')).is.true();
     });
 });
