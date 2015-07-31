@@ -29,6 +29,7 @@ export default {
   port: 1666,
   storageFilename: 'ladders.json',
   mapsFilename: 'maps.json',
+  notificationWebhookAddress: 'https://your-incoming-slack-hook',
   notificationChannel: '#notifications',
   botUsername: 'Klesk'
 };
