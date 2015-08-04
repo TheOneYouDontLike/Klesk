@@ -7,6 +7,7 @@ import config from '../config';
 function send(message) {
     let notificationMessage = {
         username: config.botUsername,
+        icon_url: config.botIconUrl,
         text: message,
         channel: config.notificationChannel
     };

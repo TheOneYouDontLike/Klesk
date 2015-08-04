@@ -23,14 +23,16 @@ Running and testing application requires: mocha, webpack and nodemon.
 `npm run watch` for watching build output and restarting service.
 
 Before building create **config.js** file in the root directory.
+[] means the setting is optional
 
 ```
 export default {
   port: 1666,
   storageFilename: 'ladders.json',
   mapsFilename: 'maps.json',
-  notificationChannel: '#notifications',
-  botUsername: 'Klesk'
+  [notificationChannel: '#notifications',] //if not set then slack incoming-webhook default channel will be used
+  [botUsername: 'Klesk',] //if not set then slack incoming-webhook name will be used
+  [botIconUrl: 'http://absolute-path-to-your-bot-icon']
 };
 ```
 
