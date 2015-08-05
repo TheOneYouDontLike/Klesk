@@ -30,6 +30,7 @@ export default {
   port: 1666,
   storageFilename: 'ladders.json',
   mapsFilename: 'maps.json',
+  notificationWebhookAddress: 'https://your-incoming-slack-hook',
   notificationChannel: '#notifications', //OPTIONAL: if not set then slack incoming-webhook default channel will be used
   botUsername: 'Klesk', //OPTIONAL: if not set then slack incoming-webhook name will be used
   botIconUrl: 'http://absolute-path-to-your-bot-icon' //OPTIONAL: if not set slack default bot icon will be used
