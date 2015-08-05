@@ -36,7 +36,7 @@ describe('addResultHandler', () => {
         callbackSpy = sinon.spy();
     });
 
-    it('should save result of the match', () => {
+    it('should save result of the match without provided score', () => {
         //given
         let parsedCommand = {
             playerName: 'winner',
@@ -48,6 +48,23 @@ describe('addResultHandler', () => {
 
         //then
         assert.that(ladder.matches[0].winner).is.equalTo('winner');
+        assert.that(ladder.matches[0].score).is.undefined();
+        assert.that(callbackSpy.calledWith(null, 'Result saved!')).is.true();
+    });
+
+    it('should save third command argument as match score if provided', () => {
+        //given
+        let matchScore = '33:20';
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', 'loser', matchScore]
+        };
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy, dummyNotification);
+
+        //then
+        assert.that(ladder.matches[0].score).is.equalTo(matchScore);
         assert.that(callbackSpy.calledWith(null, 'Result saved!')).is.true();
     });
 
