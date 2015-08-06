@@ -68,6 +68,23 @@ describe('addResultHandler', () => {
         assert.that(callbackSpy.calledWith(null, 'Result saved!')).is.true();
     });
 
+    it('should not save third command argument as match score if invalid score provided', () => {
+        //given
+        let matchScore = 'an_invalid_score';
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', 'loser', matchScore]
+        };
+        let expectedCallbackMessage = 'Score `' + matchScore + '` is invalid, score should be in format `int:int`';
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy, dummyNotification);
+
+        //then
+        assert.that(ladder.matches[0].score).is.undefined();
+        assert.that(callbackSpy.calledWith(null, expectedCallbackMessage)).is.true();
+    });
+
     it('should send notification when adding result', () => {
         //given
         let parsedCommand = {

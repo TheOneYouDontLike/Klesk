@@ -60,6 +60,16 @@ function _setScore(match, score) {
     match.score = score;
 }
 
+function _validFormatScore(score) {
+    if (!score) {
+        return true;
+    }
+    
+    var validScoreFormat = /^\d+:\d+$/;
+
+    return score.match(validScoreFormat);
+}
+
 function _getFunctionToSetResult(players, score, callback, notification) {
     return (ladder) => {
             let match = _getMatch(ladder, players);
@@ -70,6 +80,11 @@ function _getFunctionToSetResult(players, score, callback, notification) {
         }
 
         match.winner = _getWinner(players);
+
+        if (!_validFormatScore(score)) {
+            callback(null, 'Score `' + score + '` is invalid, score should be in format `int:int`');
+            return;
+        }
 
         _setScore(match, score);
 
