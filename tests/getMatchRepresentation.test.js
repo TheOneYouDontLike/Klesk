@@ -41,7 +41,7 @@ describe('getMatchRepresentation', () => {
     ];
 
     it('should give correct representations', () => {
-        testCases.forEach(function(testCase) {
+        testCases.forEach((testCase) => {
             _testMatchRepresentation(testCase.match, mapName, testCase.expectedRepresentation);
         });
     });
