@@ -52,7 +52,25 @@ function _getLoser(players) {
     return _sanitizePlayerName(_.find(players, (player) => { return !_startsWith(player, '+'); }));
 }
 
-function _getFunctionToSetWinner(players, callback, notification) {
+function _setScore(match, score) {
+    if (!score) {
+        return;
+    }
+
+    match.score = score;
+}
+
+function _validFormatScore(score) {
+    if (!score) {
+        return true;
+    }
+    
+    var validScoreFormat = /^\d+:\d+$/;
+
+    return score.match(validScoreFormat);
+}
+
+function _getFunctionToSetResult(players, score, callback, notification) {
     return (ladder) => {
             let match = _getMatch(ladder, players);
 
@@ -62,6 +80,14 @@ function _getFunctionToSetWinner(players, callback, notification) {
         }
 
         match.winner = _getWinner(players);
+
+        if (!_validFormatScore(score)) {
+            callback(null, 'Score `' + score + '` is invalid, score should be in format `int:int`');
+            return;
+        }
+
+        _setScore(match, score);
+
         callback(null, 'Result saved!');
 
         let notificationMessage = _decorate(match.winner) + ' has won a match with ' + _decorate(_getLoser(players)) + ' on ladder ' + _decorate(ladder.name);
@@ -94,6 +120,7 @@ let addResultHandler = function(persistence) {
         makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
             let players = [parsedCommand.arguments[2], parsedCommand.arguments[3]];
+            let score = parsedCommand.arguments.length === 5 ? parsedCommand.arguments[4] : null;
 
             if (!_playerWasInMatch(parsedCommand.playerName, players)) {
                 callback(null, 'You were not in the match and cannot add result.');
@@ -112,7 +139,7 @@ let addResultHandler = function(persistence) {
 
             persistence.update(
                 _getLadderPredicate(ladderName, players),
-                _getFunctionToSetWinner(players, callback, notification),
+                _getFunctionToSetResult(players, score, callback, notification),
                 (error) => {
                     callback(error);
                 },

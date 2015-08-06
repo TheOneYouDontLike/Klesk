@@ -3,6 +3,7 @@
 import getMatchRepresentation from '../app/getMatchRepresentation';
 import assert from 'assertthat';
 
+
 describe('getMatchRepresentation', () => {
     let mapName = 'aerowalk';
 
@@ -12,30 +13,36 @@ describe('getMatchRepresentation', () => {
         assert.that(actualRepresentation).is.equalTo(expectedRepresentation);
     }
 
-    it('should correctly format match without winner', () => {
-        //given
-        let match = {player1:'player1', player2:'player2', winner:''};
-        let expectedRepresentation = '[player1 vs player2 on aerowalk]';
+    let testCases = [
+        {
+            match: {player1:'player1', player2:'player2', winner:''},
+            expectedRepresentation: '[player1 vs player2 on aerowalk]'
+        },
+        {
+            match: {player1:'player1', player2:'player2', winner:'player1'},
+            expectedRepresentation: '[`+player1` vs player2 on aerowalk]'
+        },
+        {
+            match: {player1:'player1', player2:'player2', winner:'player2'},
+            expectedRepresentation: '[player1 vs `+player2` on aerowalk]'
+        },
+        {
+            match: {player1:'player1', player2:'player2', winner:'', score:'22:10'},
+            expectedRepresentation: '[player1 vs player2 (22:10) on aerowalk]'
+        },
+        {
+            match: {player1:'player1', player2:'player2', winner:'player1', score:'22:10'},
+            expectedRepresentation: '[`+player1` vs player2 (22:10) on aerowalk]'
+        },
+        {
+            match: {player1:'player1', player2:'player2', winner:'player2', score:'22:10'},
+            expectedRepresentation: '[player1 vs `+player2` (22:10) on aerowalk]'
+        },
+    ];
 
-        //when -> //then
-        _testMatchRepresentation(match, mapName, expectedRepresentation);
+    it('should give correct representations', () => {
+        testCases.forEach(function(testCase) {
+            _testMatchRepresentation(testCase.match, mapName, testCase.expectedRepresentation);
+        });
     });
-
-    it('should correctly format match when player1 won', () => {
-        //given
-        let match = {player1:'player1', player2:'player2', winner:'player1'};
-        let expectedRepresentation = '[`+player1` vs player2 on aerowalk]';
-
-        //when -> //then
-        _testMatchRepresentation(match, mapName, expectedRepresentation);
-    });
-
-    it('should correctly format match when player2 won', () => {
-        //given
-        let match = {player1:'player1', player2:'player2', winner:'player2'};
-        let expectedRepresentation = '[player1 vs `+player2` on aerowalk]';
-
-        //when -> //then
-        _testMatchRepresentation(match, mapName, expectedRepresentation);
-    });
-})
+});
