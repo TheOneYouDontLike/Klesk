@@ -4,20 +4,21 @@ import fs from 'fs';
 import path from 'path';
 import config from '../config';
 
-export default function(message) {
-    console.log(message);
+export default function(stuff) {
+    console.log('log: ', stuff);
 
     if (!config.logErrorsToFile) {
         return;
     }
-    let timestamp = 'log' + new Date().toString();
+
+    let timestamp = 'log_' + Date.now().toString();
     let logFilePath = path.resolve(config.errorsLogPath, timestamp);
 
-    let errorMessage = {
-        message: message
+    let thingToLog = {
+        stuff: stuff
     };
 
-    fs.writeFile(logFilePath, JSON.stringify(errorMessage), (error) => {
-        console.log(error);
+    fs.writeFile(logFilePath, JSON.stringify(thingToLog), (error) => {
+        if (error) console.log('error: ', error);
     });
 }

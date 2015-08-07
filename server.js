@@ -16,4 +16,4 @@ routes.configure(app);
 var port = process.env.PORT || config.port;
 app.listen(port);
 
-logger('Listening on port ' + port);
+console.log('Listening on port ' + port);
