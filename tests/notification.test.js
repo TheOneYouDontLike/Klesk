@@ -12,6 +12,7 @@ let config = {
 };
 
 notification.__Rewire__('config', config);
+notification.__Rewire__('logger', function dummyFunction() {});
 
 describe('notification', function() {
     let requestSpy;

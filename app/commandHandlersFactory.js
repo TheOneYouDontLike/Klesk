@@ -14,13 +14,12 @@ import config from '../config';
 import logger from './logger';
 import commandTypes from './commandTypes';
 
-let ladderPersistence = new Persistence(config.storageFilename);
-ladderPersistence.init((error) => {
-    logger(error);
-});
-
-
 let getCommandHandler = function(commandType) {
+    let ladderPersistence = new Persistence(config.storageFilename);
+    ladderPersistence.init((error) => {
+        logger(error);
+    });
+
     switch(commandType) {
         case commandTypes.NEWLADDER:
             let mapPersistence = new Persistence(config.mapsFilename);
