@@ -34,6 +34,8 @@ export default {
   notificationChannel: '#notifications', //OPTIONAL: if not set then slack incoming-webhook default channel will be used
   botUsername: 'Klesk', //OPTIONAL: if not set then slack incoming-webhook name will be used
   botIconUrl: 'http://absolute-path-to-your-bot-icon' //OPTIONAL: if not set slack default bot icon will be used
+  logErrorsToFile: true, // whether to log to file or only to console
+  errorsLogPath: './'
 };
 ```
 
