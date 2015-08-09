@@ -8,7 +8,8 @@ import notification from '../app/notification.js';
 let config = {
     notificationWebhookAddress: 'http://fakeNotificationAddress.com/notify',
     notificationChannel: '#vg',
-    botUsername: 'Klesk'
+    botUsername: 'Klesk',
+    botIconUrl: 'http://botIconUrl.com'
 };
 
 notification.__Rewire__('config', config);
@@ -25,13 +26,14 @@ describe('notification', function() {
         request.post.restore();
     });
 
-    it('should be sent when user joins ladder', function() {
+    it.only('should be sent when user joins ladder', function() {
         // when
         notification.send('user has joined');
 
         // then
         let expectedNotificationMessage = {
             username: config.botUsername,
+            icon_url: 'http://botIconUrl.com',
             text: 'user has joined',
             channel: config.notificationChannel
         };
