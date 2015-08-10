@@ -26,7 +26,7 @@ describe('notification', function() {
         request.post.restore();
     });
 
-    it.only('should be sent when user joins ladder', function() {
+    it('should be sent when user joins ladder', function() {
         // when
         notification.send('user has joined');
 
