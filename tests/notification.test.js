@@ -26,16 +26,35 @@ describe('notification', function() {
         request.post.restore();
     });
 
-    it('should be sent when user joins ladder', function() {
+    it('should be sent when user joins ladder', () => {
         // when
         notification.send('user has joined');
 
         // then
         let expectedNotificationMessage = {
             username: config.botUsername,
-            icon_url: 'http://botIconUrl.com',
+            icon_url: config.botIconUrl,
             text: 'user has joined',
             channel: config.notificationChannel
+        };
+
+        assert.that(requestSpy.calledWith(config.notificationWebhookAddress, expectedNotificationMessage)).is.true();
+    });
+
+    it('should allow channel override', () => {
+        //given
+        let message = 'message';
+        let channelOverride = '@channelOverride';
+        
+        //when
+        notification.send(message, channelOverride);
+        
+        //then
+        let expectedNotificationMessage = {
+            username: config.botUsername,
+            icon_url: config.botIconUrl,
+            text: message,
+            channel: channelOverride
         };
 
         assert.that(requestSpy.calledWith(config.notificationWebhookAddress, expectedNotificationMessage)).is.true();
