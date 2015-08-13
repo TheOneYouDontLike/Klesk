@@ -42,7 +42,7 @@ describe('showStatsHandler', () => {
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
         
-        let expectedMessage = 'Your stats in this ladder were sent to you directly to your @slackBot channel.';
+        let expectedMessage = 'Your stats in this ladder were sent to you directly to your @slackbot channel.';
 
         //when
         handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
@@ -73,7 +73,9 @@ describe('showStatsHandler', () => {
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
-        let expectedNotificationMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
+        let expectedNotificationMessage = 
+            'Ladder `' + ladderInRepository.name + '`\n' +
+            'Matches: 2 / Wins: 1 / Losses: 1\n' +
             '[`+anarki` vs klesk on aerowalk]\n' +
             '[anarki vs `+sarge` on aerowalk]\n';
 
@@ -107,7 +109,9 @@ describe('showStatsHandler', () => {
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
-        let expectedNotificationMessage = 'Matches: 1 / Wins: 0 / Losses: 0\n' +
+        let expectedNotificationMessage = 
+            'Ladder `' + ladderInRepository.name + '`\n' +
+            'Matches: 1 / Wins: 0 / Losses: 0\n' +
             '[anarki vs klesk on aerowalk]\n';
 
         //when

@@ -21,7 +21,7 @@ describe('ranking handler', () => {
             ]
         };
 
-        let expectedResponseString = 'Ranking sent to directly to you on your @slackBot channel';
+        let expectedResponseString = 'Ranking sent to directly to you on your @slackbot channel';
         let expectedNotificationString = '`ladderName matches`\n[`+playedMatchPlayer1` vs playedMatchPlayer2 on aerowalk]\n[unplayedMatchPlayer1 vs unplayedMatchPlayer2 on aerowalk]\n';
 
         let fakePersistence = {

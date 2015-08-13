@@ -38,7 +38,7 @@ function _putPlayedMatchesFirst(ladder) {
 }
 
 function _getInformationAboutNotification() {
-    return 'Ranking sent to directly to you on your @slackBot channel';
+    return 'Ranking sent to directly to you on your @slackbot channel';
 }
 
 let rankingHandler = function(persistence) {
