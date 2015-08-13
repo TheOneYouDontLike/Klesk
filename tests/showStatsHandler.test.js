@@ -14,8 +14,46 @@ let commandWithoutLadderName = {
     arguments: ['showstats']
 };
 
+let notificationSpy = {};
+
 describe('showStatsHandler', () => {
-    it('should return stats for player in ladder', () => {
+    beforeEach(() => {
+        notificationSpy = {
+            send: sinon.spy()
+        };
+    });
+
+    it('should tell player that stats where sent directly to him via notification', () => {
+        //given
+        let ladderInRepository = {
+            name: parsedCommand.arguments[1],
+            map: { name: 'aerowalk' },
+            matches: [
+                { player1: parsedCommand.playerName },
+            ]
+        };
+
+        let fakePersistence = {
+            query(filterFunction, callback) {
+                callback(null, [ ladderInRepository ]);
+            }
+        };
+
+        let callbackSpy = sinon.spy();
+        let handler = showStatsHandler(fakePersistence);
+        
+        let expectedMessage = 'Your stats in this ladder were sent to you directly to your @slackBot channel.';
+
+        //when
+        handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
+        
+        //then
+        let actualMessage = callbackSpy.getCall(0).args[1];
+
+        assert.that(actualMessage).is.equalTo(expectedMessage);
+    });
+
+    it('should return stats for player in ladder directly to him', () => {
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
             map: { name: 'aerowalk' },
@@ -35,17 +73,19 @@ describe('showStatsHandler', () => {
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
-        let expectedMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
-            '[`+anarki` vs klesk on aerowalk]' +
-            '[anarki vs `+sarge` on aerowalk]';
+        let expectedNotificationMessage = 'Matches: 2 / Wins: 1 / Losses: 1\n' +
+            '[`+anarki` vs klesk on aerowalk]\n' +
+            '[anarki vs `+sarge` on aerowalk]\n';
 
         //when
-        handler.makeItSo(parsedCommand, callbackSpy);
+        handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
 
         //then
-        let actualMessage = callbackSpy.getCall(0).args[1];
+        let actualMessage = notificationSpy.send.getCall(0).args[0];
+        let channelOverride = notificationSpy.send.getCall(0).args[1];
 
-        assert.that(actualMessage).is.equalTo(expectedMessage);
+        assert.that(actualMessage).is.equalTo(expectedNotificationMessage);
+        assert.that(channelOverride).is.equalTo('@' + parsedCommand.playerName);
     });
 
     it('should not count not played matches as player losses', () => {
@@ -67,16 +107,16 @@ describe('showStatsHandler', () => {
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
-        let expectedMessage = 'Matches: 1 / Wins: 0 / Losses: 0\n' +
-            '[anarki vs klesk on aerowalk]';
+        let expectedNotificationMessage = 'Matches: 1 / Wins: 0 / Losses: 0\n' +
+            '[anarki vs klesk on aerowalk]\n';
 
         //when
-        handler.makeItSo(parsedCommand, callbackSpy);
+        handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
 
         //then
-        let actualMessage = callbackSpy.getCall(0).args[1];
+        let actualMessage = notificationSpy.send.getCall(0).args[0];
 
-        assert.that(actualMessage).is.equalTo(expectedMessage);
+        assert.that(actualMessage).is.equalTo(expectedNotificationMessage);
     });
 
     it('should not return stats if ladder name is not specified', () => {
