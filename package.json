@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha ./tests --require babel-test-hook --watch",
+    "test": "mocha ./tests --require babel-test-hook",
+    "test-watch": "mocha ./tests --require babel-test-hook --watch",
     "start": "node build/server.js",
     "watch": "nodemon build/server.js",
     "build": "webpack --progress",
