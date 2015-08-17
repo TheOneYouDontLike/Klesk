@@ -1,6 +1,8 @@
 # Klesk
 Klesk is a Slack service to store and return ladder data for Quake Live or whatever game you like.
 
+[![Build Status](https://travis-ci.org/TheOneYouDontLike/Klesk.svg?branch=master)](https://travis-ci.org/TheOneYouDontLike/Klesk)
+
 ## Features
 - Creating new ladder
 - Joining existing ladder
