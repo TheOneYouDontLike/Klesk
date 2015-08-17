@@ -9,10 +9,10 @@ function _getLadderFilterFunction(ladderName) {
 }
 
 function _prepareReturnMessageAboutAllMatches(ladder) {
-    let message = '`' + ladder.name + ' matches:`';
+    let message = '`' + ladder.name + ' matches`\n';
 
     ladder.matches.forEach((match) => {
-        message += getMatchRepresentation(match, ladder.map.name);
+        message += getMatchRepresentation(match, ladder.map.name) + '\n';
     });
 
     return message;
@@ -37,9 +37,13 @@ function _putPlayedMatchesFirst(ladder) {
     return ladder;
 }
 
+function _getInformationAboutNotification() {
+    return 'Ranking sent directly to you on your @slackbot channel';
+}
+
 let rankingHandler = function(persistence) {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
 
             persistence.query(_getLadderFilterFunction(ladderName), (error, filteredData) => {
@@ -50,7 +54,8 @@ let rankingHandler = function(persistence) {
 
                 let ladderForRanking = _putPlayedMatchesFirst(filteredData[0]);
 
-                callback(null, _prepareReturnMessageAboutAllMatches(ladderForRanking));
+                callback(null, _getInformationAboutNotification());
+                notification.send(_prepareReturnMessageAboutAllMatches(ladderForRanking), '@' + parsedCommand.playerName);
             });
         }
     };

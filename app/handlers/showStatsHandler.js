@@ -3,17 +3,18 @@
 import _ from 'lodash';
 import getMatchRepresentation from '../getMatchRepresentation';
 
-function _composeResultMessage(playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName, mapName) {
+function _composeResultMessage(ladderName, playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName, mapName) {
     let playerMatchesCount = playerMatches.length;
 
     let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;
 
-    let message = 'Matches: ' + playerMatchesCount + ' / Wins: ' + playerWinsCount  + ' / Losses: ' + playerLossCount;
+    let message = 'Ladder `' + ladderName + '`\n';
+    message += 'Matches: ' + playerMatchesCount + ' / Wins: ' + playerWinsCount  + ' / Losses: ' + playerLossCount;
 
     let matchesStats = _.reduce(playerMatches, (result, match) => {
         let matchMessage = getMatchRepresentation(match, mapName);
 
-        result += matchMessage;
+        result += matchMessage + '\n';
 
         return result;
     }, '');
@@ -23,7 +24,7 @@ function _composeResultMessage(playerWinsCount, notPlayedMatches, playerMatches,
 
 let showStatsHandler = function(persistence) {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
             let playerName = parsedCommand.playerName;
 
@@ -55,9 +56,12 @@ let showStatsHandler = function(persistence) {
                     return !match.winner;
                 });
 
-                let resultMessage = _composeResultMessage(playerWins.length, notPlayedMatches.length, playerMatches, playerName, ladder.map.name);
+                let resultMessage = _composeResultMessage(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, playerName, ladder.map.name);
 
-                callback(null, resultMessage);
+                let directResponseMessage = 'Your stats in this ladder were sent to you directly to your @slackbot channel.';
+
+                callback(null, directResponseMessage);
+                notification.send(resultMessage, '@' + playerName);
             };
 
             persistence.query(filterFunction, queryCallback);
