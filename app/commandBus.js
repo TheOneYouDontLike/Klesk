@@ -13,9 +13,8 @@ export default {
             arguments: parsedCommandArguments
         };
 
-        let commandHandler = handlers.getCommandHandler(commandType);
-        let result = commandHandler.makeItSo(parsedCommand, callback, notification);
-
-        return result;
+        let commandHandler = handlers.getCommandHandler(commandType, (commandHandler) => {
+            commandHandler.makeItSo(parsedCommand, callback, notification);
+        });
     }
 };

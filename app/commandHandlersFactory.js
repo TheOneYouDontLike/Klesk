@@ -14,39 +14,44 @@ import config from '../config';
 import logger from './logger';
 import commandTypes from './commandTypes';
 
-let getCommandHandler = function(commandType) {
+let getCommandHandler = function(commandType, callback) {
     let ladderPersistence = new Persistence(config.storageFilename);
     ladderPersistence.init((error) => {
         logger(error);
+
+        switch(commandType) {
+            case commandTypes.NEWLADDER:
+                let mapPersistence = new Persistence(config.mapsFilename);
+                ladderPersistence.init((error => {
+                    logger(error);
+                    callback(newLadderHandler(ladderPersistence, mapPersistence));
+                }));
+                break;
+
+            case commandTypes.JOINLADDER:
+                callback(validateLadderExistenceDecorator(joinLadderHandler(ladderPersistence), ladderPersistence));
+                break;
+
+            case commandTypes.LEAVELADDER:
+                callback(validateLadderExistenceDecorator(leaveLadderHandler(ladderPersistence), ladderPersistence));
+                break;
+
+            case commandTypes.ADDRESULT:
+                callback(validateLadderExistenceDecorator(addResultHandler(ladderPersistence), ladderPersistence));
+                break;
+
+            case commandTypes.SHOWSTATS:
+                callback(validateLadderExistenceDecorator(showStatsHandler(ladderPersistence), ladderPersistence));
+                break;
+
+            case commandTypes.RANKING:
+                callback(validateLadderExistenceDecorator(rankingHandler(ladderPersistence), ladderPersistence));
+                break;
+
+            default:
+                callback(thisIsNotTheCommandYouAreLookingFor());
+        }
     });
-
-    switch(commandType) {
-        case commandTypes.NEWLADDER:
-            let mapPersistence = new Persistence(config.mapsFilename);
-            ladderPersistence.init((error => {
-                logger(error);
-            }));
-
-            return newLadderHandler(ladderPersistence, mapPersistence);
-
-        case commandTypes.JOINLADDER:
-            return validateLadderExistenceDecorator(joinLadderHandler(ladderPersistence), ladderPersistence);
-
-        case commandTypes.LEAVELADDER:
-            return validateLadderExistenceDecorator(leaveLadderHandler(ladderPersistence), ladderPersistence);
-
-        case commandTypes.ADDRESULT:
-            return validateLadderExistenceDecorator(addResultHandler(ladderPersistence), ladderPersistence);
-
-        case commandTypes.SHOWSTATS:
-            return validateLadderExistenceDecorator(showStatsHandler(ladderPersistence), ladderPersistence);
-
-        case commandTypes.RANKING:
-            return validateLadderExistenceDecorator(rankingHandler(ladderPersistence), ladderPersistence);
-
-        default:
-            return thisIsNotTheCommandYouAreLookingFor();
-    }
 };
 
 export default {
