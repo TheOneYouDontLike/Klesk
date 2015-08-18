@@ -6,5 +6,7 @@ export default {
     ADDRESULT: 'addresult',
     SHOWSTATS: 'showstats',
     LEAVELADDER: 'leaveladder',
-    RANKING: 'ranking'
+    RANKING: 'ranking',
+    UPVOTEMAP: 'upvoteMap',
+    DOWNVOTEMAP: 'downvoteMap'
 };
