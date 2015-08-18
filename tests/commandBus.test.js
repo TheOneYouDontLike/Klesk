@@ -12,12 +12,14 @@ describe('commandBus', () => {
         };
 
         let fakeFactory = {
-            getCommandHandler: function(/* commandType does not matter during this test */) {
-                return {
-                    makeItSo(command, callback) {
-                        callback(null, 'result');
+            getCommandHandler: function(commandType, callback) {
+                callback(
+                    {
+                        makeItSo(command, callback) {
+                            callback(null, 'result');
+                        }
                     }
-                };
+                );
             }
         };
 
