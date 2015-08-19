@@ -22,7 +22,7 @@ let getCommandHandler = function(commandType, callback) {
         switch(commandType) {
             case commandTypes.NEWLADDER:
                 let mapPersistence = new Persistence(config.mapsFilename);
-                ladderPersistence.init((error => {
+                mapPersistence.init((error => {
                     logger(error);
                     callback(newLadderHandler(ladderPersistence, mapPersistence));
                 }));
