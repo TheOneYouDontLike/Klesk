@@ -1,26 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import getMatchRepresentation from '../getMatchRepresentation';
-
-function _composeResultMessage(ladderName, playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName, mapName) {
-    let playerMatchesCount = playerMatches.length;
-
-    let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;
-
-    let message = 'Ladder `' + ladderName + '`\n';
-    message += 'Matches: ' + playerMatchesCount + ' / Wins: ' + playerWinsCount  + ' / Losses: ' + playerLossCount;
-
-    let matchesStats = _.reduce(playerMatches, (result, match) => {
-        let matchMessage = getMatchRepresentation(match, mapName);
-
-        result += matchMessage + '\n';
-
-        return result;
-    }, '');
-
-    return message + '\n' + matchesStats;
-}
+import slackTextSnippets from '../slackTextSnippets';
 
 let showStatsHandler = function(persistence) {
     return {
@@ -56,7 +37,7 @@ let showStatsHandler = function(persistence) {
                     return !match.winner;
                 });
 
-                let resultMessage = _composeResultMessage(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, playerName, ladder.map.name);
+                let resultMessage = slackTextSnippets.playerStats(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, playerName, ladder.map.name);
 
                 let directResponseMessage = 'Your stats in this ladder were sent to you directly to your @slackbot channel.';
 

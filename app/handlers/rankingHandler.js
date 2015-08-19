@@ -1,21 +1,11 @@
 'use strict';
 
-import getMatchRepresentation from '../getMatchRepresentation';
+import slackTextSnippets from '../slackTextSnippets';
 
 function _getLadderFilterFunction(ladderName) {
     return (element) => {
         return ladderName === element.name;
     };
-}
-
-function _prepareReturnMessageAboutAllMatches(ladder) {
-    let message = '`' + ladder.name + ' matches`\n';
-
-    ladder.matches.forEach((match) => {
-        message += getMatchRepresentation(match, ladder.map.name) + '\n';
-    });
-
-    return message;
 }
 
 function _putPlayedMatchesFirst(ladder) {
@@ -55,7 +45,7 @@ let rankingHandler = function(persistence) {
                 let ladderForRanking = _putPlayedMatchesFirst(filteredData[0]);
 
                 callback(null, _getInformationAboutNotification());
-                notification.send(_prepareReturnMessageAboutAllMatches(ladderForRanking), '@' + parsedCommand.playerName);
+                notification.send(slackTextSnippets.ranking(ladderForRanking), '@' + parsedCommand.playerName);
             });
         }
     };
