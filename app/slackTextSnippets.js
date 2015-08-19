@@ -10,6 +10,8 @@ function matchResultAdded(winner, loser, ladderName, score) {
     let notification = decorate(winner) + ' has won a match with ' + decorate(loser) + ' on ladder ' + decorate(ladderName);
 
     if (score) {
+
+
         notification += '\nmatch score - ' + _winningScoreFirst(score);
     }
 
@@ -28,6 +30,28 @@ function newLadder(ladderName) {
     return 'Created new ladder: ' + decorate(ladderName);
 }
 
+function _individualScoresAscending(score) {
+    let individualScores = _.map(score.split(':'), (individualScore) => { return parseInt(individualScore); });
+
+    return _.sortBy(individualScores);
+}
+
+function _scoresRepresentation(leftScore, rightScore) {
+    return leftScore + ':' + rightScore;
+}
+
+function _winningScoreFirst(score) {
+    let scoresAscending = _individualScoresAscending(score);
+
+    return _scoresRepresentation(scoresAscending[1], scoresAscending[0]);
+}
+
+function _losingScoreFirst(score) {
+    let scoresAscending = _individualScoresAscending(score);
+
+    return _scoresRepresentation(scoresAscending[0], scoresAscending[1]);
+}
+
 function _indicateWinner(playerName, match) {
     if (playerName === match.winner) {
         return '`+' + playerName + '`';
@@ -36,27 +60,20 @@ function _indicateWinner(playerName, match) {
     return playerName;
 }
 
-function _winningScoreFirst(score) {
-    let individualScores = score.split(':');
-    let score1 = parseInt(individualScores[0]);
-    let score2 = parseInt(individualScores[1]);
+function _getMatchRepresentation(match, mapName) {
+    let matchScore = '';
 
-    let higherScore = score1 > score2 ? score1 : score2;
-    let lowerScore = score1 > score2 ? score2 : score1;
-
-    return higherScore + ':' +lowerScore;
-}
-
-function _getScoreRepresentation(score) {
-    if(!score) {
-        return '';
+    if (match.score) {
+        matchScore = ' ';
+        if (match.player1 === match.winner) {
+            matchScore += _winningScoreFirst(score);
+        }
+        else {
+            matchScore += _losingScoreFirst(score);
+        }
     }
 
-    return ' (' + score + ')';
-}
-
-function _getMatchRepresentation(match, mapName) {
-    return '[' + _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match) + _getScoreRepresentation(match.score) + ' on ' + mapName + ']';
+    return '[' + _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match) + matchScore + ' on ' + mapName + ']';
 }
 
 function ranking(ladder) {
