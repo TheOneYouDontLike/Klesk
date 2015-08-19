@@ -66,10 +66,10 @@ function _getMatchRepresentation(match, mapName) {
     if (match.score) {
         matchScore = ' ';
         if (match.player1 === match.winner) {
-            matchScore += _winningScoreFirst(score);
+            matchScore += _winningScoreFirst(match.score);
         }
         else {
-            matchScore += _losingScoreFirst(score);
+            matchScore += _losingScoreFirst(match.score);
         }
     }
 
