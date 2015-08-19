@@ -10,7 +10,7 @@ function matchResultAdded(winner, loser, ladderName, score) {
     let notification = decorate(winner) + ' has won a match with ' + decorate(loser) + ' on ladder ' + decorate(ladderName);
 
     if (score) {
-        notification += '\nmatch score - ' + score;
+        notification += '\nmatch score - ' + _winningScoreFirst(score);
     }
 
     return notification;
@@ -34,6 +34,17 @@ function _indicateWinner(playerName, match) {
     }
 
     return playerName;
+}
+
+function _winningScoreFirst(score) {
+    let individualScores = score.split(':');
+    let score1 = parseInt(individualScores[0]);
+    let score2 = parseInt(individualScores[1]);
+
+    let higherScore = score1 > score2 ? score1 : score2;
+    let lowerScore = score1 > score2 ? score2 : score1;
+
+    return higherScore + ':' +lowerScore;
 }
 
 function _getScoreRepresentation(score) {

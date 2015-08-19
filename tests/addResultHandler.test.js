@@ -115,7 +115,7 @@ describe('addResultHandler', () => {
 
         //then
         let notificationMessage = notificationSpy.getCall(0).args[0];
-        assert.that(notificationMessage).is.equalTo('`winner` has won a match with `loser` on ladder `laddername`\nmatch score - 21:30');
+        assert.that(notificationMessage).is.equalTo('`winner` has won a match with `loser` on ladder `laddername`\nmatch score - 30:21');
     });
 
     it('should not allow adding results by player who was not in match', () => {
