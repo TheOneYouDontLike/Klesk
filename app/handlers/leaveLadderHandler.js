@@ -1,9 +1,9 @@
 'use strict';
 
 import _ from 'lodash';
+import slackTextSnippets from '../slackTextSnippets';
 
 const LEFT_LADDER = 'You are no longer a part of the ladder';
-const NOTIFICATION_TEXT = 'is no longer a part of the ladder';
 
 function _getLadderFilterFunction(ladderName) {
     return (ladder) => {
@@ -23,10 +23,6 @@ function _getSuccessMessage(ladderName) {
     return LEFT_LADDER + ' `' + ladderName + '`';
 }
 
-function _getNotificationMessage(playerName, ladderName) {
-    return '`' + playerName + '` ' + NOTIFICATION_TEXT + ' `' + ladderName + '`';
-}
-
 let leaveLadderHandler = function(persistence) {
     return {
         makeItSo(parsedCommand, callback, notification) {
@@ -41,7 +37,7 @@ let leaveLadderHandler = function(persistence) {
 
             if (updateSuccessfull) {
                 callback(null, _getSuccessMessage(ladderName));
-                notification.send(_getNotificationMessage(parsedCommand.playerName, ladderName));
+                notification.send(slackTextSnippets.notifications.playerLeft(parsedCommand.playerName, ladderName));
             }
         }
     };
