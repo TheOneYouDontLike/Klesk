@@ -37,7 +37,7 @@ let showStatsHandler = function(persistence) {
                     return !match.winner;
                 });
 
-                let resultMessage = slackTextSnippets.playerStats(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, playerName, ladder.map.name);
+                let resultMessage = slackTextSnippets.playerStats(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, ladder.map.name);
 
                 let directResponseMessage = 'Your stats in this ladder were sent to you directly to your @slackbot channel.';
 

@@ -86,7 +86,7 @@ function ranking(ladder) {
     return message;
 }
 
-function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName, mapName) {
+function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatches, mapName) {
     let playerMatchesCount = playerMatches.length;
 
     let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;

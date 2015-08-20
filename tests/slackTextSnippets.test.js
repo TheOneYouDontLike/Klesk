@@ -66,7 +66,7 @@ describe('should display scores in the order players appear in message', () => {
         '[loser vs `+winner` 23:32 on mapName]\n';
 
         //when
-        let playerStatsMessage = slackTextSnippets.playerStats('ladderName', playerWinsCount, notPlayedMatches, playerMatches, 'requestingPlayerName', 'mapName');
+        let playerStatsMessage = slackTextSnippets.playerStats('ladderName', playerWinsCount, notPlayedMatches, playerMatches, 'mapName');
         
         //then
         assert.that(playerStatsMessage).is.equalTo(expectedMessage);
