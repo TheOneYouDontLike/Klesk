@@ -6,5 +6,6 @@ export default {
     ADDRESULT: 'addresult',
     SHOWSTATS: 'showstats',
     LEAVELADDER: 'leaveladder',
-    RANKING: 'ranking'
+    RANKING: 'ranking',
+    SHOWLADDERS: 'showladders'
 };

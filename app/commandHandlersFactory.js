@@ -8,6 +8,7 @@ import leaveLadderHandler from './handlers/leaveLadderHandler';
 import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
 import rankingHandler from './handlers/rankingHandler';
+import showLaddersHandler from './handlers/showLaddersHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
 import config from '../config';
@@ -46,6 +47,10 @@ let getCommandHandler = function(commandType, callback) {
 
             case commandTypes.RANKING:
                 callback(validateLadderExistenceDecorator(rankingHandler(ladderPersistence), ladderPersistence));
+                break;
+
+            case commandType.SHOWLADDERS:
+                callback(showLaddersHandler(ladderPersistence));
                 break;
 
             default:
