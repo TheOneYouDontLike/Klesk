@@ -5,7 +5,7 @@ import slackTextSnippets from '../app/slackTextSnippets';
 import sinon from 'sinon';
 
 describe('should display scores in the order players appear in message', () => {
-    it('when creating new match result notifcation', () => {
+    it('when creating new match result notification', () => {
         //given
 
         //when
