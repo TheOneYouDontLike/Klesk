@@ -54,7 +54,7 @@ function _losingScoreFirst(score) {
 
 function _indicateWinner(playerName, match) {
     if (playerName === match.winner) {
-        return '`+' + playerName + '`';
+        return decorate('+' + playerName);
     }
 
     return playerName;

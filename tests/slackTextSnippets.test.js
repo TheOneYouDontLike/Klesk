@@ -4,8 +4,8 @@ import assert from 'assertthat';
 import slackTextSnippets from '../app/slackTextSnippets';
 import sinon from 'sinon';
 
-describe('new match result notifcation', () => {
-    it('should display winner score first', () => {
+describe('should display scores in the order players appear in message', () => {
+    it('when creating new match result notifcation', () => {
         //given
 
         //when
@@ -17,5 +17,33 @@ describe('new match result notifcation', () => {
 
         assert.that(winningScoreFirst).is.equalTo(expectedMessage);
         assert.that(losingScoreFirst).is.equalTo(expectedMessage);
+    });
+
+    it('when creating ranking representation', () => {
+        //given
+        let ladder = {
+            name: 'ladder',
+            map: {
+                name: 'map'
+            },
+            matches: [
+                { player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23' },
+                { player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32' },
+                { player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32' },
+                { player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23' },
+            ]
+        };
+
+        let expectedMessage = '`ladder matches`\n' +
+        '[`+winner` vs loser 32:23 on map]\n' +
+        '[`+winner` vs loser 32:23 on map]\n' +
+        '[loser vs `+winner` 23:32 on map]\n' +
+        '[loser vs `+winner` 23:32 on map]\n';
+
+        //when
+        let rankingMessage = slackTextSnippets.ranking(ladder);
+        
+        //then
+        assert.that(rankingMessage).is.equalTo(expectedMessage);
     });
 });
