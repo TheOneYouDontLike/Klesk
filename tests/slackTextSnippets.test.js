@@ -30,7 +30,7 @@ describe('should display scores in the order players appear in message', () => {
                 { player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23' },
                 { player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32' },
                 { player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32' },
-                { player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23' },
+                { player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23' }
             ]
         };
 
@@ -45,5 +45,30 @@ describe('should display scores in the order players appear in message', () => {
         
         //then
         assert.that(rankingMessage).is.equalTo(expectedMessage);
+    });
+
+    it('when creating player stats message', () => {
+        //given
+        let playerWinsCount = 2;
+        let notPlayedMatches = 0;
+        let playerMatches = [
+            { player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23' },
+            { player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32' },
+            { player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32' },
+            { player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23' }
+        ];
+        
+        let expectedMessage = 'Ladder `ladderName`\n' +
+        'Matches: 4 / Wins: ' + playerWinsCount + ' / Losses: 2\n' +
+        '[`+winner` vs loser 32:23 on mapName]\n' +
+        '[`+winner` vs loser 32:23 on mapName]\n' +
+        '[loser vs `+winner` 23:32 on mapName]\n' +
+        '[loser vs `+winner` 23:32 on mapName]\n';
+
+        //when
+        let playerStatsMessage = slackTextSnippets.playerStats('ladderName', playerWinsCount, notPlayedMatches, playerMatches, 'requestingPlayerName', 'mapName');
+        
+        //then
+        assert.that(playerStatsMessage).is.equalTo(expectedMessage);
     });
 });
