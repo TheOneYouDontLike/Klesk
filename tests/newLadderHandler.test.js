@@ -36,7 +36,7 @@ describe('newLadderHandler', () => {
         handler.makeItSo(parsedCommand, callback, emptyNotification);
 
         // then
-        assert.that(callback.calledWith(null, 'Created new ladder: normal')).is.true();
+        assert.that(callback.calledWith(null, 'Created new ladder: `normal`')).is.true();
     });
 
     it('should send notification about new ladder', () => {
@@ -57,7 +57,7 @@ describe('newLadderHandler', () => {
         handler.makeItSo(parsedCommand, () => {}, { send: notificationCallback });
 
         // then
-        assert.that(notificationCallback.calledWith('Created new ladder: normal')).is.true();
+        assert.that(notificationCallback.calledWith('Created new ladder: `normal`')).is.true();
     });
 
     it('should create new ladder using underlying repo', () => {
@@ -127,6 +127,6 @@ describe('newLadderHandler', () => {
         //then
         let addedLadder = addLadderSpy.getCall(0).args[0];
         assert.that(mapList).is.containing(addedLadder.map);
-        assert.that(callbackSpy.calledWith(null, 'Created new ladder: normal')).is.true();
+        assert.that(callbackSpy.calledWith(null, 'Created new ladder: `normal`')).is.true();
     });
 });

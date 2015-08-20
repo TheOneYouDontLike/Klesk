@@ -1,6 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
+import slackTextSnippets from '../slackTextSnippets';
 
 function Ladder(name) {
     return {
@@ -54,7 +55,7 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
                         return;
                     }
 
-                    let message = 'Created new ladder: ' + ladderName;
+                    let message = slackTextSnippets.notifications.newLadder(ladderName);
                     callback(null, message);
                     notification.send(message);
                 });

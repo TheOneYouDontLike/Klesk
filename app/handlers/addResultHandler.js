@@ -1,10 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-
-function _decorate(playerName) {
-    return '`' + playerName + '`';
-}
+import slackTextSnippets from '../slackTextSnippets';
 
 function _startsWith(element, startsWith) {
         return element.indexOf(startsWith) === 0;
@@ -48,10 +45,6 @@ function _getWinner(players) {
         }));
 }
 
-function _getLoser(players) {
-    return _sanitizePlayerName(_.find(players, (player) => { return !_startsWith(player, '+'); }));
-}
-
 function _setScore(match, score) {
     if (!score) {
         return;
@@ -68,6 +61,10 @@ function _validFormatScore(score) {
     var validScoreFormat = /^\d+:\d+$/;
 
     return score.match(validScoreFormat);
+}
+
+function _getMatchLoser(match) {
+    return match.winner === match.player1 ? match.player2 : match.player1;
 }
 
 function _getFunctionToSetResult(players, score, callback, notification) {
@@ -90,7 +87,7 @@ function _getFunctionToSetResult(players, score, callback, notification) {
 
         callback(null, 'Result saved!');
 
-        let notificationMessage = _decorate(match.winner) + ' has won a match with ' + _decorate(_getLoser(players)) + ' on ladder ' + _decorate(ladder.name);
+        let notificationMessage = slackTextSnippets.notifications.matchResultAdded(match.winner, _getMatchLoser(match), ladder.name, match.score);
         notification.send(notificationMessage);
     };
 }

@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import logger from '../logger';
+import slackTextSnippets from '../slackTextSnippets';
 
 const RESULT_MESSAGE = 'Added: ';
 const ALREADY_JOINED = 'You already joined this ladder ';
@@ -43,10 +44,6 @@ let newLadderHandler = function(persistence) {
         });
     }
 
-    function _decorate(playerName) {
-        return '`' + playerName + '`';
-    }
-
     return {
         makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
@@ -60,21 +57,21 @@ let newLadderHandler = function(persistence) {
                 if (_thereAreNoOtherPlayers(ladder.matches)) {
                     ladder.matches.push({ player1: playerName, player2: '', winner: '' });
 
-                    callback(null, RESULT_MESSAGE + _decorate(playerName));
-                    notification.send('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
+                    callback(null, RESULT_MESSAGE + slackTextSnippets.decorate(playerName));
+                    notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
                     return;
                 }
 
                 if (_alreadyJoinedLadder(ladder.matches, playerName)) {
-                    callback(null, ALREADY_JOINED + _decorate(playerName));
+                    callback(null, ALREADY_JOINED + slackTextSnippets.decorate(playerName));
                     return;
                 }
 
                 if (_thereIsOnlyOnePlayer(ladder.matches)) {
                     _addNewPlayerToMatch(ladder.matches[0], playerName);
 
-                    callback(null, RESULT_MESSAGE + _decorate(playerName));
-                    notification.send('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
+                    callback(null, RESULT_MESSAGE + slackTextSnippets.decorate(playerName));
+                    notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
                     return;
                 }
 
@@ -91,7 +88,7 @@ let newLadderHandler = function(persistence) {
                 ladder.matches = matches;
 
                 callback(null, RESULT_MESSAGE + playerName);
-                notification.send('Player ' + _decorate(playerName) + ' has joined the ladder ' + _decorate(ladderName));
+                notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
             };
 
             persistence.update(queryLadder, updateCallback, (error) => {
