@@ -55,7 +55,7 @@ describe('showLaddersHandler', () => {
         assert.that(callbackSpy.getCall(0).args[1]).is.equalTo('There are no active ladders.');
     });
 
-    it('should inform about errors log errors', () => {
+    it('should inform about errors and log them', () => {
         // given
         let expectedError = new Error('something went wrong');
 
