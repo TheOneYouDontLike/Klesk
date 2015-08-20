@@ -33,4 +33,25 @@ describe('showLaddersHandler', () => {
         // then
         assert.that(callbackSpy.getCall(0).args[1]).is.equalTo('Active ladders: `normal`, `insta`');
     });
+
+    it('should return info if there are no ladders', () => {
+        // given
+        let ladders = [];
+
+        let fakePersistence = {
+            getAll(callback) {
+                callback(null, ladders);
+            }
+        };
+
+        let handler = showLaddersHandler(fakePersistence);
+
+        let callbackSpy = sinon.spy();
+
+        // when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        // then
+        assert.that(callbackSpy.getCall(0).args[1]).is.equalTo('There are no active ladders.');
+    });
 });
