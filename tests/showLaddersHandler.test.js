@@ -54,4 +54,29 @@ describe('showLaddersHandler', () => {
         // then
         assert.that(callbackSpy.getCall(0).args[1]).is.equalTo('There are no active ladders.');
     });
+
+    it('should inform about errors log errors', () => {
+        // given
+        let expectedError = new Error('something went wrong');
+
+        let fakePersistence = {
+            getAll(callback) {
+                callback(expectedError, null);
+            }
+        };
+
+        let loggerSpy = sinon.spy();
+        showLaddersHandler.__Rewire__('logger', loggerSpy);
+
+        let handler = showLaddersHandler(fakePersistence);
+
+        let callbackSpy = sinon.spy();
+
+        // when
+        handler.makeItSo(parsedCommand, callbackSpy);
+
+        // then
+        assert.that(callbackSpy.getCall(0).args[0]).is.equalTo(expectedError);
+        assert.that(loggerSpy.getCall(0).args[0]).is.equalTo(expectedError);
+    });
 });

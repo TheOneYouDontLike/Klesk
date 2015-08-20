@@ -1,11 +1,18 @@
 'use strict';
 
 import _ from 'lodash';
+import logger from '../logger';
 
 let showStatsHandler = function(persistence) {
     return {
         makeItSo(parsedCommand, callback) {
             persistence.getAll((error, ladders) => {
+                if (error) {
+                    logger(error);
+                    callback(error);
+                    return;
+                }
+
                 if (ladders.length === 0) {
                     callback(null, 'There are no active ladders.');
                 }
