@@ -49,7 +49,7 @@ let getCommandHandler = function(commandType, callback) {
                 callback(validateLadderExistenceDecorator(rankingHandler(ladderPersistence), ladderPersistence));
                 break;
 
-            case commandType.SHOWLADDERS:
+            case commandTypes.SHOWLADDERS:
                 callback(showLaddersHandler(ladderPersistence));
                 break;
 
