@@ -28,9 +28,9 @@ let showStatsHandler = function(persistence) {
     };
 };
 
-function _decorate(ladderName, shouldAddComa) {
+function _decorate(ladderName, shouldAddComma) {
     let decoratedName = '`' + ladderName + '`';
-    if (shouldAddComa) {
+    if (shouldAddComma) {
         decoratedName += ', ';
     }
 
