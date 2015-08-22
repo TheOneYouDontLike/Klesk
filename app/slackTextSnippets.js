@@ -54,7 +54,7 @@ function _losingScoreFirst(score) {
 
 function _indicateWinner(playerName, match) {
     if (playerName === match.winner) {
-        return '`+' + playerName + '`';
+        return decorate('+' + playerName);
     }
 
     return playerName;
@@ -86,7 +86,7 @@ function ranking(ladder) {
     return message;
 }
 
-function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatches, requestingPlayerName, mapName) {
+function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatches, mapName) {
     let playerMatchesCount = playerMatches.length;
 
     let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;

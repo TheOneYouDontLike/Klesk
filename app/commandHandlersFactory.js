@@ -8,7 +8,8 @@ import leaveLadderHandler from './handlers/leaveLadderHandler';
 import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
 import rankingHandler from './handlers/rankingHandler';
-import {mapUpVoteHandler, mapDownVoteHandler} from './handlers/maps/mapVoteHandlers';
+import {mapUpVoteHandler, mapDownVoteHandler} from './handlers/mapVoteHandlers';
+import showLaddersHandler from './handlers/showLaddersHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
 import config from '../config';
@@ -50,12 +51,17 @@ let getCommandHandler = function(commandType, callback) {
                 callback(validateLadderExistenceDecorator(rankingHandler(ladderPersistence), ladderPersistence));
                 break;
 
+            case commandTypes.SHOWLADDERS:
+                callback(showLaddersHandler(ladderPersistence));
+                break;
+
             case commandTypes.UPVOTEMAP:
                 mapPersistence.init((error => {
                     logger(error);
                     callback(mapUpVoteHandler(mapPersistence));
                 }));
                 break;
+
             case commandTypes.DOWNVOTEMAP:
                 mapPersistence.init((error => {
                     logger(error);
