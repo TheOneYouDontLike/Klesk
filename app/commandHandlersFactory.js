@@ -9,6 +9,7 @@ import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
 import rankingHandler from './handlers/rankingHandler';
 import {mapUpVoteHandler, mapDownVoteHandler} from './handlers/mapVoteHandlers';
+import listMapsHandler from './handlers/listMapsHandler';
 import showLaddersHandler from './handlers/showLaddersHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
@@ -56,17 +57,24 @@ let getCommandHandler = function(commandType, callback) {
                 break;
 
             case commandTypes.UPVOTEMAP:
-                mapPersistence.init((error => {
+                mapPersistence.init((error) => {
                     logger(error);
                     callback(mapUpVoteHandler(mapPersistence));
-                }));
+                });
                 break;
 
             case commandTypes.DOWNVOTEMAP:
-                mapPersistence.init((error => {
+                mapPersistence.init((error) => {
                     logger(error);
                     callback(mapDownVoteHandler(mapPersistence));
-                }));
+                });
+                break;
+
+            case commandTypes.LISTMAPS:
+                mapPersistence.init((error) => {
+                    logger(error);
+                    callback(listMapsHandler(mapPersistence));
+                });
                 break;
 
             default:

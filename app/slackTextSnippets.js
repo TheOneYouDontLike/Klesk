@@ -105,6 +105,23 @@ function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatche
     return message + '\n' + matchesStats;
 }
 
+function _getMapRepresentation(map) {
+    console.log(map);
+    let votes = '';
+    _.forIn(map.votes, (voteValue, voteTag) => {
+        votes += voteTag + ':' + voteValue + ' ';
+    });
+    return decorate(map.name) + ' ' + vote;
+}
+
+function mapList(maps) {
+    console.log(maps);
+    return _.reduce(maps, (mapListMessage, map) => {
+        console.log(map);
+        return mapListMessage + '\n' + _getMapRepresentation(map)
+    });
+}
+
 export default {
     notifications: {
         matchResultAdded: matchResultAdded,
@@ -114,5 +131,6 @@ export default {
     },
     decorate: decorate,
     ranking: ranking,
-    playerStats: playerStats
+    playerStats: playerStats,
+    mapList: mapList
 };

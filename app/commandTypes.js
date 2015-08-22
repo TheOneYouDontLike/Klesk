@@ -9,5 +9,6 @@ export default {
     RANKING: 'ranking',
     SHOWLADDERS: 'showladders',
     UPVOTEMAP: 'upvoteMap',
-    DOWNVOTEMAP: 'downvoteMap'
+    DOWNVOTEMAP: 'downvoteMap',
+    LISTMAPS: 'listmaps'
 };
