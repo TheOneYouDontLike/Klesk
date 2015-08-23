@@ -80,7 +80,7 @@ function ranking(ladder) {
     let message = '`' + ladder.name + ' matches`\n';
 
     ladder.matches.forEach((match) => {
-        message += _getMatchRepresentation(match, ladder.map.name) + '\n';
+        message += _getMatchRepresentation(match, ladder.map) + '\n';
     });
 
     return message;

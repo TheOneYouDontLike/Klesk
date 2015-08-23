@@ -23,9 +23,7 @@ describe('should display scores in the order players appear in message', () => {
         //given
         let ladder = {
             name: 'ladder',
-            map: {
-                name: 'map'
-            },
+            map:  'map',
             matches: [
                 { player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23' },
                 { player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32' },

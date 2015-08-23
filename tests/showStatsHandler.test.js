@@ -27,7 +27,7 @@ describe('showStatsHandler', () => {
         //given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: { name: 'aerowalk' },
+            map: 'aerowalk',
             matches: [
                 { player1: parsedCommand.playerName },
             ]
@@ -56,7 +56,7 @@ describe('showStatsHandler', () => {
     it('should return stats for player in ladder directly to him', () => {
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: { name: 'aerowalk' },
+            map: 'aerowalk',
             matches: [
                 { player1: 'anarki', player2: 'klesk', winner: 'anarki' },
                 { player1: 'anarki', player2: 'sarge', winner: 'sarge' },
@@ -94,7 +94,7 @@ describe('showStatsHandler', () => {
         //given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: { name: 'aerowalk' },
+            map: 'aerowalk',
             matches: [
                 { player1: 'anarki', player2: 'klesk', winner: '' }
             ]
@@ -141,7 +141,6 @@ describe('showStatsHandler', () => {
         // given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: { name: 'aerowalk' },
             matches: [
                 { player1: 'klesk', player2: 'sarge', winner: 'sarge' }
             ]

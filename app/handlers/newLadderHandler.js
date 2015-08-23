@@ -24,7 +24,7 @@ function _assignRandomMap(ladder, mapPersistence, callback) {
 
         var randomMap = maps[Math.floor(Math.random()*maps.length)];
 
-        ladder.map = randomMap;
+        ladder.map = randomMap.name;
     });
 }
 

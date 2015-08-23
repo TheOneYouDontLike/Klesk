@@ -14,7 +14,7 @@ describe('ranking handler', () => {
 
         let ladderWithNotPlayedMatchFirst = {
             name: 'ladderName',
-            map: {name: 'aerowalk'},
+            map: 'aerowalk',
             matches: [
                 {player1: 'unplayedMatchPlayer1', player2: 'unplayedMatchPlayer2', winner: ''},
                 {player1: 'playedMatchPlayer1', player2: 'playedMatchPlayer2', winner: 'playedMatchPlayer1'}
