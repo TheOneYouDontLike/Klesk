@@ -20,7 +20,7 @@ function _getMapListFavouringUpvotedMaps(maps) {
     return biasedMapList;
 }
 
-function _initializeVotesForMapsWithoutKeywordVote(maps, keyword) {
+function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
     let keywordVoteMap =_.map(maps, (map) => {
         if (_.has(map.votes, keyword)) {
             return map;
@@ -33,26 +33,18 @@ function _initializeVotesForMapsWithoutKeywordVote(maps, keyword) {
     return keywordVoteMap;
 }
 
-let mapSelection = function() {
-    var randoms = {
-        getRandomElement(collection) {
-            return collection[Math.floor(Math.random()*collection.length)];
+let mapSelection = { 
+    getMapFrom(maps, keyword) {
+        if(!keyword) {
+            return _.sample(maps);
         }
-    };
 
-    return { 
-        getMapFrom(maps, keyword) {
-            if(!keyword) {
-                return randoms.getRandomElement(maps);
-            }
+        let mapsWithKeywordVotes = _initialiseVotesForMapsWithoutKeywordVote(maps, keyword);
 
-            let mapsWithKeywordVotes = _initializeVotesForMapsWithoutKeywordVote(maps, keyword);
+        let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(mapsWithKeywordVotes);
 
-            let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(mapsWithKeywordVotes);
-
-            return randoms.getRandomElement(mapsToSelectFrom);
-        }
-    };
+        return _.sample(mapsToSelectFrom);
+    }
 };
 
 export default mapSelection;
