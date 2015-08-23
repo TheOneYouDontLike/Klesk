@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
+import mapSelection from '../maps/mapSelection';
 
 function Ladder(name) {
     return {
@@ -22,7 +23,9 @@ function _assignRandomMap(ladder, mapPersistence, callback) {
             return;
         }
 
-        var randomMap = maps[Math.floor(Math.random()*maps.length)];
+        let mapSelect = new mapSelection();
+
+        let randomMap = mapSelect.getMapFrom(maps);
 
         ladder.map = randomMap.name;
     });
