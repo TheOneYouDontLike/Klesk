@@ -10,19 +10,19 @@ function _decorate(word) {
     return '`' + word + '`';
 }
 
-function _getMapUpdateAction(ladderName, voteStrategy, callback) {
+function _getMapUpdateAction(keyword, voteStrategy, callback) {
     return (map) => {
         if (!map.votes) {
             map.votes = {};
         }
 
-        if (!map.votes[ladderName]) {
-            map.votes[ladderName] = 0;
+        if (!map.votes[keyword]) {
+            map.votes[keyword] = 0;
         }
 
-        map.votes[ladderName] = voteStrategy(map.votes[ladderName]);
+        map.votes[keyword] = voteStrategy(map.votes[keyword]);
 
-        callback(null, 'Map voted for ladder ' + _decorate(ladderName) + ' currently at ' + map.votes[ladderName]);
+        callback(null, 'Map voted for ' + _decorate(keyword) + ' currently at ' + map.votes[keyword]);
     };
 }
 
@@ -30,9 +30,9 @@ function _getMapVoteHandler(mapPersistence, voteStrategy) {
     return {
         makeItSo(parsedCommand, callback) {
             let mapName = parsedCommand.arguments[1];
-            let ladderName = parsedCommand.arguments[2];
+            let keyword = parsedCommand.arguments[2];
 
-            mapPersistence.update(_getMapPredicate(mapName), _getMapUpdateAction(ladderName, voteStrategy, callback), (error) => {
+            mapPersistence.update(_getMapPredicate(mapName), _getMapUpdateAction(keyword, voteStrategy, callback), (error) => {
                 callback(error);
             },
             (mapNotFoundError) => {
