@@ -29,6 +29,16 @@ function _getMapUpdateAction(keyword, voteStrategy, callback) {
 function _getMapVoteHandler(mapPersistence, voteStrategy) {
     return {
         makeItSo(parsedCommand, callback) {
+            if (parsedCommand.arguments.length < 2) {
+                callback(null, 'Map name and keyword is required for voting.');
+                return;
+            }
+
+            if (parsedCommand.arguments.length < 3) {
+                callback(null, 'Keyword is required for voting.');
+                return;
+            }
+
             let mapName = parsedCommand.arguments[1];
             let keyword = parsedCommand.arguments[2];
 
