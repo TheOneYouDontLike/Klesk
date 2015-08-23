@@ -1,13 +1,11 @@
 'use strict';
 
+import slackTextSnippets from '../slackTextSnippets';
+
 function _getMapPredicate(mapName) {
     return (map) => {
         return map.name === mapName;
     };
-}
-
-function _decorate(word) {
-    return '`' + word + '`';
 }
 
 function _getMapUpdateAction(keyword, voteStrategy, callback) {
@@ -22,7 +20,7 @@ function _getMapUpdateAction(keyword, voteStrategy, callback) {
 
         map.votes[keyword] = voteStrategy(map.votes[keyword]);
 
-        callback(null, 'Map voted for ' + _decorate(keyword) + ' currently at ' + map.votes[keyword]);
+        callback(null, slackTextSnippets.decorate(map.name) + ' voted for ' + slackTextSnippets.decorate(keyword) + '; currently at ' + slackTextSnippets.decorate(map.votes[keyword]));
     };
 }
 
