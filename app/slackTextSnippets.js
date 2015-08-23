@@ -106,20 +106,19 @@ function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatche
 }
 
 function _getMapRepresentation(map) {
-    console.log(map);
     let votes = '';
     _.forIn(map.votes, (voteValue, voteTag) => {
         votes += voteTag + ':' + voteValue + ' ';
     });
-    return decorate(map.name) + ' ' + vote;
+    return decorate(map.name) + ' ' + votes;
 }
 
 function mapList(maps) {
-    console.log(maps);
-    return _.reduce(maps, (mapListMessage, map) => {
-        console.log(map);
-        return mapListMessage + '\n' + _getMapRepresentation(map)
+    var mapListMessage = '';
+    _.forEach(maps, (map) => {
+        mapListMessage += _getMapRepresentation(map) + '\n';
     });
+    return mapListMessage;
 }
 
 export default {
