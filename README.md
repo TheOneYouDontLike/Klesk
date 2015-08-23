@@ -10,7 +10,7 @@ creates a new ladder with name `<laddername>`
 
 map selection: a random map will be assigned to the ladder if `<keyword>` is not specified
 
-`<keyword>` makes map selection ignore maps with negative <keyword> count and choose maps with higher <keyword> vote count more often
+`<keyword>` makes map selection ignore maps with negative `<keyword>` count and choose maps with higher `<keyword>` vote count more often
 
 sends notification to configured slack webhook about a new ladder
 
