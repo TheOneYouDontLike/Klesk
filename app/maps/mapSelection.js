@@ -2,15 +2,15 @@
 
 import _ from 'lodash';
 
-function _getMapListFavouringUpvotedMaps(maps) {
+function _getMapListFavouringUpvotedMaps(maps, keyword) {
     let biasedMapList = [];
 
     _.forEach(maps, (map) => {
-        if (map.votes.keyword < 0) {
+        if (map.votes[keyword] < 0) {
             return;
         }
 
-        for(let i = 0; i < map.votes.keyword + 1; ++i) {
+        for(let i = 0; i < map.votes[keyword] + 1; ++i) {
             biasedMapList.push(map);
         }
     });
@@ -26,7 +26,7 @@ function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
             return map;
         }
 
-        map.votes.keyword = 0;
+        map.votes[keyword] = 0;
         return map;
     });
 
@@ -41,7 +41,7 @@ let mapSelection = {
 
         let mapsWithKeywordVotes = _initialiseVotesForMapsWithoutKeywordVote(maps, keyword);
 
-        let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(mapsWithKeywordVotes);
+        let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(mapsWithKeywordVotes, keyword);
 
         return _.sample(mapsToSelectFrom);
     }
