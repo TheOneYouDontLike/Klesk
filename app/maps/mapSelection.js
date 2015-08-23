@@ -22,6 +22,10 @@ function _getMapListFavouringUpvotedMaps(maps, keyword) {
 
 function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
     let keywordVoteMap =_.map(maps, (map) => {
+        if (!_.has(map, 'votes')) {
+            map.votes = {};
+        }
+
         if (_.has(map.votes, keyword)) {
             return map;
         }
@@ -39,9 +43,13 @@ let mapSelection = {
             return _.sample(maps);
         }
 
-        let mapsWithKeywordVotes = _initialiseVotesForMapsWithoutKeywordVote(maps, keyword);
+        let allMapsWithKeywordVotes = _initialiseVotesForMapsWithoutKeywordVote(maps, keyword);
 
-        let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(mapsWithKeywordVotes, keyword);
+        let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(allMapsWithKeywordVotes, keyword);
+
+        if (mapsToSelectFrom.length === 0) {
+            mapsToSelectFrom = allMapsWithKeywordVotes;
+        }
 
         return _.sample(mapsToSelectFrom);
     }
