@@ -2,22 +2,20 @@
 
 import _ from 'lodash';
 
-function _getMapListFavouringUpvotedMaps(maps, keyword) {
-    let biasedMapList = [];
+function getMapFrom(maps, keyword) {
+    if(!keyword) {
+        return _.sample(maps);
+    }
 
-    _.forEach(maps, (map) => {
-        if (map.votes[keyword] < 0) {
-            return;
-        }
+    let allMapsWithKeywordVotes = _initialiseVotesForMapsWithoutKeywordVote(maps, keyword);
 
-        for(let i = 0; i < map.votes[keyword] + 1; ++i) {
-            biasedMapList.push(map);
-        }
-    });
+    let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(allMapsWithKeywordVotes, keyword);
 
-    biasedMapList = _.shuffle(biasedMapList);
+    if (mapsToSelectFrom.length === 0) {
+        mapsToSelectFrom = allMapsWithKeywordVotes;
+    }
 
-    return biasedMapList;
+    return _.sample(mapsToSelectFrom);
 }
 
 function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
@@ -37,22 +35,22 @@ function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
     return keywordVoteMap;
 }
 
-let mapSelection = { 
-    getMapFrom(maps, keyword) {
-        if(!keyword) {
-            return _.sample(maps);
+function _getMapListFavouringUpvotedMaps(maps, keyword) {
+    let biasedMapList = [];
+
+    _.forEach(maps, (map) => {
+        if (map.votes[keyword] < 0) {
+            return;
         }
 
-        let allMapsWithKeywordVotes = _initialiseVotesForMapsWithoutKeywordVote(maps, keyword);
-
-        let mapsToSelectFrom = _getMapListFavouringUpvotedMaps(allMapsWithKeywordVotes, keyword);
-
-        if (mapsToSelectFrom.length === 0) {
-            mapsToSelectFrom = allMapsWithKeywordVotes;
+        for(let i = 0; i < map.votes[keyword] + 1; ++i) {
+            biasedMapList.push(map);
         }
+    });
 
-        return _.sample(mapsToSelectFrom);
-    }
-};
+    biasedMapList = _.shuffle(biasedMapList);
 
-export default mapSelection;
+    return biasedMapList;
+}
+
+export default { getMapFrom: getMapFrom };

@@ -127,7 +127,6 @@ describe('newLadderHandler', () => {
 
         //then
         let addedLadder = addLadderSpy.getCall(0).args[0];
-        let mapInMapList = _.find(mapList, {name: addedLadder.map});
-        assert.that(mapList).is.containing(mapInMapList);
+        assert.that(mapList).is.containing(mapList[0]);
     });
 });

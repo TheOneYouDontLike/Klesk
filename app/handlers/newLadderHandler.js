@@ -12,31 +12,6 @@ function Ladder(name) {
     };
 }
 
-function _prepareLadderExistsErrorMessage(ladderName) {
-    return 'Ladder `' + ladderName + '` already exists.';
-}
-
-function _assignRandomMap(ladder, keyword, mapPersistence, callback) {
-    mapPersistence.getAll((error, maps) => {
-        if (error) {
-            callback(error);
-            return;
-        }
-        
-        let randomMap = mapSelection.getMapFrom(maps, keyword);
-
-        ladder.map = randomMap.name;
-    });
-}
-
-function _getArgumentIfPresentAt(args, argumentIndex) {
-    if (args.length < argumentIndex + 1) {
-        return undefined;
-    }
-
-    return  args[argumentIndex];
-}
-
 let newLadderHandler = function(ladderPersistence, mapPersistence) {
     return {
         makeItSo(parsedCommand, callback, notification) {
@@ -73,5 +48,30 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
         }
     };
 };
+
+function _getArgumentIfPresentAt(args, argumentIndex) {
+    if (args.length < argumentIndex + 1) {
+        return undefined;
+    }
+
+    return  args[argumentIndex];
+}
+
+function _prepareLadderExistsErrorMessage(ladderName) {
+    return 'Ladder ' + slackTextSnippets.decorate(ladderName) + ' already exists.';
+}
+
+function _assignRandomMap(ladder, keyword, mapPersistence, callback) {
+    mapPersistence.getAll((error, maps) => {
+        if (error) {
+            callback(error);
+            return;
+        }
+        
+        let randomMap = mapSelection.getMapFrom(maps, keyword);
+
+        ladder.map = randomMap.name;
+    });
+}
 
 export default newLadderHandler;

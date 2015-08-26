@@ -10,8 +10,6 @@ function matchResultAdded(winner, loser, ladderName, score) {
     let notification = decorate(winner) + ' has won a match with ' + decorate(loser) + ' on ladder ' + decorate(ladderName);
 
     if (score) {
-
-
         notification += '\nmatch score - ' + _winningScoreFirst(score);
     }
 

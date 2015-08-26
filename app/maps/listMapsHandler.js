@@ -14,7 +14,7 @@ let listMapsHandler = function(mapPersistence) {
                 }
 
                 if (maps.length === 0) {
-                    callback(null, 'Maps not found - you should initialize the map list.');
+                    callback(null, 'Maps not found - you should initialise the map list.');
                 }
 
                 notification.send(slackTextSnippets.mapList(maps), '@' + parsedCommand.playerName);

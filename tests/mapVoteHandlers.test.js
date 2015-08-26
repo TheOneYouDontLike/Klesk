@@ -16,10 +16,10 @@ function _shouldRequireMapNameAndKeyword(handler) {
     handler.makeItSo(parsedCommand, callbackSpy);
 
     //then
-    assert.that(callbackSpy.calledWith(null, 'Map name and keyword is required for voting.')).is.true();
+    assert.that(callbackSpy.calledWith(null, 'Missing arguments, correct syntax is `(up|down)votemap <mapName> <keyword>`')).is.true();
 }
 
-function _shouldRequiredKeyword(handler) {
+function _shouldRequireKeyword(handler) {
     //given
     let parsedCommand = {
         arguments: ['voteForMap', 'map name']
@@ -31,7 +31,7 @@ function _shouldRequiredKeyword(handler) {
     handler.makeItSo(parsedCommand, callbackSpy);
 
     //then
-    assert.that(callbackSpy.calledWith(null, 'Keyword is required for voting.')).is.true();
+    assert.that(callbackSpy.calledWith(null, 'Missing arguments, correct syntax is `(up|down)votemap <mapName> <keyword>`')).is.true();
 }
 
 describe('downvoting a map', () => {
@@ -42,7 +42,7 @@ describe('downvoting a map', () => {
     });
 
     it('should required keyword if only map name provided', () => {
-        _shouldRequiredKeyword(handler);
+        _shouldRequireKeyword(handler);
     });
 });
 
@@ -54,6 +54,6 @@ describe('upvoting a map', () => {
     });
 
     it('should required keyword if only map name provided', () => {
-        _shouldRequiredKeyword(handler);
+        _shouldRequireKeyword(handler);
     });
 });
