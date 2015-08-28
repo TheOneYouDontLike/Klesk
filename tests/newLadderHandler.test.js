@@ -2,6 +2,7 @@
 
 import assert from 'assertthat';
 import sinon from 'sinon';
+import _ from 'lodash';
 import newLadderHandler from '../app/handlers/newLadderHandler.js';
 
 let parsedCommand = {
@@ -126,7 +127,6 @@ describe('newLadderHandler', () => {
 
         //then
         let addedLadder = addLadderSpy.getCall(0).args[0];
-        assert.that(mapList).is.containing(addedLadder.map);
-        assert.that(callbackSpy.calledWith(null, 'Created new ladder: `normal`')).is.true();
+        assert.that(mapList).is.containing(mapList[0]);
     });
 });

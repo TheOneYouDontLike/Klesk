@@ -8,6 +8,8 @@ import leaveLadderHandler from './handlers/leaveLadderHandler';
 import addResultHandler from './handlers/addResultHandler';
 import showStatsHandler from './handlers/showStatsHandler';
 import rankingHandler from './handlers/rankingHandler';
+import {mapUpVoteHandler, mapDownVoteHandler} from './maps/mapVoteHandlers';
+import listMapsHandler from './maps/listMapsHandler';
 import showLaddersHandler from './handlers/showLaddersHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
@@ -20,9 +22,10 @@ let getCommandHandler = function(commandType, callback) {
     ladderPersistence.init((error) => {
         logger(error);
 
+        let mapPersistence = new Persistence(config.mapsFilename);
+
         switch(commandType) {
             case commandTypes.NEWLADDER:
-                let mapPersistence = new Persistence(config.mapsFilename);
                 mapPersistence.init((error => {
                     logger(error);
                     callback(newLadderHandler(ladderPersistence, mapPersistence));
@@ -51,6 +54,27 @@ let getCommandHandler = function(commandType, callback) {
 
             case commandTypes.SHOWLADDERS:
                 callback(showLaddersHandler(ladderPersistence));
+                break;
+
+            case commandTypes.UPVOTEMAP:
+                mapPersistence.init((error) => {
+                    logger(error);
+                    callback(mapUpVoteHandler(mapPersistence));
+                });
+                break;
+
+            case commandTypes.DOWNVOTEMAP:
+                mapPersistence.init((error) => {
+                    logger(error);
+                    callback(mapDownVoteHandler(mapPersistence));
+                });
+                break;
+
+            case commandTypes.LISTMAPS:
+                mapPersistence.init((error) => {
+                    logger(error);
+                    callback(listMapsHandler(mapPersistence));
+                });
                 break;
 
             default:

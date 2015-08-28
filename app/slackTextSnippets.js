@@ -10,8 +10,6 @@ function matchResultAdded(winner, loser, ladderName, score) {
     let notification = decorate(winner) + ' has won a match with ' + decorate(loser) + ' on ladder ' + decorate(ladderName);
 
     if (score) {
-
-
         notification += '\nmatch score - ' + _winningScoreFirst(score);
     }
 
@@ -80,7 +78,7 @@ function ranking(ladder) {
     let message = '`' + ladder.name + ' matches`\n';
 
     ladder.matches.forEach((match) => {
-        message += _getMatchRepresentation(match, ladder.map.name) + '\n';
+        message += _getMatchRepresentation(match, ladder.map) + '\n';
     });
 
     return message;
@@ -105,6 +103,22 @@ function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatche
     return message + '\n' + matchesStats;
 }
 
+function _getMapRepresentation(map) {
+    let votes = '';
+    _.forIn(map.votes, (voteValue, voteTag) => {
+        votes += voteTag + ':' + voteValue + ' ';
+    });
+    return decorate(map.name) + ' ' + votes;
+}
+
+function mapList(maps) {
+    var mapListMessage = '';
+    _.forEach(maps, (map) => {
+        mapListMessage += _getMapRepresentation(map) + '\n';
+    });
+    return mapListMessage;
+}
+
 export default {
     notifications: {
         matchResultAdded: matchResultAdded,
@@ -114,5 +128,6 @@ export default {
     },
     decorate: decorate,
     ranking: ranking,
-    playerStats: playerStats
+    playerStats: playerStats,
+    mapList: mapList
 };

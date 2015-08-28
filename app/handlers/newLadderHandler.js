@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
+import mapSelection from '../maps/mapSelection';
 
 function Ladder(name) {
     return {
@@ -11,27 +12,11 @@ function Ladder(name) {
     };
 }
 
-function _prepareLadderExistsErrorMessage(ladderName) {
-    return 'Ladder `' + ladderName + '` already exists.';
-}
-
-function _assignRandomMap(ladder, mapPersistence, callback) {
-    mapPersistence.getAll((error, maps) => {
-        if (error) {
-            callback(error);
-            return;
-        }
-
-        var randomMap = maps[Math.floor(Math.random()*maps.length)];
-
-        ladder.map = randomMap;
-    });
-}
-
 let newLadderHandler = function(ladderPersistence, mapPersistence) {
     return {
         makeItSo(parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
+            let keyword = _getArgumentIfPresentAt(parsedCommand.arguments, 2);
 
             ladderPersistence.getAll((error, data) => {
                 if (error) {
@@ -47,7 +32,7 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
 
                 let newLadder = Ladder(ladderName);
 
-                _assignRandomMap(newLadder, mapPersistence, callback);
+                _assignRandomMap(newLadder, keyword, mapPersistence, callback);
 
                 ladderPersistence.add(newLadder, (error) => {
                     if (error) {
@@ -63,5 +48,30 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
         }
     };
 };
+
+function _getArgumentIfPresentAt(args, argumentIndex) {
+    if (args.length < argumentIndex + 1) {
+        return undefined;
+    }
+
+    return  args[argumentIndex];
+}
+
+function _prepareLadderExistsErrorMessage(ladderName) {
+    return 'Ladder ' + slackTextSnippets.decorate(ladderName) + ' already exists.';
+}
+
+function _assignRandomMap(ladder, keyword, mapPersistence, callback) {
+    mapPersistence.getAll((error, maps) => {
+        if (error) {
+            callback(error);
+            return;
+        }
+        
+        let randomMap = mapSelection.getMapFrom(maps, keyword);
+
+        ladder.map = randomMap.name;
+    });
+}
 
 export default newLadderHandler;

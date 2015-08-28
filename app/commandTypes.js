@@ -7,5 +7,8 @@ export default {
     SHOWSTATS: 'showstats',
     LEAVELADDER: 'leaveladder',
     RANKING: 'ranking',
-    SHOWLADDERS: 'showladders'
+    SHOWLADDERS: 'showladders',
+    UPVOTEMAP: 'upvotemap',
+    DOWNVOTEMAP: 'downvotemap',
+    LISTMAPS: 'listmaps'
 };
