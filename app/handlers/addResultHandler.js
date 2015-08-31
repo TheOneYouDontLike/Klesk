@@ -69,12 +69,7 @@ function _getMatchLoser(match) {
 
 function _getFunctionToSetResult(players, score, callback, notification) {
     return (ladder) => {
-            let match = _getMatch(ladder, players);
-
-        if (match.winner) {
-            callback(null, 'This match result has already been added.');
-            return;
-        }
+        let match = _getMatch(ladder, players);
 
         match.winner = _getWinner(players);
 
@@ -134,21 +129,61 @@ let addResultHandler = function(persistence) {
                 return;
             }
 
-            persistence.update(
-                _getLadderPredicate(ladderName, players),
-                _getFunctionToSetResult(players, score, callback, notification),
-                (error) => {
+            persistence.query(_getLadderPredicate(ladderName, players), (error, filteredLadders) => {
+                if (error) {
                     callback(error);
-                },
-                (ladderNotFoundError) => {
-                    if (ladderNotFoundError) {
-                        callback(null, 'There is no match with given players in the ladder.');
-                    }
+                    return;
                 }
-            );
+
+                if (filteredLadders.length === 0) {
+                    callback(null, 'There is no match with given players in the ladder.');
+                    return;
+                }
+
+                let ladder = filteredLadders[0];
+
+                let match = _getMatch(ladder, players);
+
+                if (match.winner) {
+                    callback(null, 'This match result has already been added.');
+                    return;
+                }
+
+                persistence.update(
+                    _getLadderPredicate(ladderName, players),
+                    _getFunctionToSetResult(players, score, callback, notification),
+                    (error) => {
+                        if (error) {
+                            callback(error);
+                            return;
+                        }
+
+                        _notifyAboutLadderEvents(persistence, notification, (ladder) => { return ladder.name === ladderName; });
+                    }
+                );
+            });
         }
     };
-
 };
+
+function _notifyAboutLadderEvents(persistence, notification, ladderFilter) {
+    persistence.query(ladderFilter, (error, data) => {
+        if (error || data.length !== 1) {
+            return;
+        }
+
+        let ladder = data[0];
+
+        if (_allMatchesPlayed(ladder)) {
+            notification.send(slackTextSnippets.notifications.ladderFinished(ladder));
+        }
+    });
+}
+
+function _allMatchesPlayed(ladder) {
+    return _.all(ladder.matches, (match) => {
+        return match.winner;
+    });
+}
 
 export default addResultHandler;

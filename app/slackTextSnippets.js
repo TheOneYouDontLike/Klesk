@@ -119,12 +119,19 @@ function mapList(maps) {
     return mapListMessage;
 }
 
+function ladderFinished(ladder) {
+    var notification = 'All matches in ' + decorate(ladder.name) + ' have been played!';
+
+    return notification;
+}
+
 export default {
     notifications: {
         matchResultAdded: matchResultAdded,
         playerJoined: playerJoined,
         playerLeft: playerLeft,
-        newLadder: newLadder
+        newLadder: newLadder,
+        ladderFinished: ladderFinished
     },
     decorate: decorate,
     ranking: ranking,

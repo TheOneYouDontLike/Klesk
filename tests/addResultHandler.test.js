@@ -24,8 +24,9 @@ describe('addResultHandler', () => {
             readFile(fileName, callback) {
                 callback(null, JSON.stringify([ladder]));
             },
-            writeFile(filename, data) {
+            writeFile(filename, data, callback) {
                 ladder = JSON.parse(data)[0];
+                callback();
             }
         };
 
@@ -192,5 +193,22 @@ describe('addResultHandler', () => {
 
         //then
         assert.that(callbackSpy.calledWith(null, 'There is no match with given players in the ladder.')).is.true();
+    });
+
+    it('should send a notification about finished ladder', () => {
+        //given
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', 'loser']
+        };
+
+        let notificationSpy = sinon.spy();
+        
+        //when
+        handler.makeItSo(parsedCommand, () => {}, { send: notificationSpy });
+        
+        //then
+        let notificationMessage = notificationSpy.getCall(1).args[0];
+        assert.that(notificationMessage).is.equalTo('All matches in `laddername` have been played!');
     });
 });
