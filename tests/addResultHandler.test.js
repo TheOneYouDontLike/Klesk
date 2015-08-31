@@ -195,7 +195,7 @@ describe('addResultHandler', () => {
         assert.that(callbackSpy.calledWith(null, 'There is no match with given players in the ladder.')).is.true();
     });
 
-    it('should send a notification about finished ladder', () => {
+    it('should send a notification about a finished ladder', () => {
         //given
         let parsedCommand = {
             playerName: 'winner',
@@ -209,6 +209,6 @@ describe('addResultHandler', () => {
         
         //then
         let notificationMessage = notificationSpy.getCall(1).args[0];
-        assert.that(notificationMessage).is.equalTo('All matches in `laddername` have been played!');
+        assert.that(notificationMessage).is.equalTo('All matches in `laddername` have been played!\n`winner` 1/0\n`loser` 0/1\n');
     });
 });

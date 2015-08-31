@@ -119,10 +119,59 @@ function mapList(maps) {
     return mapListMessage;
 }
 
-function ladderFinished(ladder) {
-    var notification = 'All matches in ' + decorate(ladder.name) + ' have been played!';
+function _getResolvedMatchWinner(match) {
+    return match.winner === match.player1 ? match.player1 : match.player2;
+}
 
-    return notification;
+function _getResolvedMatchLoser(match) {
+    return match.winner === match.player1 ? match.player2 : match.player1;
+}
+
+function ladderFinished(ladder) {
+    var notification = 'All matches in ' + decorate(ladder.name) + ' have been played!\n';
+
+    var playerWins = _.countBy(ladder.matches, _getResolvedMatchWinner);
+    var playerLosses = _.countBy(ladder.matches,  _getResolvedMatchLoser);
+
+    let playerResults = [];
+
+    _addResultsForPeopleWhoWonAnything(playerResults, playerWins, playerLosses);
+
+    _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, playerLosses);
+
+    let sortedPlayerResults = _.sortByOrder(playerResults, 'wins').reverse();
+
+    return _.reduce(sortedPlayerResults, (message, playerResult) => {
+        return message + decorate(playerResult.playerName) + ' ' + playerResult.wins + '/' + playerResult.losses + '\n';
+    }, notification);
+}
+
+function _addResultsForPeopleWhoWonAnything(playerResults, playerWins, playerLosses) {
+    _.forEach(playerWins, (wins, playerName) => {
+        let playerResult = {
+            playerName: playerName,
+            wins: wins,
+            losses: 0
+        };
+
+        if (_.has(playerLosses, playerName)) {
+            playerResult.losses = playerLosses[playerName];
+        }
+
+        playerResults.push(playerResult);
+    });
+}
+
+function _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, playerLosses) {
+    _.forEach(playerLosses, (losses, playerName) => {
+        if (!_.any(playerResults, {playerName: playerName})) {
+            playerResults.push({
+                playerName: playerName,
+                wins: 0,
+                losses: losses
+            });
+        }
+    });
 }
 
 export default {
