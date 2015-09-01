@@ -4,17 +4,22 @@ import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
 import mapSelection from '../maps/mapSelection';
 
-function Ladder(name) {
+function Ladder (name) {
     return {
         name: name,
-        map: '',
-        matches: []
+        seasons: [
+            {
+                number: 1,
+                map: '',
+                matches: []
+            }
+        ]
     };
 }
 
-let newLadderHandler = function(ladderPersistence, mapPersistence) {
+function newLadderHandler (ladderPersistence, mapPersistence) {
     return {
-        makeItSo(parsedCommand, callback, notification) {
+        makeItSo (parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
             let keyword = _getArgumentIfPresentAt(parsedCommand.arguments, 2);
 
@@ -24,7 +29,7 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
                     return;
                 }
 
-                let ladderAlreadyExists = _.any(data, { name: ladderName });
+                let ladderAlreadyExists = _.any(data, {name: ladderName});
                 if (ladderAlreadyExists) {
                     callback(null, _prepareLadderExistsErrorMessage(ladderName));
                     return;
@@ -34,9 +39,9 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
 
                 _assignRandomMap(newLadder, keyword, mapPersistence, callback);
 
-                ladderPersistence.add(newLadder, (error) => {
-                    if (error) {
-                        callback(error.message, null);
+                ladderPersistence.add(newLadder, (addingError) => {
+                    if (addingError) {
+                        callback(addingError.message, null);
                         return;
                     }
 
@@ -47,9 +52,9 @@ let newLadderHandler = function(ladderPersistence, mapPersistence) {
             });
         }
     };
-};
+}
 
-function _getArgumentIfPresentAt(args, argumentIndex) {
+function _getArgumentIfPresentAt (args, argumentIndex) {
     if (args.length < argumentIndex + 1) {
         return undefined;
     }
@@ -57,20 +62,20 @@ function _getArgumentIfPresentAt(args, argumentIndex) {
     return  args[argumentIndex];
 }
 
-function _prepareLadderExistsErrorMessage(ladderName) {
+function _prepareLadderExistsErrorMessage (ladderName) {
     return 'Ladder ' + slackTextSnippets.decorate(ladderName) + ' already exists.';
 }
 
-function _assignRandomMap(ladder, keyword, mapPersistence, callback) {
+function _assignRandomMap (ladder, keyword, mapPersistence, callback) {
     mapPersistence.getAll((error, maps) => {
         if (error) {
             callback(error);
             return;
         }
-        
+
         let randomMap = mapSelection.getMapFrom(maps, keyword);
 
-        ladder.map = randomMap.name;
+        ladder.seasons[0].map = randomMap.name;
     });
 }
 
