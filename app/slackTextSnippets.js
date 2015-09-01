@@ -174,12 +174,8 @@ function _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, player
     });
 }
 
-function playerFinishedLadder(ladder, playerName) {
-    let notification = 'You played all matches in ladder ' + decorate(ladder.name) + '\n';
-
-    let playerMatches = _.filter(ladder.matches, (match) => {
-        return match.player1 === playerName || match.player2 === playerName;
-    });
+function playerFinishedLadder(ladderName, playerMatches, playerName) {
+    let notification = 'You played all matches in ladder ' + decorate(ladderName) + '\n';
 
     let winCount = _.filter(playerMatches, {winner: playerName}).length;
     let lossCount = playerMatches.length - winCount;

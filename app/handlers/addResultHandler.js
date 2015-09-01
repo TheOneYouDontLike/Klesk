@@ -178,16 +178,17 @@ function _notifyAboutLadderEvents(persistence, notification, ladderFilter, playe
             notification.send(slackTextSnippets.notifications.ladderFinished(ladder));
         }
 
-        let player1 = players[0];
-        if (_allMatchesPlayedByPlayer(ladder.matches, player1)) {
-            notification.send(slackTextSnippets.notifications.playerFinishedLadder(ladder, player1), '@' + player1);
-        }
-
-        let player2 = players[1];
-        if (_allMatchesPlayedByPlayer(ladder.matches, player2)) {
-            notification.send(slackTextSnippets.notifications.playerFinishedLadder(ladder, player2), '@' + player2);
-        }
+        _.forEach(players, (playerName) => {
+            _notifyAboutAllMatchesPlayedByPlayer(ladder, playerName, notification);
+        });
     });
+}
+
+function _notifyAboutAllMatchesPlayedByPlayer(ladder, playerName, notification) {
+    let playerMatches = _getPlayerMatches(ladder.matches, playerName);
+    if (_allMatchesPlayed(playerMatches)) {
+        notification.send(slackTextSnippets.notifications.playerFinishedLadder(ladder.name, playerMatches, playerName), '@' + playerName);
+    }
 }
 
 function _allMatchesPlayed(matches) {
@@ -196,12 +197,10 @@ function _allMatchesPlayed(matches) {
     });
 }
 
-function _allMatchesPlayedByPlayer(matches, playerName) {
-    let playerMatches = _.filter(matches, (match) => {
+function _getPlayerMatches(matches, playerName) {
+    return _.filter(matches, (match) => {
         return match.player1 === playerName || match.player2 === playerName;
     });
-
-    return _allMatchesPlayed(playerMatches);
 }
 
 export default addResultHandler;
