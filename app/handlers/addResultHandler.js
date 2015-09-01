@@ -158,7 +158,7 @@ let addResultHandler = function(persistence) {
                             return;
                         }
 
-                        _notifyAboutLadderEvents(persistence, notification, (ladder) => { return ladder.name === ladderName; });
+                        _notifyAboutLadderEvents(persistence, notification, (ladder) => { return ladder.name === ladderName; }, _.map(players, _sanitizePlayerName));
                     }
                 );
             });
@@ -166,7 +166,7 @@ let addResultHandler = function(persistence) {
     };
 };
 
-function _notifyAboutLadderEvents(persistence, notification, ladderFilter) {
+function _notifyAboutLadderEvents(persistence, notification, ladderFilter, players) {
     persistence.query(ladderFilter, (error, data) => {
         if (error || data.length !== 1) {
             return;
@@ -174,16 +174,34 @@ function _notifyAboutLadderEvents(persistence, notification, ladderFilter) {
 
         let ladder = data[0];
 
-        if (_allMatchesPlayed(ladder)) {
+        if (_allMatchesPlayed(ladder.matches)) {
             notification.send(slackTextSnippets.notifications.ladderFinished(ladder));
+        }
+
+        let player1 = players[0];
+        if (_allMatchesPlayedByPlayer(ladder.matches, player1)) {
+            notification.send(slackTextSnippets.notifications.playerFinishedLadder(ladder, player1), '@' + player1);
+        }
+
+        let player2 = players[1];
+        if (_allMatchesPlayedByPlayer(ladder.matches, player2)) {
+            notification.send(slackTextSnippets.notifications.playerFinishedLadder(ladder, player2), '@' + player2);
         }
     });
 }
 
-function _allMatchesPlayed(ladder) {
-    return _.all(ladder.matches, (match) => {
+function _allMatchesPlayed(matches) {
+    return _.all(matches, (match) => {
         return match.winner;
     });
+}
+
+function _allMatchesPlayedByPlayer(matches, playerName) {
+    let playerMatches = _.filter(matches, (match) => {
+        return match.player1 === playerName || match.player2 === playerName;
+    });
+
+    return _allMatchesPlayed(playerMatches);
 }
 
 export default addResultHandler;

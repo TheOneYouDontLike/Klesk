@@ -211,4 +211,40 @@ describe('addResultHandler', () => {
         let notificationMessage = notificationSpy.getCall(1).args[0];
         assert.that(notificationMessage).is.equalTo('All matches in `laddername` have been played!\n`winner` 1/0\n`loser` 0/1\n');
     });
+
+    it('should send a personal notification when player played all matches', () => {
+        let parsedCommand = {
+            playerName: 'winner',
+            arguments: ['addresult', 'laddername', '+winner', 'loser']
+        };
+
+        ladder = {
+            name: 'laddername',
+            matches: [
+                { player1: 'winner', player2: 'loser', winner: '' },
+                { player1: 'player1', player2: 'player2', winner: '' },
+                { player1: 'player1', player2: 'winner', winner: 'winner' },
+                { player1: 'player1', player2: 'loser', winner: 'loser' },
+                { player1: 'winner', player2: 'player2', winner: 'player2' },
+                { player1: 'loser', player2: 'player2', winner: 'player2' },
+
+            ]
+        };
+
+        let notificationSpy = sinon.spy();
+        
+        //when
+        handler.makeItSo(parsedCommand, () => {}, { send: notificationSpy });
+        
+        //then
+        let winnerNotificationMessage = notificationSpy.getCall(1).args[0];
+        assert.that(winnerNotificationMessage).is.equalTo('You played all matches in ladder `laddername`\nYour stats are: 2/1');
+        let winnerChannelOverride = notificationSpy.getCall(1).args[1];
+        assert.that(winnerChannelOverride).is.equalTo('@winner');
+
+        let loserNotificationMessage = notificationSpy.getCall(2).args[0];
+        assert.that(loserNotificationMessage).is.equalTo('You played all matches in ladder `laddername`\nYour stats are: 1/2');
+        let loserChannelOverride = notificationSpy.getCall(2).args[1];
+        assert.that(loserChannelOverride).is.equalTo('@loser');
+    });
 });
