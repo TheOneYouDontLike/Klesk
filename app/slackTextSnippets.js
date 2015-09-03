@@ -119,12 +119,80 @@ function mapList(maps) {
     return mapListMessage;
 }
 
+function _getResolvedMatchWinner(match) {
+    return match.winner === match.player1 ? match.player1 : match.player2;
+}
+
+function _getResolvedMatchLoser(match) {
+    return match.winner === match.player1 ? match.player2 : match.player1;
+}
+
+function ladderFinished(ladder) {
+    var notification = 'All matches in ' + decorate(ladder.name) + ' have been played!\n';
+
+    var playerWins = _.countBy(ladder.matches, _getResolvedMatchWinner);
+    var playerLosses = _.countBy(ladder.matches,  _getResolvedMatchLoser);
+
+    let playerResults = [];
+
+    _addResultsForPeopleWhoWonAnything(playerResults, playerWins, playerLosses);
+
+    _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, playerLosses);
+
+    let sortedPlayerResults = _.sortByOrder(playerResults, 'wins').reverse();
+
+    return _.reduce(sortedPlayerResults, (message, playerResult) => {
+        return message + decorate(playerResult.playerName) + ' ' + playerResult.wins + '/' + playerResult.losses + '\n';
+    }, notification);
+}
+
+function _addResultsForPeopleWhoWonAnything(playerResults, playerWins, playerLosses) {
+    _.forEach(playerWins, (wins, playerName) => {
+        let playerResult = {
+            playerName: playerName,
+            wins: wins,
+            losses: 0
+        };
+
+        if (_.has(playerLosses, playerName)) {
+            playerResult.losses = playerLosses[playerName];
+        }
+
+        playerResults.push(playerResult);
+    });
+}
+
+function _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, playerLosses) {
+    _.forEach(playerLosses, (losses, playerName) => {
+        if (!_.any(playerResults, {playerName: playerName})) {
+            playerResults.push({
+                playerName: playerName,
+                wins: 0,
+                losses: losses
+            });
+        }
+    });
+}
+
+function playerFinishedLadder(ladderName, playerMatches, playerName) {
+    let notification = 'You played all matches in ladder ' + decorate(ladderName) + '\n';
+
+    let winCount = _.filter(playerMatches, {winner: playerName}).length;
+    let lossCount = playerMatches.length - winCount;
+
+    notification += 'Your stats are: ' + winCount + '/' + lossCount;
+
+    return notification;
+}
+
 export default {
     notifications: {
         matchResultAdded: matchResultAdded,
         playerJoined: playerJoined,
         playerLeft: playerLeft,
-        newLadder: newLadder
+        newLadder: newLadder,
+        ladderFinished: ladderFinished,
+        playerFinishedLadder: playerFinishedLadder
     },
     decorate: decorate,
     ranking: ranking,
