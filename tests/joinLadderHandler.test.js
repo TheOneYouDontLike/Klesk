@@ -11,7 +11,7 @@ let parsedCommand = {
 };
 
 describe('joinLadderHandler', () => {
-    it.only('should join ladder\'s active season if there are other players', () => {
+    it('should join ladder\'s active season if there are other players', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
@@ -54,31 +54,35 @@ describe('joinLadderHandler', () => {
         assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
-    it('should join ladder if there is only one other player', () => {
+    it.only('should join ladder if there is only one other player', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: [
-                { player1: 'anarki', player2: '', winner: '' }
+            seasons: [
+                {
+                    matches: [
+                        {player1: 'anarki', player2: '', winner: ''}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
+        handler.makeItSo(parsedCommand, () => {}, {send: () => {}});
 
         // then
         let expectedMatches = [
-            { player1: 'anarki', player2: 'newPlayer', winner: '' }
+            {player1: 'anarki', player2: 'newPlayer', winner: ''}
         ];
 
-        assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+        assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
     it('should join ladder if there are no other players', () => {
