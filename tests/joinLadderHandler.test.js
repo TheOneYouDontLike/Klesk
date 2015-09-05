@@ -54,7 +54,7 @@ describe('joinLadderHandler', () => {
         assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
-    it.only('should join ladder if there is only one other player', () => {
+    it('should join ladder if there is only one other player', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
@@ -85,29 +85,33 @@ describe('joinLadderHandler', () => {
         assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
-    it('should join ladder if there are no other players', () => {
+    it.only('should join ladder if there are no other players', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: []
+            seasons: [
+                {
+                    matches: []
+                }
+            ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
+        handler.makeItSo(parsedCommand, () => {}, {send: () => {}});
 
         // then
         let expectedMatches = [
-            { player1: 'newPlayer', player2: '', winner: '' }
+            {player1: 'newPlayer', player2: '', winner: ''}
         ];
 
-        assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+        assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
     it('should send notification when user joins the ladder', () => {
