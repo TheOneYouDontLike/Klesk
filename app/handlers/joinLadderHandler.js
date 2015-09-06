@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import logger from '../logger';
 import slackTextSnippets from '../slackTextSnippets';
+import seasonsHelper from '../seasonsHelper';
 
 const RESULT_MESSAGE = 'Added: ';
 const ALREADY_JOINED = 'You already joined this ladder ';
@@ -44,15 +45,6 @@ let newLadderHandler = (persistence) => {
         });
     }
 
-    function _sortSeasons (ladder) {
-        let seasonsWithActiveOnTheTop = _(ladder.seasons, 'number')
-            .sortBy('number')
-            .reverse()
-            .value();
-
-        ladder.seasons = seasonsWithActiveOnTheTop;
-    }
-
     return {
         makeItSo (parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
@@ -63,42 +55,40 @@ let newLadderHandler = (persistence) => {
             };
 
             let updateCallback = (ladder) => {
-                _sortSeasons(ladder);
+                let activeSeason = seasonsHelper.getActiveSeason(ladder);
 
-                let currentSeason = ladder.seasons[0];
-
-                if (_thereAreNoOtherPlayers(currentSeason.matches)) {
-                    currentSeason.matches.push({player1: playerName, player2: '', winner: ''});
+                if (_thereAreNoOtherPlayers(activeSeason.matches)) {
+                    activeSeason.matches.push({player1: playerName, player2: '', winner: ''});
 
                     callback(null, RESULT_MESSAGE + slackTextSnippets.decorate(playerName));
                     notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
                     return;
                 }
 
-                if (_alreadyJoinedLadder(currentSeason.matches, playerName)) {
+                if (_alreadyJoinedLadder(activeSeason.matches, playerName)) {
                     callback(null, ALREADY_JOINED + slackTextSnippets.decorate(playerName));
                     return;
                 }
 
-                if (_thereIsOnlyOnePlayer(currentSeason.matches)) {
-                    _addNewPlayerToMatch(currentSeason.matches[0], playerName);
+                if (_thereIsOnlyOnePlayer(activeSeason.matches)) {
+                    _addNewPlayerToMatch(activeSeason.matches[0], playerName);
 
                     callback(null, RESULT_MESSAGE + slackTextSnippets.decorate(playerName));
                     notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
                     return;
                 }
 
-                let allPlayersInLadder = _getAllPlayers(currentSeason.matches);
+                let allPlayersInLadder = _getAllPlayers(activeSeason.matches);
 
                 let newMatchesToPlay = _.map(allPlayersInLadder, (player) => {
                     return {player1: playerName, player2: player, winner: ''};
                 });
 
-                let allMatches = currentSeason.matches;
+                let allMatches = activeSeason.matches;
 
                 let matches = allMatches.concat(newMatchesToPlay);
 
-                currentSeason.matches = matches;
+                activeSeason.matches = matches;
 
                 callback(null, RESULT_MESSAGE + playerName);
                 notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
