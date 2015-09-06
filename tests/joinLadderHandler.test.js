@@ -85,7 +85,7 @@ describe('joinLadderHandler', () => {
         assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
-    it.only('should join ladder if there are no other players', () => {
+    it('should join ladder if there are no other players', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
@@ -118,11 +118,15 @@ describe('joinLadderHandler', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: []
+            seasons: [
+                {
+                    matches: []
+                }
+            ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
@@ -131,7 +135,7 @@ describe('joinLadderHandler', () => {
         let sendSpy = sinon.spy();
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: sendSpy });
+        handler.makeItSo(parsedCommand, () => {}, {send: sendSpy});
 
         // then
         let expectedMessage = 'Player `newPlayer` has joined the ladder `normal`';
@@ -143,13 +147,17 @@ describe('joinLadderHandler', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: [{ player1: 'newPlayer', player2: '', winner: '' }]
+            seasons: [
+                {
+                    matches: [{player1: 'newPlayer', player2: '', winner: ''}]
+                }
+            ]
         };
 
         let expectedMatches = _.cloneDeep(ladderToUpdate.matches);
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };

@@ -65,38 +65,40 @@ let newLadderHandler = (persistence) => {
             let updateCallback = (ladder) => {
                 _sortSeasons(ladder);
 
-                if (_thereAreNoOtherPlayers(ladder.seasons[0].matches)) {
-                    ladder.seasons[0].matches.push({player1: playerName, player2: '', winner: ''});
+                let currentSeason = ladder.seasons[0];
+
+                if (_thereAreNoOtherPlayers(currentSeason.matches)) {
+                    currentSeason.matches.push({player1: playerName, player2: '', winner: ''});
 
                     callback(null, RESULT_MESSAGE + slackTextSnippets.decorate(playerName));
                     notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
                     return;
                 }
 
-                if (_alreadyJoinedLadder(ladder.seasons[0].matches, playerName)) {
+                if (_alreadyJoinedLadder(currentSeason.matches, playerName)) {
                     callback(null, ALREADY_JOINED + slackTextSnippets.decorate(playerName));
                     return;
                 }
 
-                if (_thereIsOnlyOnePlayer(ladder.seasons[0].matches)) {
-                    _addNewPlayerToMatch(ladder.seasons[0].matches[0], playerName);
+                if (_thereIsOnlyOnePlayer(currentSeason.matches)) {
+                    _addNewPlayerToMatch(currentSeason.matches[0], playerName);
 
                     callback(null, RESULT_MESSAGE + slackTextSnippets.decorate(playerName));
                     notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
                     return;
                 }
 
-                let allPlayersInLadder = _getAllPlayers(ladder.seasons[0].matches);
+                let allPlayersInLadder = _getAllPlayers(currentSeason.matches);
 
                 let newMatchesToPlay = _.map(allPlayersInLadder, (player) => {
                     return {player1: playerName, player2: player, winner: ''};
                 });
 
-                let allMatches = ladder.seasons[0].matches;
+                let allMatches = currentSeason.matches;
 
                 let matches = allMatches.concat(newMatchesToPlay);
 
-                ladder.seasons[0].matches = matches;
+                currentSeason.matches = matches;
 
                 callback(null, RESULT_MESSAGE + playerName);
                 notification.send(slackTextSnippets.notifications.playerJoined(playerName, ladderName));
