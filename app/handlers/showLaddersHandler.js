@@ -3,9 +3,9 @@
 import _ from 'lodash';
 import logger from '../logger';
 
-let showStatsHandler = function(persistence) {
+let showStatsHandler = (persistence) => {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo (parsedCommand, callback) {
             persistence.getAll((error, ladders) => {
                 if (error) {
                     logger(error);
@@ -28,7 +28,7 @@ let showStatsHandler = function(persistence) {
     };
 };
 
-function _decorate(ladderName, shouldAddComma) {
+function _decorate (ladderName, shouldAddComma) {
     let decoratedName = '`' + ladderName + '`';
     if (shouldAddComma) {
         decoratedName += ', ';

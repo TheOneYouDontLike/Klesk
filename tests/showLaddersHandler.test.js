@@ -13,12 +13,12 @@ describe('showLaddersHandler', () => {
     it('should show all possible ladders', () => {
         // given
         let ladders = [
-            { name: 'normal' },
-            { name: 'insta' }
+            {name: 'normal'},
+            {name: 'insta'}
         ];
 
         let fakePersistence = {
-            getAll(callback) {
+            getAll (callback) {
                 callback(null, ladders);
             }
         };
@@ -39,7 +39,7 @@ describe('showLaddersHandler', () => {
         let ladders = [];
 
         let fakePersistence = {
-            getAll(callback) {
+            getAll (callback) {
                 callback(null, ladders);
             }
         };
@@ -60,7 +60,7 @@ describe('showLaddersHandler', () => {
         let expectedError = new Error('something went wrong');
 
         let fakePersistence = {
-            getAll(callback) {
+            getAll (callback) {
                 callback(expectedError, null);
             }
         };

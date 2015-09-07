@@ -2,10 +2,11 @@
 
 import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
+import seasonsHelper from '../seasonsHelper';
 
-let showStatsHandler = function(persistence) {
+let showStatsHandler = (persistence) => {
     return {
-        makeItSo(parsedCommand, callback, notification) {
+        makeItSo (parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
             let playerName = parsedCommand.playerName;
 
@@ -20,7 +21,9 @@ let showStatsHandler = function(persistence) {
 
             let queryCallback = (error, filteredLadders) => {
                 let ladder = filteredLadders[0];
-                let playerMatches = _.filter(ladder.matches, (match) => {
+                let activeSeason = seasonsHelper.getActiveSeason(ladder);
+
+                let playerMatches = _.filter(activeSeason.matches, (match) => {
                     return match.player1 === playerName || match.player2 === playerName;
                 });
 
@@ -37,7 +40,7 @@ let showStatsHandler = function(persistence) {
                     return !match.winner;
                 });
 
-                let resultMessage = slackTextSnippets.playerStats(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, ladder.map);
+                let resultMessage = slackTextSnippets.playerStats(ladder.name, playerWins.length, notPlayedMatches.length, playerMatches, activeSeason.map);
 
                 let directResponseMessage = 'Your stats in this ladder were sent to you directly to your @slackbot channel.';
 
