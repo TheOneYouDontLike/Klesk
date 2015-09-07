@@ -74,11 +74,11 @@ function _getMatchRepresentation(match, mapName) {
     return '[' + _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match) + matchScore + ' on ' + mapName + ']';
 }
 
-function ranking(ladder) {
-    let message = '`' + ladder.name + ' matches`\n';
+function ranking (ladderName, activeSeason) {
+    let message = '`' + ladderName + ' matches`\n';
 
-    ladder.matches.forEach((match) => {
-        message += _getMatchRepresentation(match, ladder.map) + '\n';
+    activeSeason.matches.forEach((match) => {
+        message += _getMatchRepresentation(match, activeSeason.map) + '\n';
     });
 
     return message;

@@ -6,7 +6,7 @@ import sinon from 'sinon';
 
 describe('ranking handler', () => {
     it('should present ranking directly to player showing played matches first', () => {
-        //given
+        // given
         let parsedCommand = {
             arguments: ['ranking', 'ladderName'],
             playerName: 'playerName'
@@ -14,10 +14,20 @@ describe('ranking handler', () => {
 
         let ladderWithNotPlayedMatchFirst = {
             name: 'ladderName',
-            map: 'aerowalk',
-            matches: [
-                {player1: 'unplayedMatchPlayer1', player2: 'unplayedMatchPlayer2', winner: ''},
-                {player1: 'playedMatchPlayer1', player2: 'playedMatchPlayer2', winner: 'playedMatchPlayer1'}
+            seasons: [
+                {
+                    map: 'not-aerowalk',
+                    number: 1,
+                    matches: []
+                },
+                {
+                    map: 'aerowalk',
+                    number: 2,
+                    matches: [
+                        {player1: 'unplayedMatchPlayer1', player2: 'unplayedMatchPlayer2', winner: ''},
+                        {player1: 'playedMatchPlayer1', player2: 'playedMatchPlayer2', winner: 'playedMatchPlayer1'}
+                    ]
+                }
             ]
         };
 
@@ -25,7 +35,7 @@ describe('ranking handler', () => {
         let expectedNotificationString = '`ladderName matches`\n[`+playedMatchPlayer1` vs playedMatchPlayer2 on aerowalk]\n[unplayedMatchPlayer1 vs unplayedMatchPlayer2 on aerowalk]\n';
 
         let fakePersistence = {
-            query(filter, callback) {
+            query (filter, callback) {
                 callback(null, [ladderWithNotPlayedMatchFirst]);
             }
         };
@@ -37,10 +47,10 @@ describe('ranking handler', () => {
             send: sinon.spy()
         };
 
-        //when
+        // when
         handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
-        
-        //then
+
+        // then
         assert.that(callbackSpy.calledWith(null, expectedResponseString)).is.true();
         assert.that(notificationSpy.send.calledWith(expectedNotificationString, '@' + parsedCommand.playerName)).is.true();
     });
