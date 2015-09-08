@@ -151,7 +151,6 @@ let addResultHandler = (persistence) => {
             );
         }
     };
-
 };
 
 export default addResultHandler;

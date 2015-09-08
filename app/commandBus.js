@@ -4,8 +4,8 @@ import handlers from './commandHandlersFactory';
 import notification from './notification';
 
 export default {
-    dispatch(command, callback) {
-        let parsedCommandArguments = command.text.split(" ");
+    dispatch (command, callback) {
+        let parsedCommandArguments = command.text.split(' ');
         let commandType = parsedCommandArguments[0];
 
         let parsedCommand = {
@@ -13,7 +13,7 @@ export default {
             arguments: parsedCommandArguments
         };
 
-        let commandHandler = handlers.getCommandHandler(commandType, (commandHandler) => {
+        handlers.getCommandHandler(commandType, (commandHandler) => {
             commandHandler.makeItSo(parsedCommand, callback, notification);
         });
     }

@@ -4,7 +4,7 @@ import request from 'superagent';
 import logger from './logger';
 import config from '../config';
 
-function send(message, channelOverride) {
+function send (message, channelOverride) {
     let notificationChannel = channelOverride ? channelOverride : config.notificationChannel;
     let notificationMessage = {
         username: config.botUsername,

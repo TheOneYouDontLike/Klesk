@@ -4,38 +4,38 @@ import assert from 'assertthat';
 import sinon from 'sinon';
 import {mapUpVoteHandler, mapDownVoteHandler} from '../app/maps/mapVoteHandlers';
 
-function _shouldRequireMapNameAndKeyword(handler) {
-    //given
+function _shouldRequireMapNameAndKeyword (handler) {
+    // given
     let parsedCommand = {
         arguments: ['voteForMap']
     };
 
     let callbackSpy = sinon.spy();
 
-    //when
+    // when
     handler.makeItSo(parsedCommand, callbackSpy);
 
-    //then
+    // then
     assert.that(callbackSpy.calledWith(null, 'Missing arguments, correct syntax is `(up|down)votemap <mapName> <keyword>`')).is.true();
 }
 
-function _shouldRequireKeyword(handler) {
-    //given
+function _shouldRequireKeyword (handler) {
+    // given
     let parsedCommand = {
         arguments: ['voteForMap', 'map name']
     };
 
     let callbackSpy = sinon.spy();
 
-    //when
+    // when
     handler.makeItSo(parsedCommand, callbackSpy);
 
-    //then
+    // then
     assert.that(callbackSpy.calledWith(null, 'Missing arguments, correct syntax is `(up|down)votemap <mapName> <keyword>`')).is.true();
 }
 
 describe('downvoting a map', () => {
-    let handler = new mapDownVoteHandler({});
+    let handler = mapDownVoteHandler({});
 
     it('should require map name and keyword if nothing provided', () => {
         _shouldRequireMapNameAndKeyword(handler);
@@ -47,7 +47,7 @@ describe('downvoting a map', () => {
 });
 
 describe('upvoting a map', () => {
-    let handler = new mapUpVoteHandler({});
+    let handler = mapUpVoteHandler({});
 
     it('should require map name and keyword if nothing provided', () => {
         _shouldRequireMapNameAndKeyword(handler);

@@ -50,7 +50,7 @@ function _putPlayedMatchesFirst (ladder) {
     return activeSeason;
 }
 
-function _getInformationAboutNotification() {
+function _getInformationAboutNotification () {
     return 'Ranking sent directly to you on your @slackbot channel';
 }
 

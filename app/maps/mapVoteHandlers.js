@@ -2,9 +2,9 @@
 
 import slackTextSnippets from '../slackTextSnippets';
 
-function _getMapVoteHandler(mapPersistence, voteStrategy) {
+function _getMapVoteHandler (mapPersistence, voteStrategy) {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo (parsedCommand, callback) {
             if (parsedCommand.arguments.length < 3) {
                 callback(null, 'Missing arguments, correct syntax is ' + slackTextSnippets.decorate('(up|down)votemap <mapName> <keyword>'));
                 return;
@@ -25,13 +25,13 @@ function _getMapVoteHandler(mapPersistence, voteStrategy) {
     };
 }
 
-function _getMapPredicate(mapName) {
+function _getMapPredicate (mapName) {
     return (map) => {
         return map.name === mapName;
     };
 }
 
-function _getMapUpdateAction(keyword, voteStrategy, callback) {
+function _getMapUpdateAction (keyword, voteStrategy, callback) {
     return (map) => {
         if (!map.votes) {
             map.votes = {};
@@ -47,10 +47,14 @@ function _getMapUpdateAction(keyword, voteStrategy, callback) {
     };
 }
 
-export function mapUpVoteHandler(mapPersistence) {
-    return _getMapVoteHandler(mapPersistence, (ladderVotes) => { return ladderVotes + 1; });
+export function mapUpVoteHandler (mapPersistence) {
+    return _getMapVoteHandler(mapPersistence, (ladderVotes) => {
+        return ladderVotes + 1;
+    });
 }
 
-export function mapDownVoteHandler(mapPersistence) {
-    return _getMapVoteHandler(mapPersistence, (ladderVotes) => { return ladderVotes - 1; });
+export function mapDownVoteHandler (mapPersistence) {
+    return _getMapVoteHandler(mapPersistence, (ladderVotes) => {
+        return ladderVotes - 1;
+    });
 }

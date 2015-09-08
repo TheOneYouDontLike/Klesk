@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import config from '../config';
 
-export default function(stuffToLog) {
+export default function (stuffToLog) {
     console.log('log: ', stuffToLog);
 
     if (!config.logErrorsToFile) {
@@ -27,14 +27,14 @@ export default function(stuffToLog) {
     _logToFile(thingToLog);
 }
 
-function _isError(stuffToLog) {
+function _isError (stuffToLog) {
     let isAnObject = typeof stuffToLog === 'object';
     let hasErrorProperties = stuffToLog.hasOwnProperty('message') && stuffToLog.hasOwnProperty('stack');
 
     return isAnObject && hasErrorProperties;
 }
 
-function _logToFile(thingToLog) {
+function _logToFile (thingToLog) {
     let timestamp = 'log_' + Date.now().toString();
     let logFilePath = path.resolve(config.errorsLogPath, timestamp);
 

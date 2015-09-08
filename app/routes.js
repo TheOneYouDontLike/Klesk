@@ -3,10 +3,10 @@
 import logger from './logger';
 import commandBus from './commandBus';
 
-let configure = function(app) {
+let configure = (app) => {
 
     app.get('/', (req, res) => {
-        res.end("hello from Klesk");
+        res.end('hello from Klesk');
     });
 
     app.post('/', (req, res) => {

@@ -17,17 +17,17 @@ import config from '../config';
 import logger from './logger';
 import commandTypes from './commandTypes';
 
-let getCommandHandler = function(commandType, callback) {
+let getCommandHandler = (commandType, callback) => {
     let ladderPersistence = new Persistence(config.storageFilename);
     ladderPersistence.init((error) => {
         logger(error);
 
         let mapPersistence = new Persistence(config.mapsFilename);
 
-        switch(commandType) {
+        switch (commandType) {
             case commandTypes.NEWLADDER:
-                mapPersistence.init((error => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError => {
+                    logger(mapPersistenceError);
                     callback(newLadderHandler(ladderPersistence, mapPersistence));
                 }));
                 break;
@@ -57,22 +57,22 @@ let getCommandHandler = function(commandType, callback) {
                 break;
 
             case commandTypes.UPVOTEMAP:
-                mapPersistence.init((error) => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError) => {
+                    logger(mapPersistenceError);
                     callback(mapUpVoteHandler(mapPersistence));
                 });
                 break;
 
             case commandTypes.DOWNVOTEMAP:
-                mapPersistence.init((error) => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError) => {
+                    logger(mapPersistenceError);
                     callback(mapDownVoteHandler(mapPersistence));
                 });
                 break;
 
             case commandTypes.LISTMAPS:
-                mapPersistence.init((error) => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError) => {
+                    logger(mapPersistenceError);
                     callback(listMapsHandler(mapPersistence));
                 });
                 break;
