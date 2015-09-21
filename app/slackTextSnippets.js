@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 
-function decorate (playerName) {
-    return '`' + playerName + '`';
+function decorate (name) {
+    return '`' + name + '`';
 }
 
 function matchResultAdded (winner, loser, ladderName, score) {
@@ -120,12 +120,17 @@ function mapList (maps) {
     return mapListMessage;
 }
 
+function newSeason (ladderName) {
+    return 'New season added to ' + decorate(ladderName);
+}
+
 export default {
     notifications: {
         matchResultAdded: matchResultAdded,
         playerJoined: playerJoined,
         playerLeft: playerLeft,
-        newLadder: newLadder
+        newLadder: newLadder,
+        newSeason: newSeason
     },
     decorate: decorate,
     ranking: ranking,

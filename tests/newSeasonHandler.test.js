@@ -37,11 +37,11 @@ describe('newSeasonHandler', () => {
         handler = newSeasonHandler(fakePersistence);
     });
 
-    it('should create new season when ladder exists', () => {
+    it.only('should create new season when ladder exists', () => {
         // given
         let parsedCommand = {
             playerName: 'somedude',
-            arguments: ['newseason', 'laddername']
+            arguments: ['newseason', 'some ladder']
         };
 
         // when
@@ -49,5 +49,11 @@ describe('newSeasonHandler', () => {
 
         // then
         assert.that(callbackSpy.calledWith(null, 'New season added to `some ladder`')).is.true();
+        assert.that(ladder.seasons.length).is.equalTo(2);
+        assert.that(seasonsHelper.getActiveSeason(ladder).matches.length).is.equalTo(0);
+
     });
+
+    // should get random map when creating new season
+    // should log errors on failure
 });
