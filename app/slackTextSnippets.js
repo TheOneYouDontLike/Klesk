@@ -126,14 +126,14 @@ function newSeason (ladderName) {
 
 export default {
     notifications: {
-        matchResultAdded: matchResultAdded,
-        playerJoined: playerJoined,
-        playerLeft: playerLeft,
-        newLadder: newLadder,
-        newSeason: newSeason
+        matchResultAdded,
+        playerJoined,
+        playerLeft,
+        newLadder,
+        newSeason
     },
-    decorate: decorate,
-    ranking: ranking,
-    playerStats: playerStats,
-    mapList: mapList
+    decorate,
+    ranking,
+    playerStats,
+    mapList
 };
