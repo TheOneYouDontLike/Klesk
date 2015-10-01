@@ -21,6 +21,13 @@ let fakePersistence = {};
 let callbackSpy = {};
 let handler = {};
 
+let mapList = [{name: 'aerowalk'}];
+let fakeMapPersistence = {
+    getAll (callback) {
+        callback(null, mapList);
+    }
+};
+
 describe('newSeasonHandler', () => {
     beforeEach(() => {
         let fsMock = {
@@ -34,10 +41,10 @@ describe('newSeasonHandler', () => {
 
         fakePersistence = new Persistence('filename', fsMock);
         callbackSpy = sinon.spy();
-        handler = newSeasonHandler(fakePersistence);
+        handler = newSeasonHandler(fakePersistence, fakeMapPersistence);
     });
 
-    it.only('should create new season when ladder exists', () => {
+    it('should create new season when ladder exists', () => {
         // given
         let parsedCommand = {
             playerName: 'somedude',
@@ -54,6 +61,19 @@ describe('newSeasonHandler', () => {
 
     });
 
-    // should get random map when creating new season
+    it('should get random map when creating new season', () => {
+        // given
+        let parsedCommand = {
+            playerName: 'somedude',
+            arguments: ['newseason', 'some ladder']
+        };
+
+        // when
+        handler.makeItSo(parsedCommand, callbackSpy, {});
+
+        // then
+        assert.that(ladder.seasons[0].map.name).is.equalTo('aerowalk');
+    });
+
     // should log errors on failure
 });

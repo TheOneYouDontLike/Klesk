@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
-import mapSelection from '../maps/mapSelection';
+import MapSelection from '../maps/mapSelection';
 
 function Ladder (name) {
     return {
@@ -73,7 +73,7 @@ function _assignRandomMap (ladder, keyword, mapPersistence, callback) {
             return;
         }
 
-        let randomMap = mapSelection.getMapFrom(maps, keyword);
+        let randomMap = MapSelection.getMapFrom(maps, keyword);
 
         ladder.seasons[0].map = randomMap.name;
     });
