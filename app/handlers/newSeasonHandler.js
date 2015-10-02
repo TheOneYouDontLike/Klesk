@@ -26,7 +26,9 @@ let newSeasonHandler = (persistence, mapPersistence) => {
                         });
                     });
 
-                    callback(null, slackTextSnippets.notifications.newSeason(ladderName));
+                    let message = slackTextSnippets.notifications.newSeason(ladderName);
+                    callback(null, message);
+                    notification.send(message);
                 }
             );
         }

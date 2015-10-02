@@ -28,6 +28,8 @@ let fakeMapPersistence = {
     }
 };
 
+let emptyNotification = {send: () => {}};
+
 describe('newSeasonHandler', () => {
     beforeEach(() => {
         let fsMock = {
@@ -52,13 +54,12 @@ describe('newSeasonHandler', () => {
         };
 
         // when
-        handler.makeItSo(parsedCommand, callbackSpy, {});
+        handler.makeItSo(parsedCommand, callbackSpy, emptyNotification);
 
         // then
         assert.that(callbackSpy.calledWith(null, 'New season added to `some ladder`')).is.true();
         assert.that(ladder.seasons.length).is.equalTo(2);
         assert.that(seasonsHelper.getActiveSeason(ladder).matches.length).is.equalTo(0);
-
     });
 
     it('should get random map when creating new season', () => {
@@ -69,10 +70,26 @@ describe('newSeasonHandler', () => {
         };
 
         // when
-        handler.makeItSo(parsedCommand, callbackSpy, {});
+        handler.makeItSo(parsedCommand, callbackSpy, emptyNotification);
 
         // then
         assert.that(ladder.seasons[0].map.name).is.equalTo('aerowalk');
+    });
+
+    it('should send notification about new season', () => {
+        // given
+        let parsedCommand = {
+            playerName: 'somedude',
+            arguments: ['newseason', 'some ladder']
+        };
+
+        let notificationSpy = sinon.spy();
+
+        // when
+        handler.makeItSo(parsedCommand, () => {}, {send: notificationSpy});
+
+        // then
+        assert.that(notificationSpy.calledWith('New season added to `some ladder`')).is.true();
     });
 
     // should log errors on failure
