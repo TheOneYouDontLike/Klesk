@@ -11,6 +11,7 @@ import rankingHandler from './handlers/rankingHandler';
 import {mapUpVoteHandler, mapDownVoteHandler} from './maps/mapVoteHandlers';
 import listMapsHandler from './maps/listMapsHandler';
 import showLaddersHandler from './handlers/showLaddersHandler';
+import newSeasonHandler from './handlers/newSeasonHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
 import config from '../config';
@@ -75,6 +76,13 @@ let getCommandHandler = (commandType, callback) => {
                     logger(mapPersistenceError);
                     callback(listMapsHandler(mapPersistence));
                 });
+                break;
+
+            case commandTypes.NEWSEASON:
+                mapPersistence.init((mapPersistenceError => {
+                    logger(mapPersistenceError);
+                    callback(validateLadderExistenceDecorator(newSeasonHandler(ladderPersistence, mapPersistence), ladderPersistence));
+                }));
                 break;
 
             default:

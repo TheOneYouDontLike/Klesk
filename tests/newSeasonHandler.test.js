@@ -111,4 +111,6 @@ describe('newSeasonHandler', () => {
         // then
         assert.that(callbackSpy.calledWith(null, 'Error occured')).is.true();
     });
+
+    // should not create new sesaon when ladder does not exist
 });

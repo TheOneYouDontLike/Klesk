@@ -10,5 +10,6 @@ export default {
     SHOWLADDERS: 'showladders',
     UPVOTEMAP: 'upvotemap',
     DOWNVOTEMAP: 'downvotemap',
-    LISTMAPS: 'listmaps'
+    LISTMAPS: 'listmaps',
+    NEWSEASON: 'newseason'
 };
