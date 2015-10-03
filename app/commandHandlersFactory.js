@@ -11,23 +11,24 @@ import rankingHandler from './handlers/rankingHandler';
 import {mapUpVoteHandler, mapDownVoteHandler} from './maps/mapVoteHandlers';
 import listMapsHandler from './maps/listMapsHandler';
 import showLaddersHandler from './handlers/showLaddersHandler';
+import newSeasonHandler from './handlers/newSeasonHandler';
 import thisIsNotTheCommandYouAreLookingFor from './handlers/nullHandler';
 import validateLadderExistenceDecorator from './validation/validateLadderExistenceDecorator.js';
 import config from '../config';
 import logger from './logger';
 import commandTypes from './commandTypes';
 
-let getCommandHandler = function(commandType, callback) {
+let getCommandHandler = (commandType, callback) => {
     let ladderPersistence = new Persistence(config.storageFilename);
     ladderPersistence.init((error) => {
         logger(error);
 
         let mapPersistence = new Persistence(config.mapsFilename);
 
-        switch(commandType) {
+        switch (commandType) {
             case commandTypes.NEWLADDER:
-                mapPersistence.init((error => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError => {
+                    logger(mapPersistenceError);
                     callback(newLadderHandler(ladderPersistence, mapPersistence));
                 }));
                 break;
@@ -57,24 +58,31 @@ let getCommandHandler = function(commandType, callback) {
                 break;
 
             case commandTypes.UPVOTEMAP:
-                mapPersistence.init((error) => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError) => {
+                    logger(mapPersistenceError);
                     callback(mapUpVoteHandler(mapPersistence));
                 });
                 break;
 
             case commandTypes.DOWNVOTEMAP:
-                mapPersistence.init((error) => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError) => {
+                    logger(mapPersistenceError);
                     callback(mapDownVoteHandler(mapPersistence));
                 });
                 break;
 
             case commandTypes.LISTMAPS:
-                mapPersistence.init((error) => {
-                    logger(error);
+                mapPersistence.init((mapPersistenceError) => {
+                    logger(mapPersistenceError);
                     callback(listMapsHandler(mapPersistence));
                 });
+                break;
+
+            case commandTypes.NEWSEASON:
+                mapPersistence.init((mapPersistenceError => {
+                    logger(mapPersistenceError);
+                    callback(validateLadderExistenceDecorator(newSeasonHandler(ladderPersistence, mapPersistence), ladderPersistence));
+                }));
                 break;
 
             default:

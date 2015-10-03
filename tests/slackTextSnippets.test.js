@@ -2,17 +2,16 @@
 
 import assert from 'assertthat';
 import slackTextSnippets from '../app/slackTextSnippets';
-import sinon from 'sinon';
 
-describe('should display scores in the order players appear in message', () => {
+describe('slackTextSnippets should display scores in the order players appear in message', () => {
     it('when creating new match result notification', () => {
-        //given
+        // given
 
-        //when
+        // when
         let winningScoreFirst = slackTextSnippets.notifications.matchResultAdded('winner', 'loser', 'ladderName', '32:30');
         let losingScoreFirst = slackTextSnippets.notifications.matchResultAdded('winner', 'loser', 'ladderName', '30:32');
-        
-        //then
+
+        // then
         let expectedMessage = '`winner` has won a match with `loser` on ladder `ladderName`\nmatch score - 32:30';
 
         assert.that(winningScoreFirst).is.equalTo(expectedMessage);
@@ -20,15 +19,15 @@ describe('should display scores in the order players appear in message', () => {
     });
 
     it('when creating ranking representation', () => {
-        //given
-        let ladder = {
-            name: 'ladder',
-            map:  'map',
+        // given
+        let ladderName = 'ladder';
+        let activeSeason = {
+            map: 'map',
             matches: [
-                { player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23' },
-                { player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32' },
-                { player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32' },
-                { player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23' }
+                {player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23'},
+                {player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32'},
+                {player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32'},
+                {player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23'}
             ]
         };
 
@@ -38,24 +37,24 @@ describe('should display scores in the order players appear in message', () => {
         '[loser vs `+winner` 23:32 on map]\n' +
         '[loser vs `+winner` 23:32 on map]\n';
 
-        //when
-        let rankingMessage = slackTextSnippets.ranking(ladder);
-        
-        //then
+        // when
+        let rankingMessage = slackTextSnippets.ranking(ladderName, activeSeason);
+
+        // then
         assert.that(rankingMessage).is.equalTo(expectedMessage);
     });
 
     it('when creating player stats message', () => {
-        //given
+        // given
         let playerWinsCount = 2;
         let notPlayedMatches = 0;
         let playerMatches = [
-            { player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23' },
-            { player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32' },
-            { player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32' },
-            { player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23' }
+            {player1: 'winner', player2: 'loser', winner: 'winner', score: '32:23'},
+            {player1: 'winner', player2: 'loser', winner: 'winner', score: '23:32'},
+            {player1: 'loser', player2: 'winner', winner: 'winner', score: '23:32'},
+            {player1: 'loser', player2: 'winner', winner: 'winner', score: '32:23'}
         ];
-        
+
         let expectedMessage = 'Ladder `ladderName`\n' +
         'Matches: 4 / Wins: ' + playerWinsCount + ' / Losses: 2\n' +
         '[`+winner` vs loser 32:23 on mapName]\n' +
@@ -63,10 +62,10 @@ describe('should display scores in the order players appear in message', () => {
         '[loser vs `+winner` 23:32 on mapName]\n' +
         '[loser vs `+winner` 23:32 on mapName]\n';
 
-        //when
+        // when
         let playerStatsMessage = slackTextSnippets.playerStats('ladderName', playerWinsCount, notPlayedMatches, playerMatches, 'mapName');
-        
-        //then
+
+        // then
         assert.that(playerStatsMessage).is.equalTo(expectedMessage);
     });
 });

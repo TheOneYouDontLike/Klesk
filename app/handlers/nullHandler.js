@@ -1,8 +1,8 @@
 'use strict';
 
-let thisIsNotTheCommandYouAreLookingFor = function() {
+let thisIsNotTheCommandYouAreLookingFor = () => {
     return {
-        makeItSo(parsedCommand, callback) {
+        makeItSo (parsedCommand, callback) {
             callback(null, 'This is not the command you are looking for.');
         }
     };

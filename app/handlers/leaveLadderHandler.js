@@ -2,30 +2,33 @@
 
 import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
+import seasonsHelper from '../seasonsHelper';
 
 const LEFT_LADDER = 'You are no longer a part of the ladder';
 
-function _getLadderFilterFunction(ladderName) {
+function _getLadderFilterFunction (ladderName) {
     return (ladder) => {
         return ladder.name === ladderName;
     };
 }
 
-function _getLadderUpdateFunction(playerName) {
+function _getLadderUpdateFunction (playerName) {
     return (ladder) => {
-        _.remove(ladder.matches, (match) => {
+        let activeSeason = seasonsHelper.getActiveSeason(ladder);
+
+        _.remove(activeSeason.matches, (match) => {
             return match.player1 === playerName || match.player2 === playerName;
         });
     };
 }
 
-function _getSuccessMessage(ladderName) {
+function _getSuccessMessage (ladderName) {
     return LEFT_LADDER + ' `' + ladderName + '`';
 }
 
-let leaveLadderHandler = function(persistence) {
+let leaveLadderHandler = (persistence) => {
     return {
-        makeItSo(parsedCommand, callback, notification) {
+        makeItSo (parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
 
             let updateSuccessfull = true;

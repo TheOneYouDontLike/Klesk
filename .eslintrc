@@ -139,7 +139,7 @@
     "no-undef-init": 1,               // disallow use of undefined when initializing variables
     "no-undefined": 1,                // disallow use of undefined variable (off by default)
     "no-unused-vars": 1,              // disallow declaration of variables that are not used in the code
-    "no-use-before-define": 1,        // disallow use of variables before they are defined
+    "no-use-before-define": [1, "nofunc"],        // disallow use of variables before they are defined
 
 
     ////////// Node.js //////////
@@ -176,7 +176,7 @@
     "no-new-object": 1,             // disallow use of the Object constructor
     "semi-spacing": 1,              // disallow space before semicolon
     "no-spaced-func": 1,            // disallow space between function identifier and application
-    "no-ternary": 1,                // disallow the use of ternary operators (off by default)
+    "no-ternary": 0,                // disallow the use of ternary operators (off by default)
     "no-trailing-spaces": 1,        // disallow trailing whitespace at the end of lines
     "no-underscore-dangle": 0,      // disallow dangling underscores in identifiers
     "one-var": 0,                   // allow just one var statement per function (off by default)

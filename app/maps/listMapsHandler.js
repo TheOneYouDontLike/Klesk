@@ -3,9 +3,9 @@
 import slackTextSnippets from '../slackTextSnippets';
 import logger from '../logger';
 
-let listMapsHandler = function(mapPersistence) {
+let listMapsHandler = (mapPersistence) => {
     return {
-        makeItSo(parsedCommand, callback, notification) {
+        makeItSo (parsedCommand, callback, notification) {
             mapPersistence.getAll((error, maps) => {
                 if (error) {
                     logger(error);

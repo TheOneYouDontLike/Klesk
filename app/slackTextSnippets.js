@@ -1,12 +1,13 @@
 'use strict';
 
 import _ from 'lodash';
+import SeasonsHelper from './seasonsHelper';
 
-function decorate(playerName) {
-    return '`' + playerName + '`';
+function decorate (name) {
+    return '`' + name + '`';
 }
 
-function matchResultAdded(winner, loser, ladderName, score) {
+function matchResultAdded (winner, loser, ladderName, score) {
     let notification = decorate(winner) + ' has won a match with ' + decorate(loser) + ' on ladder ' + decorate(ladderName);
 
     if (score) {
@@ -16,41 +17,43 @@ function matchResultAdded(winner, loser, ladderName, score) {
     return notification;
 }
 
-function playerJoined(playerName, ladderName) {
+function playerJoined (playerName, ladderName) {
     return 'Player ' + decorate(playerName) + ' has joined the ladder ' + decorate(ladderName);
 }
 
-function playerLeft(playerName, ladderName) {
+function playerLeft (playerName, ladderName) {
     return decorate(playerName) + ' is no longer a part of the ladder ' + decorate(ladderName);
 }
 
-function newLadder(ladderName) {
+function newLadder (ladderName) {
     return 'Created new ladder: ' + decorate(ladderName);
 }
 
-function _individualScoresAscending(score) {
-    let individualScores = _.map(score.split(':'), (individualScore) => { return parseInt(individualScore); });
+function _individualScoresAscending (score) {
+    let individualScores = _.map(score.split(':'), (individualScore) => {
+        return parseInt(individualScore);
+    });
 
     return _.sortBy(individualScores);
 }
 
-function _scoresRepresentation(leftScore, rightScore) {
+function _scoresRepresentation (leftScore, rightScore) {
     return leftScore + ':' + rightScore;
 }
 
-function _winningScoreFirst(score) {
+function _winningScoreFirst (score) {
     let scoresAscending = _individualScoresAscending(score);
 
     return _scoresRepresentation(scoresAscending[1], scoresAscending[0]);
 }
 
-function _losingScoreFirst(score) {
+function _losingScoreFirst (score) {
     let scoresAscending = _individualScoresAscending(score);
 
     return _scoresRepresentation(scoresAscending[0], scoresAscending[1]);
 }
 
-function _indicateWinner(playerName, match) {
+function _indicateWinner (playerName, match) {
     if (playerName === match.winner) {
         return decorate('+' + playerName);
     }
@@ -58,15 +61,14 @@ function _indicateWinner(playerName, match) {
     return playerName;
 }
 
-function _getMatchRepresentation(match, mapName) {
+function _getMatchRepresentation (match, mapName) {
     let matchScore = '';
 
     if (match.score) {
         matchScore = ' ';
         if (match.player1 === match.winner) {
             matchScore += _winningScoreFirst(match.score);
-        }
-        else {
+        } else {
             matchScore += _losingScoreFirst(match.score);
         }
     }
@@ -74,17 +76,17 @@ function _getMatchRepresentation(match, mapName) {
     return '[' + _indicateWinner(match.player1, match) + ' vs ' +  _indicateWinner(match.player2, match) + matchScore + ' on ' + mapName + ']';
 }
 
-function ranking(ladder) {
-    let message = '`' + ladder.name + ' matches`\n';
+function ranking (ladderName, activeSeason) {
+    let message = '`' + ladderName + ' matches`\n';
 
-    ladder.matches.forEach((match) => {
-        message += _getMatchRepresentation(match, ladder.map) + '\n';
+    activeSeason.matches.forEach((match) => {
+        message += _getMatchRepresentation(match, activeSeason.map) + '\n';
     });
 
     return message;
 }
 
-function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatches, mapName) {
+function playerStats (ladderName, playerWinsCount, notPlayedMatches, playerMatches, mapName) {
     let playerMatchesCount = playerMatches.length;
 
     let playerLossCount = playerMatchesCount - playerWinsCount - notPlayedMatches;
@@ -103,7 +105,7 @@ function playerStats(ladderName, playerWinsCount, notPlayedMatches, playerMatche
     return message + '\n' + matchesStats;
 }
 
-function _getMapRepresentation(map) {
+function _getMapRepresentation (map) {
     let votes = '';
     _.forIn(map.votes, (voteValue, voteTag) => {
         votes += voteTag + ':' + voteValue + ' ';
@@ -111,7 +113,7 @@ function _getMapRepresentation(map) {
     return decorate(map.name) + ' ' + votes;
 }
 
-function mapList(maps) {
+function mapList (maps) {
     var mapListMessage = '';
     _.forEach(maps, (map) => {
         mapListMessage += _getMapRepresentation(map) + '\n';
@@ -119,19 +121,25 @@ function mapList(maps) {
     return mapListMessage;
 }
 
-function _getResolvedMatchWinner(match) {
+function newSeason (ladderName) {
+    return 'New season added to ' + decorate(ladderName);
+}
+
+function _getResolvedMatchWinner (match) {
     return match.winner === match.player1 ? match.player1 : match.player2;
 }
 
-function _getResolvedMatchLoser(match) {
+function _getResolvedMatchLoser (match) {
     return match.winner === match.player1 ? match.player2 : match.player1;
 }
 
-function ladderFinished(ladder) {
+function ladderFinished (ladder) {
     var notification = 'All matches in ' + decorate(ladder.name) + ' have been played!\n';
 
-    var playerWins = _.countBy(ladder.matches, _getResolvedMatchWinner);
-    var playerLosses = _.countBy(ladder.matches,  _getResolvedMatchLoser);
+    let activeSeason = SeasonsHelper.getActiveSeason(ladder);
+
+    var playerWins = _.countBy(activeSeason.matches, _getResolvedMatchWinner);
+    var playerLosses = _.countBy(activeSeason.matches,  _getResolvedMatchLoser);
 
     let playerResults = [];
 
@@ -187,15 +195,16 @@ function playerFinishedLadder(ladderName, playerMatches, playerName) {
 
 export default {
     notifications: {
-        matchResultAdded: matchResultAdded,
-        playerJoined: playerJoined,
-        playerLeft: playerLeft,
-        newLadder: newLadder,
-        ladderFinished: ladderFinished,
-        playerFinishedLadder: playerFinishedLadder
+        matchResultAdded,
+        playerJoined,
+        playerLeft,
+        newLadder,
+        newSeason,
+        ladderFinished,
+        playerFinishedLadder
     },
-    decorate: decorate,
-    ranking: ranking,
-    playerStats: playerStats,
-    mapList: mapList
+    decorate,
+    ranking,
+    playerStats,
+    mapList
 };

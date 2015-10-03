@@ -2,12 +2,13 @@
 
 import _ from 'lodash';
 import slackTextSnippets from '../slackTextSnippets';
+import seasonsHelper from '../seasonsHelper';
 
-function _startsWith(element, startsWith) {
+function _startsWith (element, startsWith) {
         return element.indexOf(startsWith) === 0;
 }
 
-function _sanitizePlayerName(playerNameWithIndicators) {
+function _sanitizePlayerName (playerNameWithIndicators) {
     if (_startsWith(playerNameWithIndicators, '+')) {
         return playerNameWithIndicators.substring(1);
     }
@@ -15,8 +16,10 @@ function _sanitizePlayerName(playerNameWithIndicators) {
     return playerNameWithIndicators;
 }
 
-function _getMatch(ladder, players) {
-    let matchWithPlayers = _.find(ladder.matches, (match) => {
+function _getMatch (ladder, players) {
+    let activeSeason = seasonsHelper.getActiveSeason(ladder);
+
+    let matchWithPlayers = _.find(activeSeason.matches, (match) => {
             let player1InPlayers = _.any(players, (player) => {
                 return _sanitizePlayerName(player) === match.player1;
             });
@@ -30,7 +33,7 @@ function _getMatch(ladder, players) {
     return matchWithPlayers;
 }
 
-function _getLadderPredicate(ladderName, players) {
+function _getLadderPredicate (ladderName, players) {
     return (ladder) => {
         let isGoodLadder = ladder.name === ladderName;
         let hasMatch = Boolean(_getMatch(ladder, players));
@@ -39,13 +42,13 @@ function _getLadderPredicate(ladderName, players) {
     };
 }
 
-function _getWinner(players) {
+function _getWinner (players) {
         return _sanitizePlayerName(_.find(players, (player) => {
             return _startsWith(player, '+');
         }));
 }
 
-function _setScore(match, score) {
+function _setScore (match, score) {
     if (!score) {
         return;
     }
@@ -53,21 +56,21 @@ function _setScore(match, score) {
     match.score = score;
 }
 
-function _validFormatScore(score) {
+function _validFormatScore (score) {
     if (!score) {
         return true;
     }
-    
-    var validScoreFormat = /^\d+:\d+$/;
+
+    let validScoreFormat = /^\d+:\d+$/;
 
     return score.match(validScoreFormat);
 }
 
-function _getMatchLoser(match) {
+function _getMatchLoser (match) {
     return match.winner === match.player1 ? match.player2 : match.player1;
 }
 
-function _getFunctionToSetResult(players, score, callback, notification) {
+function _getFunctionToSetResult (players, score, callback, notification) {
     return (ladder) => {
         let match = _getMatch(ladder, players);
 
@@ -87,7 +90,7 @@ function _getFunctionToSetResult(players, score, callback, notification) {
     };
 }
 
-function _playerWasInMatch(playerName, playersFromCommand) {
+function _playerWasInMatch (playerName, playersFromCommand) {
     var sanitizedPlayers = _.map(playersFromCommand, _sanitizePlayerName);
 
     return _.any(sanitizedPlayers, (sanitizedPlayerName) => {
@@ -95,21 +98,21 @@ function _playerWasInMatch(playerName, playersFromCommand) {
     });
 }
 
-function _noWinnerProvided(players) {
+function _noWinnerProvided (players) {
     return !_.any(players, (playerName) => {
         return _startsWith(playerName, '+');
     });
 }
 
-function _bothAreWinners(players) {
+function _bothAreWinners (players) {
     return _.all(players, (playerName) => {
         return _startsWith(playerName, '+');
     });
 }
 
-let addResultHandler = function(persistence) {
+let addResultHandler = (persistence) => {
     return {
-        makeItSo(parsedCommand, callback, notification) {
+        makeItSo (parsedCommand, callback, notification) {
             let ladderName = parsedCommand.arguments[1];
             let players = [parsedCommand.arguments[2], parsedCommand.arguments[3]];
             let score = parsedCommand.arguments.length === 5 ? parsedCommand.arguments[4] : null;
@@ -152,13 +155,17 @@ let addResultHandler = function(persistence) {
                 persistence.update(
                     _getLadderPredicate(ladderName, players),
                     _getFunctionToSetResult(players, score, callback, notification),
-                    (error) => {
-                        if (error) {
-                            callback(error);
+                    (updateError) => {
+                        if (updateError) {
+                            callback(updateError);
                             return;
                         }
 
-                        _notifyAboutLadderEvents(persistence, notification, (ladder) => { return ladder.name === ladderName; }, _.map(players, _sanitizePlayerName));
+                        _notifyAboutLadderEvents(
+                            persistence, notification,
+                            filteredLadder => filteredLadder.name === ladderName,
+                            _.map(players, _sanitizePlayerName)
+                        );
                     }
                 );
             });
@@ -166,7 +173,7 @@ let addResultHandler = function(persistence) {
     };
 };
 
-function _notifyAboutLadderEvents(persistence, notification, ladderFilter, players) {
+function _notifyAboutLadderEvents (persistence, notification, ladderFilter, players) {
     persistence.query(ladderFilter, (error, data) => {
         if (error || data.length !== 1) {
             return;
@@ -174,7 +181,9 @@ function _notifyAboutLadderEvents(persistence, notification, ladderFilter, playe
 
         let ladder = data[0];
 
-        if (_allMatchesPlayed(ladder.matches)) {
+        let activeSeason = seasonsHelper.getActiveSeason(ladder);
+
+        if (_allMatchesPlayed(activeSeason.matches)) {
             notification.send(slackTextSnippets.notifications.ladderFinished(ladder));
         }
 
@@ -184,20 +193,22 @@ function _notifyAboutLadderEvents(persistence, notification, ladderFilter, playe
     });
 }
 
-function _notifyAboutAllMatchesPlayedByPlayer(ladder, playerName, notification) {
-    let playerMatches = _getPlayerMatches(ladder.matches, playerName);
+function _notifyAboutAllMatchesPlayedByPlayer (ladder, playerName, notification) {
+    let activeSeason = seasonsHelper.getActiveSeason(ladder);
+    let playerMatches = _getPlayerMatches(activeSeason.matches, playerName);
+
     if (_allMatchesPlayed(playerMatches)) {
         notification.send(slackTextSnippets.notifications.playerFinishedLadder(ladder.name, playerMatches, playerName), '@' + playerName);
     }
 }
 
-function _allMatchesPlayed(matches) {
+function _allMatchesPlayed (matches) {
     return _.all(matches, (match) => {
         return match.winner;
     });
 }
 
-function _getPlayerMatches(matches, playerName) {
+function _getPlayerMatches (matches, playerName) {
     return _.filter(matches, (match) => {
         return match.player1 === playerName || match.player2 === playerName;
     });

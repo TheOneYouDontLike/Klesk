@@ -11,101 +11,122 @@ let parsedCommand = {
 };
 
 describe('joinLadderHandler', () => {
-    it('should join ladder if there are other players', () => {
+    it('should join ladder\'s active season if there are other players', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: [
-                { player1: 'anarki', player2: 'sarge', winner: '' },
-                { player1: 'sarge', player2: 'klesk', winner: '' },
-                { player1: 'anarki', player2: 'klesk', winner: '' }
+            seasons: [
+                {
+                    number: 1,
+                    matches: []
+                },
+                {
+                    number: 2,
+                    matches: [
+                        {player1: 'anarki', player2: 'sarge', winner: ''},
+                        {player1: 'sarge', player2: 'klesk', winner: ''},
+                        {player1: 'anarki', player2: 'klesk', winner: ''}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
+        handler.makeItSo(parsedCommand, () => {}, {send: () => {}});
 
         // then
         let expectedMatches = [
-            { player1: 'anarki', player2: 'sarge', winner: '' },
-            { player1: 'sarge', player2: 'klesk', winner: '' },
-            { player1: 'anarki', player2: 'klesk', winner: '' },
-            { player1: 'newPlayer', player2: 'anarki', winner: '' },
-            { player1: 'newPlayer', player2: 'sarge', winner: '' },
-            { player1: 'newPlayer', player2: 'klesk', winner: '' }
+            {player1: 'anarki', player2: 'sarge', winner: ''},
+            {player1: 'sarge', player2: 'klesk', winner: ''},
+            {player1: 'anarki', player2: 'klesk', winner: ''},
+            {player1: 'newPlayer', player2: 'anarki', winner: ''},
+            {player1: 'newPlayer', player2: 'sarge', winner: ''},
+            {player1: 'newPlayer', player2: 'klesk', winner: ''}
         ];
 
-        assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+        assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
     it('should join ladder if there is only one other player', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: [
-                { player1: 'anarki', player2: '', winner: '' }
+            seasons: [
+                {
+                    matches: [
+                        {player1: 'anarki', player2: '', winner: ''}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
+        handler.makeItSo(parsedCommand, () => {}, {send: () => {}});
 
         // then
         let expectedMatches = [
-            { player1: 'anarki', player2: 'newPlayer', winner: '' }
+            {player1: 'anarki', player2: 'newPlayer', winner: ''}
         ];
 
-        assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+        assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
     it('should join ladder if there are no other players', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: []
+            seasons: [
+                {
+                    matches: []
+                }
+            ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
         let handler = joinLadderHandler(fakePersistence);
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: () => {} });
+        handler.makeItSo(parsedCommand, () => {}, {send: () => {}});
 
         // then
         let expectedMatches = [
-            { player1: 'newPlayer', player2: '', winner: '' }
+            {player1: 'newPlayer', player2: '', winner: ''}
         ];
 
-        assert.that(ladderToUpdate.matches).is.equalTo(expectedMatches);
+        assert.that(ladderToUpdate.seasons[0].matches).is.equalTo(expectedMatches);
     });
 
     it('should send notification when user joins the ladder', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: []
+            seasons: [
+                {
+                    matches: []
+                }
+            ]
         };
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };
@@ -114,7 +135,7 @@ describe('joinLadderHandler', () => {
         let sendSpy = sinon.spy();
 
         // when
-        handler.makeItSo(parsedCommand, () => {}, { send: sendSpy });
+        handler.makeItSo(parsedCommand, () => {}, {send: sendSpy});
 
         // then
         let expectedMessage = 'Player `newPlayer` has joined the ladder `normal`';
@@ -126,13 +147,17 @@ describe('joinLadderHandler', () => {
         // given
         let ladderToUpdate = {
             name: 'normal',
-            matches: [{ player1: 'newPlayer', player2: '', winner: '' }]
+            seasons: [
+                {
+                    matches: [{player1: 'newPlayer', player2: '', winner: ''}]
+                }
+            ]
         };
 
         let expectedMatches = _.cloneDeep(ladderToUpdate.matches);
 
         let fakePersistence = {
-            update(filterDelegate, updateDelegate) {
+            update (filterDelegate, updateDelegate) {
                 updateDelegate(ladderToUpdate);
             }
         };

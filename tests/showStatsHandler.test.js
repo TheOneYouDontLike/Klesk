@@ -24,30 +24,40 @@ describe('showStatsHandler', () => {
     });
 
     it('should tell player that stats where sent directly to him via notification', () => {
-        //given
+        // given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: 'aerowalk',
-            matches: [
-                { player1: parsedCommand.playerName },
+            seasons: [
+                {
+                    number: 1,
+                    map: 'not-aerowalk',
+                    matches: []
+                },
+                {
+                    number: 2,
+                    map: 'aerowalk',
+                    matches: [
+                        {player1: parsedCommand.playerName}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            query(filterFunction, callback) {
-                callback(null, [ ladderInRepository ]);
+            query (filterFunction, callback) {
+                callback(null, [ladderInRepository]);
             }
         };
 
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
-        
+
         let expectedMessage = 'Your stats in this ladder were sent to you directly to your @slackbot channel.';
 
-        //when
+        // when
         handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
-        
-        //then
+
+        // then
         let actualMessage = callbackSpy.getCall(0).args[1];
 
         assert.that(actualMessage).is.equalTo(expectedMessage);
@@ -56,33 +66,43 @@ describe('showStatsHandler', () => {
     it('should return stats for player in ladder directly to him', () => {
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: 'aerowalk',
-            matches: [
-                { player1: 'anarki', player2: 'klesk', winner: 'anarki' },
-                { player1: 'anarki', player2: 'sarge', winner: 'sarge' },
-                { player1: 'klesk', player2: 'sarge', winner: 'sarge' }
+            seasons: [
+                {
+                    number: 1,
+                    map: 'not-aerowalk',
+                    matches: []
+                },
+                {
+                    number: 2,
+                    map: 'aerowalk',
+                    matches: [
+                        {player1: 'anarki', player2: 'klesk', winner: 'anarki'},
+                        {player1: 'anarki', player2: 'sarge', winner: 'sarge'},
+                        {player1: 'klesk', player2: 'sarge', winner: 'sarge'}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            query(filterFunction, callback) {
-                callback(null, [ ladderInRepository ]);
+            query (filterFunction, callback) {
+                callback(null, [ladderInRepository]);
             }
         };
 
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
-        let expectedNotificationMessage = 
+        let expectedNotificationMessage =
             'Ladder `' + ladderInRepository.name + '`\n' +
             'Matches: 2 / Wins: 1 / Losses: 1\n' +
             '[`+anarki` vs klesk on aerowalk]\n' +
             '[anarki vs `+sarge` on aerowalk]\n';
 
-        //when
+        // when
         handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
 
-        //then
+        // then
         let actualMessage = notificationSpy.send.getCall(0).args[0];
         let channelOverride = notificationSpy.send.getCall(0).args[1];
 
@@ -91,33 +111,43 @@ describe('showStatsHandler', () => {
     });
 
     it('should not count not played matches as player losses', () => {
-        //given
+        // given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            map: 'aerowalk',
-            matches: [
-                { player1: 'anarki', player2: 'klesk', winner: '' }
+            seasons: [
+                {
+                    number: 1,
+                    map: 'not-aerowalk',
+                    matches: []
+                },
+                {
+                    number: 2,
+                    map: 'aerowalk',
+                    matches: [
+                        {player1: 'anarki', player2: 'klesk', winner: ''}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            query(filterFunction, callback) {
-                callback(null, [ ladderInRepository ]);
+            query (filterFunction, callback) {
+                callback(null, [ladderInRepository]);
             }
         };
 
         let callbackSpy = sinon.spy();
         let handler = showStatsHandler(fakePersistence);
 
-        let expectedNotificationMessage = 
+        let expectedNotificationMessage =
             'Ladder `' + ladderInRepository.name + '`\n' +
             'Matches: 1 / Wins: 0 / Losses: 0\n' +
             '[anarki vs klesk on aerowalk]\n';
 
-        //when
+        // when
         handler.makeItSo(parsedCommand, callbackSpy, notificationSpy);
 
-        //then
+        // then
         let actualMessage = notificationSpy.send.getCall(0).args[0];
 
         assert.that(actualMessage).is.equalTo(expectedNotificationMessage);
@@ -141,14 +171,23 @@ describe('showStatsHandler', () => {
         // given
         let ladderInRepository = {
             name: parsedCommand.arguments[1],
-            matches: [
-                { player1: 'klesk', player2: 'sarge', winner: 'sarge' }
+            seasons: [
+                {
+                    number: 1,
+                    matches: []
+                },
+                {
+                    number: 2,
+                    matches: [
+                        {player1: 'klesk', player2: 'sarge', winner: 'sarge'}
+                    ]
+                }
             ]
         };
 
         let fakePersistence = {
-            query(filterFunction, callback) {
-                callback(null, [ ladderInRepository ]);
+            query (filterFunction, callback) {
+                callback(null, [ladderInRepository]);
             }
         };
 

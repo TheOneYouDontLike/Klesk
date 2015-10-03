@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-function getMapFrom(maps, keyword) {
+function getMapFrom (maps, keyword) {
     if(!keyword) {
         return _.sample(maps);
     }
@@ -18,8 +18,8 @@ function getMapFrom(maps, keyword) {
     return _.sample(mapsToSelectFrom);
 }
 
-function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
-    let keywordVoteMap =_.map(maps, (map) => {
+function _initialiseVotesForMapsWithoutKeywordVote (maps, keyword) {
+    let keywordVoteMap = _.map(maps, (map) => {
         if (!_.has(map, 'votes')) {
             map.votes = {};
         }
@@ -35,7 +35,7 @@ function _initialiseVotesForMapsWithoutKeywordVote(maps, keyword) {
     return keywordVoteMap;
 }
 
-function _getMapListFavouringUpvotedMaps(maps, keyword) {
+function _getMapListFavouringUpvotedMaps (maps, keyword) {
     let biasedMapList = [];
 
     _.forEach(maps, (map) => {
@@ -43,7 +43,7 @@ function _getMapListFavouringUpvotedMaps(maps, keyword) {
             return;
         }
 
-        for(let i = 0; i < map.votes[keyword] + 1; ++i) {
+        for (let i = 0; i < map.votes[keyword] + 1; ++i) {
             biasedMapList.push(map);
         }
     });
@@ -53,4 +53,4 @@ function _getMapListFavouringUpvotedMaps(maps, keyword) {
     return biasedMapList;
 }
 
-export default { getMapFrom: getMapFrom };
+export default {getMapFrom: getMapFrom};

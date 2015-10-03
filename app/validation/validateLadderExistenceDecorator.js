@@ -17,9 +17,9 @@ function _getQueryCallback (ladderName, commandHandlerToDecorate, parsedCommand,
     };
 }
 
-let validateLadderExistenceDecorator = function (commandHandlerToDecorate, persistence) {
+let validateLadderExistenceDecorator = (commandHandlerToDecorate, persistence) => {
     return {
-        makeItSo(parsedCommand, callback, notificationCallback) {
+        makeItSo (parsedCommand, callback, notificationCallback) {
             let ladderName = parsedCommand.arguments[1];
 
             if (!ladderName) {
