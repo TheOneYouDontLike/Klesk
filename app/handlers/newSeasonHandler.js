@@ -1,7 +1,10 @@
 'use strict';
 
 import slackTextSnippets from '../slackTextSnippets';
+import logger from '../logger';
 import MapSelection from '../maps/mapSelection';
+
+let ERROR = 'Error occured';
 
 let newSeasonHandler = (persistence, mapPersistence) => {
     return {
@@ -29,6 +32,12 @@ let newSeasonHandler = (persistence, mapPersistence) => {
                     let message = slackTextSnippets.notifications.newSeason(ladderName);
                     callback(null, message);
                     notification.send(message);
+                },
+                (error) => {
+                    if (error) {
+                        logger(error);
+                        callback(null, ERROR);
+                    }
                 }
             );
         }

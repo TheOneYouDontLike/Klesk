@@ -30,17 +30,17 @@ let fakeMapPersistence = {
 
 let emptyNotification = {send: () => {}};
 
+let fsMock = {
+    readFile (fileName, callback) {
+        callback(null, JSON.stringify([ladder]));
+    },
+    writeFile (filename, data) {
+        ladder = JSON.parse(data)[0];
+    }
+};
+
 describe('newSeasonHandler', () => {
     beforeEach(() => {
-        let fsMock = {
-            readFile (fileName, callback) {
-                callback(null, JSON.stringify([ladder]));
-            },
-            writeFile (filename, data) {
-                ladder = JSON.parse(data)[0];
-            }
-        };
-
         fakePersistence = new Persistence('filename', fsMock);
         callbackSpy = sinon.spy();
         handler = newSeasonHandler(fakePersistence, fakeMapPersistence);
@@ -92,5 +92,23 @@ describe('newSeasonHandler', () => {
         assert.that(notificationSpy.calledWith('New season added to `some ladder`')).is.true();
     });
 
-    // should log errors on failure
+    it('should log errors on failure', () => {
+        // given
+        let fsError = new Error();
+
+        fsMock.writeFile = (filename, data, callback) => {
+            callback(fsError);
+        };
+
+        let parsedCommand = {
+            playerName: 'somedude',
+            arguments: ['newseason', 'some ladder']
+        };
+
+        // when
+        handler.makeItSo(parsedCommand, callbackSpy, emptyNotification);
+
+        // then
+        assert.that(callbackSpy.calledWith(null, 'Error occured')).is.true();
+    });
 });
