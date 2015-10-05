@@ -154,7 +154,7 @@ function ladderFinished (ladder) {
     }, notification);
 }
 
-function _addResultsForPeopleWhoWonAnything(playerResults, playerWins, playerLosses) {
+function _addResultsForPeopleWhoWonAnything (playerResults, playerWins, playerLosses) {
     _.forEach(playerWins, (wins, playerName) => {
         let playerResult = {
             playerName: playerName,
@@ -170,7 +170,7 @@ function _addResultsForPeopleWhoWonAnything(playerResults, playerWins, playerLos
     });
 }
 
-function _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, playerLosses) {
+function _addRemainingResultsForPeopleWhoDidNotWinEvenOnce (playerResults, playerLosses) {
     _.forEach(playerLosses, (losses, playerName) => {
         if (!_.any(playerResults, {playerName: playerName})) {
             playerResults.push({
@@ -182,7 +182,7 @@ function _addRemainingResultsForPeopleWhoDidNotWinEvenOnce(playerResults, player
     });
 }
 
-function playerFinishedLadder(ladderName, playerMatches, playerName) {
+function playerFinishedLadder (ladderName, playerMatches, playerName) {
     let notification = 'You played all matches in ladder ' + decorate(ladderName) + '\n';
 
     let winCount = _.filter(playerMatches, {winner: playerName}).length;

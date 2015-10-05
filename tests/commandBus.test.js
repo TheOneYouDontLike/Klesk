@@ -12,11 +12,11 @@ describe('commandBus', () => {
         };
 
         let fakeFactory = {
-            getCommandHandler: function(commandType, callback) {
+            getCommandHandler (commandType, callback) {
                 callback(
                     {
-                        makeItSo(command, callback) {
-                            callback(null, 'result');
+                        makeItSo (command, handlerCallback) {
+                            handlerCallback(null, 'result');
                         }
                     }
                 );
@@ -32,15 +32,3 @@ describe('commandBus', () => {
         });
     });
 });
-
-// let genericKleskCommand = {
-//     token: "...",
-//     team_id: "...",
-//     team_domain: "...",
-//     channel_id: "...",
-//     channel_name: "...",
-//     user_id: "...",
-//     user_name: "...",
-//     command: "/klesk",
-//     text: "query string"
-// };

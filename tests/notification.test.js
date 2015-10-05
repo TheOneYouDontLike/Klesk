@@ -15,7 +15,7 @@ let config = {
 notification.__Rewire__('config', config);
 notification.__Rewire__('logger', function dummyFunction() {});
 
-describe('notification', function() {
+describe('notification', () => {
     let requestSpy;
 
     beforeEach(() => {
@@ -42,14 +42,14 @@ describe('notification', function() {
     });
 
     it('should allow channel override', () => {
-        //given
+        // given
         let message = 'message';
         let channelOverride = '@channelOverride';
-        
-        //when
+
+        // when
         notification.send(message, channelOverride);
-        
-        //then
+
+        // then
         let expectedNotificationMessage = {
             username: config.botUsername,
             icon_url: config.botIconUrl,

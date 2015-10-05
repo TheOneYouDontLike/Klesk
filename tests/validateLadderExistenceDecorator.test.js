@@ -12,9 +12,9 @@ describe('validateLadderExistenceDecorator', () => {
         };
 
         let jsonPersistence = {
-            query(filter, queryCallback) {
+            query (filter, queryCallback) {
                 if (filter(dummyLadderThatShouldPassFiltering)) {
-                    queryCallback(null, [ dummyLadderThatShouldPassFiltering ]);
+                    queryCallback(null, [dummyLadderThatShouldPassFiltering]);
                 }
             }
         };
@@ -45,7 +45,7 @@ describe('validateLadderExistenceDecorator', () => {
         };
 
         let jsonPersistence = {
-            query(filter, callback) {
+            query (filter, callback) {
                 if (!filter(dummyLadderThatShouldNotPassFiltering)) {
                     callback(null, []);
                 }
