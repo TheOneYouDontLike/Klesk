@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Klesk by TheOneYouDontLike</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Klesk</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/TheOneYouDontLike/Klesk" class="btn">View on GitHub</a>
+      <a href="https://github.com/TheOneYouDontLike/Klesk/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/TheOneYouDontLike/Klesk/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="klesk" class="anchor" href="#klesk" aria-hidden="true"><span class="octicon octicon-link"></span></a>Klesk</h1>
+
+<p>Klesk is a Slack service to store and return ladder data for Quake Live or whatever game you like.</p>
+
+<p><a href="https://travis-ci.org/TheOneYouDontLike/Klesk"><img src="https://travis-ci.org/TheOneYouDontLike/Klesk.svg?branch=master" alt="Build Status"></a></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li><p><code>newladder &lt;laddername&gt; [&lt;keyword&gt;]</code><br>
+creates a new ladder with name <code>&lt;laddername&gt;</code><br>
+map selection: a random map will be assigned to the ladder if <code>&lt;keyword&gt;</code> is not specified<br>
+<code>&lt;keyword&gt;</code> makes map selection ignore maps with negative <code>&lt;keyword&gt;</code> vote count and choose maps with higher <code>&lt;keyword&gt;</code> vote count more often<br>
+sends notification to configured slack webhook about a new ladder</p></li>
+<li><p><code>joinladder &lt;laddername&gt;</code><br>
+adds your slack name to ladder <code>&lt;laddername&gt;</code> and initialises matches against all other participants<br>
+sends notification to configured slack webhook about a new player in the ladder</p></li>
+<li><p><code>addresult &lt;laddername&gt; &lt;player1&gt; &lt;player2&gt; [&lt;score&gt;]</code><br>
+adds match result, the winner should be indicated by a <code>+</code> sign before their name<br>
+you can optionally provide match <code>&lt;score&gt;</code> which will later be displayed with match result<br>
+sends notification to configured slack webhook about match result</p></li>
+<li><p><code>leaveladder &lt;laddername&gt;</code><br>
+removes all your matches from ladder <code>&lt;laddername&gt;</code><br>
+sends notification to configured slack webhook about player leaving the ladder</p></li>
+<li><p><code>ranking &lt;laddername&gt;</code><br>
+sends the list of <code>&lt;laddername&gt;</code>'s matches with their results to your <a href="https://github.com/slackbot" class="user-mention">@slackbot</a> slack channel</p></li>
+<li><p><code>showstats &lt;laddername&gt;</code><br>
+sends the list of your matches in ladder <code>&lt;laddername&gt;</code> with their results to your <a href="https://github.com/slackbot" class="user-mention">@slackbot</a> slack channel</p></li>
+<li><p><code>showladders</code><br>
+lists all created ladders</p></li>
+<li><p><code>upvotemap &lt;mapname&gt; &lt;keyword&gt;</code></p></li>
+<li><p><code>downvotemap &lt;mapname&gt; &lt;keyword&gt;</code><br>
+adds (<code>upvotemap</code>) or subtracts (<code>downvotemap</code>) 1 from vote <code>&lt;keyword&gt;</code> count for map <code>&lt;mapname&gt;</code><br>
+the number of votes is used when selecting maps for new ladders (see <code>newladder</code>)</p></li>
+<li><p><code>listmaps</code><br>
+lists all configured maps with keyword vote breakdown</p></li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Simply run inside Klesk directory:</p>
+
+<p><code>npm install</code></p>
+
+<p>Running application requires: webpack and nodemon.</p>
+
+<p><code>npm install -g webpack nodemon</code></p>
+
+<h3>
+<a id="running-klesk-for-development" class="anchor" href="#running-klesk-for-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Klesk for development</h3>
+
+<p>Testing the application requires mocha.</p>
+
+<p><code>npm install -g mocha</code></p>
+
+<p><code>webpack</code> (or <code>webpack -w</code> for watching files) for building the app.</p>
+
+<p><code>npm run watch</code> for watching build output and restarting service.</p>
+
+<p>Before building create <strong>config.js</strong> file in the root directory.
+Just copy following configuration and customize what you need</p>
+
+<pre><code>export default {
+  port: 1666,
+  storageFilename: 'ladders.json',
+  mapsFilename: 'maps.json',
+  notificationWebhookAddress: 'https://your-incoming-slack-hook',
+  notificationChannel: '#notifications', //OPTIONAL: if not set then slack incoming-webhook default channel will be used
+  botUsername: 'Klesk', //OPTIONAL: if not set then slack incoming-webhook name will be used
+  botIconUrl: 'http://absolute-path-to-your-bot-icon' //OPTIONAL: if not set slack default bot icon will be used
+  logErrorsToFile: true, // whether to log to file or only to console
+  errorsLogPath: './'
+};
+</code></pre>
+
+<p>maps.json schema example:</p>
+
+<pre><code>[
+  { "name": "Campgrounds" },
+  { "name": "Aerowalk" }
+  ...
+]
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/TheOneYouDontLike/Klesk">Klesk</a> is maintained by <a href="https://github.com/TheOneYouDontLike">TheOneYouDontLike</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
