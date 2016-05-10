@@ -28,6 +28,10 @@ export default function (stuffToLog) {
 }
 
 function _isError (stuffToLog) {
+    if (!stuffToLog) {
+        return false;
+    }
+    
     let isAnObject = typeof stuffToLog === 'object';
     let hasErrorProperties = stuffToLog.hasOwnProperty('message') && stuffToLog.hasOwnProperty('stack');
 
